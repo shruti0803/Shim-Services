@@ -1,5 +1,5 @@
 import Navigation from "./Components/Navigation"
-import Footer from "./Components/Footer"
+
 
 
 function App() {
