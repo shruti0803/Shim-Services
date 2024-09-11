@@ -1,15 +1,21 @@
 import Navigation from "./Components/Navigation"
-import Footer from "./Components/Footer"
+
+
+import VideoCarousel from "./Components/VideoCarousel"
+
 
 
 function App() {
   
   return (
     <>
- 
+
      <Navigation/>
      
      
+
+     <VideoCarousel/>
+
     </>
   )
 }
