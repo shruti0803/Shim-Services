@@ -8,8 +8,8 @@ const Navigation = () => {
     };
 
     return (
-        <div className='bg-black flex items-center h-18 sticky top-0 z-10 px-3 text-lg text-white'>
-            <div className='h-15'>
+        <div className='bg-black flex items-center h-24 md:h-20 lg:h-18 sticky top-0 z-10 px-3 text-lg text-white'>
+            <div className='h-full'>
                 <img src="shimlogo.jpg" alt="Logo" className='h-full' />
             </div>
             <div className="ml-auto flex items-center gap-7">
@@ -28,13 +28,13 @@ const Navigation = () => {
                     <li>Services</li>
                 </ul>
                 <div className='hidden lg:block'>
-                    <button className='bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700'>Contact Us</button>
+                    <button className='bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 ml-4'>Contact Us</button>
                 </div>
             </div>
 
             {/* Conditionally render navigation links based on toggle state */}
             {isNavOpen && (
-                <div className="lg:hidden absolute top-18 left-0 w-full bg-gray-900 py-3 px-5 flex flex-col gap-4">
+                <div className="lg:hidden absolute top-24 left-0 w-full bg-gray-900 py-3 px-5 flex flex-col gap-4">
                     <ul className='list-none'>
                         <li>Home</li>
                         <li>About Us</li>
