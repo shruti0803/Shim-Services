@@ -1,4 +1,5 @@
 import Navigation from "./Components/Navigation"
+import VideoCarousel from "./Components/VideoCarousel"
 
 
 function App() {
@@ -8,6 +9,7 @@ function App() {
     <>
  
      <Navigation/> 
+     <VideoCarousel/>
     </>
   )
 }
