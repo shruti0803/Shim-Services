@@ -1,7 +1,8 @@
 import React, { useRef, useEffect } from 'react';
-// import Details from './Details';
+import Details from './Details';
 import Carousel from 'react-bootstrap/Carousel';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { Reviews } from './Reviews';
 
 const Card = ({ imageSrc, title }) => (
   <div className="m-4 p-1 text-center w-30 h-32 text-gray-900 transition-shadow duration-300 overflow-visible hover:shadow-lg">
@@ -39,11 +40,12 @@ const Appliance = () => {
 
   return (
     <>
+    
       <div className="flex flex-col-reverse justify-between gap-2.5 md:flex-row ">
         {/* Left Section */}
         <div className="md:w-1/2 text-black flex flex-wrap p-2.5 sticky top-0 max-h-[calc(100vh-40px)] overflow-y-auto" ref={leftSectionRef}>
           <div className="mb-2.5 mt-2.5 pl-4">
-            <h2 className="text-2xl">Appliances Repair</h2>
+          <h2 className="text-5xl font-extrabold text-center mb-4">Appliances Repair</h2>
             <p className="mt-2">Don't let appliance issues slow you down. ShimServices is here to help. When appliances break, ShimServices fixes them fast?</p>
             <div className="flex items-center underline">
               <img src="https://t3.ftcdn.net/jpg/04/20/03/48/360_F_420034841_AKpgqQGkkUyeD7oWc9y8vGTMwT4GmbHm.jpg" className="h-5 w-20 mt-2" alt="rating" />
@@ -85,12 +87,17 @@ const Appliance = () => {
 
       {/* Additional Section */}
       <div className="flex p-2.5 m-6">
-        <div className="flex-4 text-xl">
-          <h2>What we offer</h2>
-          <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Reprehenderit rerum vel sapiente porro. Molestias pariatur eos ducimus distinctio quas provident, rerum aliquid voluptas assumenda quis nemo. Voluptate sit quidem iste, impedit vero corrupti aspernatur fugit doloremque, accusantium expedita praesentium debitis.</p>
+        <div className="text-xl w-1/2">
+          <h2 className='font-bold'>What we offer</h2>
+          <div>
+          <div>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Reprehenderit rerum vel sapiente porro. Molestias pariatur eos ducimus distinctio quas provident, rerum aliquid voluptas assumenda quis nemo. Voluptate sit quidem iste, impedit vero corrupti aspernatur fugit doloremque, accusantium expedita praesentium debitis.</div>
+          <div>
+            <Reviews/>
+          </div>
+          </div>
         </div>
         <div className="flex-6">
-          {/* <Details /> */}
+          <Details />
         </div>
       </div>
     </>
