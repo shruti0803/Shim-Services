@@ -1,3 +1,4 @@
+import Navigation from "./Components/Navigation"
 
 
 function App() {
@@ -5,7 +6,8 @@ function App() {
 
   return (
     <>
-      
+ 
+     <Navigation/> 
     </>
   )
 }
