@@ -1,0 +1,100 @@
+import React, { useRef, useEffect } from 'react';
+// import Details from './Details';
+import Carousel from 'react-bootstrap/Carousel';
+import 'bootstrap/dist/css/bootstrap.min.css';
+
+const Card = ({ imageSrc, title }) => (
+  <div className="m-4 p-1 text-center w-30 h-32 text-gray-900 transition-shadow duration-300 overflow-visible hover:shadow-lg">
+    <img src={imageSrc} alt="card" className="w-full h-full object-cover" />
+    <p className="mt-1">{title}</p>
+  </div>
+);
+
+const Appliance = () => {
+  const cardItems = [
+    { id: 1, imageSrc: 'https://media.istockphoto.com/id/1308686330/photo/technician-examining-dishwasher.jpg?s=612x612&w=0&k=20&c=dOnBvAdU8y_OlEjDbN_DxAUkSVUxXwg4OSIra5yX93o=', title: 'Appliance Installation' },
+    { id: 2, imageSrc: 'https://media.istockphoto.com/id/614135768/photo/repairman-is-repairing-a-washing-machine-on-the-white-background.jpg?s=612x612&w=0&k=20&c=nKCPfBCkfKEBBKWwK4muG8wdhyJoBRIHlLH6JZEBG6k=', title: 'Appliance Servicing' },
+    { id: 3, imageSrc: 'https://media.istockphoto.com/id/1180607321/photo/two-young-male-movers-placing-steel-refrigerator-in-kitchen.jpg?s=612x612&w=0&k=20&c=PW4dVclZ9wCgc-qq6BLHuMKzzStEW2N4-DxmlUk0K54=', title: 'Appliance Gas Refill' },
+    { id: 4, imageSrc: 'https://media.istockphoto.com/id/512511894/photo/repairman-is-repairing-a-washing-machine-entering-malfunction.jpg?s=1024x1024&w=is&k=20&c=iSUTD2qjWJP7uuhTGh5yLccPWy9oqvkJ7QZaWmzXCKg=', title: 'Appliance Duct Cleaning' },
+    { id: 5, imageSrc: 'https://media.istockphoto.com/id/912624814/photo/young-repairman-in-protective-workwear-fixing-oven-in-kitchen.jpg?s=1024x1024&w=is&k=20&c=pIc7EIHJxrkdYsDfKbcfwis6lyOYbx8kw7pxRCEEPgQ=', title: 'Thermostat Replacement' },
+    { id: 6, imageSrc: 'https://cdn.pixabay.com/photo/2020/12/28/09/44/man-5866475_1280.jpg', title: 'Appliance Filter Replacement' },
+  ];
+
+  const leftSectionRef = useRef(null);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const stickyOffset = leftSectionRef.current.offsetTop;
+      if (window.scrollY > stickyOffset) {
+        leftSectionRef.current.classList.add("sticky");
+      } else {
+        leftSectionRef.current.classList.remove("sticky");
+      }
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
+  return (
+    <>
+      <div className="flex flex-col-reverse justify-between gap-2.5 md:flex-row ">
+        {/* Left Section */}
+        <div className="md:w-1/2 text-black flex flex-wrap p-2.5 sticky top-0 max-h-[calc(100vh-40px)] overflow-y-auto" ref={leftSectionRef}>
+          <div className="mb-2.5 mt-2.5 pl-4">
+            <h2 className="text-2xl">Appliances Repair</h2>
+            <p className="mt-2">Don't let appliance issues slow you down. ShimServices is here to help. When appliances break, ShimServices fixes them fast?</p>
+            <div className="flex items-center underline">
+              <img src="https://t3.ftcdn.net/jpg/04/20/03/48/360_F_420034841_AKpgqQGkkUyeD7oWc9y8vGTMwT4GmbHm.jpg" className="h-5 w-20 mt-2" alt="rating" />
+              <p className="ml-2">6M+ bookings till now</p>
+            </div>
+          </div>
+          <div className='grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-4'>
+          {cardItems.map(item => (
+            <Card key={item.id} imageSrc={item.imageSrc} title={item.title} />
+          ))}
+          </div>
+          
+        </div>
+
+        {/* Right Section */}
+        <div className="md:w-1/2 mt-24 pl-5 box-border z-[-1]">
+          <Carousel fade>
+            <Carousel.Item>
+              <video className="w-full h-125 object-cover" src="https://videos.pexels.com/video-files/8293017/8293017-hd_1920_1080_30fps.mp4" autoPlay muted loop playsInline></video>
+              <Carousel.Caption>
+                <h2 className="text-xl">Where Appliances meet Expertise!</h2>
+              </Carousel.Caption>
+            </Carousel.Item>
+            <Carousel.Item>
+              <img className="w-full h-125 object-cover" src="https://media.istockphoto.com/id/1267057581/photo/a-repairman-checking-the-air-conditioner.jpg?s=612x612&w=0&k=20&c=jsx63zh_etUL0QALeDZNLeE6yIA3bA2xqsv-bRtFBXM=" alt="carousel item" />
+              <Carousel.Caption>
+                <h2 className="text-xl">Appliance Rescue, Done Right</h2>
+              </Carousel.Caption>
+            </Carousel.Item>
+            <Carousel.Item>
+              <img className="w-full h-125 object-cover" src="https://media.istockphoto.com/id/1347516184/photo/repairman-handshake-in-house-door.jpg?s=612x612&w=0&k=20&c=ePJmBK67AQ1O__VvHkMFKp7UE4rwHbSNhUTNqQ9M2j0=" alt="carousel item" />
+              <Carousel.Caption>
+                <h2 className="text-xl">All things done Right. At your pace, At your comfort.</h2>
+              </Carousel.Caption>
+            </Carousel.Item>
+          </Carousel>
+        </div>
+      </div>
+
+      {/* Additional Section */}
+      <div className="flex p-2.5 m-6">
+        <div className="flex-4 text-xl">
+          <h2>What we offer</h2>
+          <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Reprehenderit rerum vel sapiente porro. Molestias pariatur eos ducimus distinctio quas provident, rerum aliquid voluptas assumenda quis nemo. Voluptate sit quidem iste, impedit vero corrupti aspernatur fugit doloremque, accusantium expedita praesentium debitis.</p>
+        </div>
+        <div className="flex-6">
+          {/* <Details /> */}
+        </div>
+      </div>
+    </>
+  );
+};
+
+export default Appliance;

@@ -1,3 +1,4 @@
+import Appliance from "./Components/Appliances"
 
 
 function App() {
@@ -5,7 +6,7 @@ function App() {
 
   return (
     <>
-      
+      <Appliance/>
     </>
   )
 }
