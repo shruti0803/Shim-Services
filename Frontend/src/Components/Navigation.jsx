@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import BWlogo from '../assets/BWlogo.jpg'
 
 const Navigation = () => {
     const [isNavOpen, setIsNavOpen] = useState(false);
@@ -10,7 +11,7 @@ const Navigation = () => {
     return (
         <div className='bg-black flex items-center h-24 md:h-20 lg:h-18 sticky top-0 z-10 px-3 text-lg text-white'>
             <div className='h-full'>
-                <img src="shimlogo.jpg" alt="Logo" className='h-full' />
+                <img src={BWlogo} alt="Logo" className='h-full' />
             </div>
             <div className="ml-auto flex items-center gap-7">
                 {/* Show navigation toggle button only on mobile */}
