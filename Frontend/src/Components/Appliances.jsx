@@ -101,7 +101,26 @@ const Appliance = () => {
         <hr></hr>
           <h2 className='font-bold text-center mt-4'>What we offer</h2>
           <div>
-          <div className='mb-4'>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Reprehenderit rerum vel sapiente porro. Molestias pariatur eos ducimus distinctio quas provident, rerum aliquid voluptas assumenda quis nemo. Voluptate sit quidem iste, impedit vero corrupti aspernatur fugit doloremque, accusantium expedita praesentium debitis.</div>
+          <div className="mb-4">
+  ShimServices provides reliable, expert repair services for a range of home appliances to ensure they run smoothly. Our offerings include:
+  
+  <ul className="list-disc list-inside mt-4">
+    <li><strong>AC Repair & Service:</strong> Comprehensive cleaning, part replacement, and cooling efficiency checks.</li>
+    
+    <li><strong>Refrigerator Repair:</strong> Complete diagnostic, part replacements, and cooling system fixes.</li>
+    
+    <li><strong>Washing Machine Repair:</strong> Expert solutions for motor, drum, and drainage issues.</li>
+    
+    <li><strong>Microwave Repair:</strong> Heating element fixes, part replacements, and safety checks.</li>
+    
+    <li><strong>Television Repair:</strong> Screen and system repairs for both LCD and LED TVs.</li>
+    
+    <li><strong>Geyser Repair:</strong> Thermostat checks, heating element replacement, and leakage fixes.</li>
+  </ul>
+
+  Count on ShimServices for hassle-free, professional appliance repair!
+</div>
+
           <hr></hr>
           <div className='mt-4'>
             <Reviews/>

@@ -119,12 +119,26 @@ const Beauty = () => {
           <hr></hr>
           <h2 className="font-bold text-center mt-4">What we offer</h2>
           <div>
-            <div className="mb-4">
-              Lorem ipsum, dolor sit amet consectetur adipisicing elit. Reprehenderit rerum vel sapiente porro.
-              Molestias pariatur eos ducimus distinctio quas provident, rerum aliquid voluptas assumenda quis nemo.
-              Voluptate sit quidem iste, impedit vero corrupti aspernatur fugit doloremque, accusantium expedita
-              praesentium debitis.
-            </div>
+          <div className="mb-4">
+  At ShimServices, we offer a range of beauty services to elevate your look and boost your confidence. Whether it's a big event or self-care, our services include:
+  
+  <ul className="list-disc list-inside mt-4">
+    <li><strong>Hair Styling:</strong> Trendy cuts, coloring, and highlights to refresh your look.</li>
+    
+    <li><strong>Bridal Makeup:</strong> Flawless makeup to make your special day perfect.</li>
+    
+    <li><strong>Facial Treatments:</strong> Hydrating, anti-aging, and customized facials for glowing skin.</li>
+    
+    <li><strong>Manicure & Pedicure:</strong> Luxurious nail care, from classic to intricate nail art.</li>
+    
+    <li><strong>Threading & Waxing:</strong> Precise shaping and smooth skin with professional care.</li>
+    
+    <li><strong>Men's Grooming:</strong> Tailored grooming services including beard trims and facials.</li>
+  </ul>
+
+  Let us help you look and feel your best at ShimServices!
+</div>
+
             <hr></hr>
             <div className="mt-4">
               <Reviews />

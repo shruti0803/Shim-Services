@@ -24,7 +24,7 @@ const DetailsBeauty = () => {
     },
     {
       id: 3,
-      imgSrc: 'https://cdn.pixabay.com/photo/2021/08/19/09/18/woman-6557552_1280.jpg',
+      imgSrc: 'https://media.istockphoto.com/id/1303337467/photo/beautiful-young-asian-woman-holding-hands-smile-feeling-so-happy-and-cheerful-with-healthy.jpg?s=612x612&w=0&k=20&c=3wuVMmBCzda1HXNqwfex5FuCl6dJ7Cu2xHojIVHFL5g=',
       title: 'Facial Treatment',
       description: [
         'Hydrating Facial',
@@ -34,7 +34,7 @@ const DetailsBeauty = () => {
     },
     {
       id: 4,
-      imgSrc: 'https://cdn.pixabay.com/photo/2015/07/28/22/06/nails-865121_1280.jpg',
+      imgSrc: 'https://media.istockphoto.com/id/171328031/photo/beautiful-female-hands-with-manicure.jpg?s=612x612&w=0&k=20&c=CcNWRsYli6xO4vCmds7lQXIHVjsXsWffD7MDIxVH7U8=',
       title: 'Manicure/Pedicure',
       description: [
         'Classic Manicure',
@@ -54,18 +54,18 @@ const DetailsBeauty = () => {
     },
     {
       id: 6,
-      imgSrc: 'https://cdn.pixabay.com/photo/2020/03/08/14/53/makeup-4912678_1280.jpg',
-      title: 'Skin Care Treatment',
+      imgSrc: 'https://media.istockphoto.com/id/1355309866/photo/gorgeous-brown-haired-woman-with-the-fresh-skin-and-delicate-makeup-is-closed-eyes-with-fill.jpg?s=612x612&w=0&k=20&c=19jbxy3WTDdaeZ2F9sa_UrOObfKdGWmMnqBQtjHl8h0=',
+      title: 'Body Treatment',
       description: [
         'Deep Cleansing Treatment',
         'Microdermabrasion',
         'Chemical Peels'
       ]
     },
-    // New Men's Services
+    
     {
       id: 7,
-      imgSrc: 'https://cdn.pixabay.com/photo/2017/02/04/12/56/beard-2031192_1280.jpg',
+      imgSrc: 'https://cdn.pixabay.com/photo/2020/05/24/01/53/barber-5212050_1280.jpg',
       title: 'Beard Grooming',
       description: [
         'Beard Shaping',
@@ -75,7 +75,7 @@ const DetailsBeauty = () => {
     },
     {
       id: 8,
-      imgSrc: 'https://cdn.pixabay.com/photo/2018/06/12/02/13/fashion-3465199_1280.jpg',
+      imgSrc: 'https://media.istockphoto.com/id/1365603326/photo/shot-of-a-handsome-young-man-enjoying-a-facial-at-a-spa.jpg?s=612x612&w=0&k=20&c=ESiGLijRwohSdCDg0bumxTq2scz7qk54LMjKOPYxpCI=',
       title: 'Men’s Facial Treatment',
       description: [
         'Hydrating Facial for Men',
