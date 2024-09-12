@@ -86,7 +86,7 @@ const Details = () => {
           <div className="pb-2">
             <img
               src={service.imgSrc}
-              className="h-28 w-28 rounded-lg"
+              className="h-40 w-40 rounded-lg"
               alt="service-img"
             />
           </div>
