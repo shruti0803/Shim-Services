@@ -5,8 +5,7 @@ import Navigation from './Components/Navigation';
 import Footer from './Components/Footer';
 import Services from './Components/Services';
 import Appliance from './Components/Appliances';
-import Footer from "./Components/Footer"
-import Navigation from "./Components/Navigation"
+
 
 
 import VideoCarousel from "./Components/VideoCarousel"
@@ -34,7 +33,7 @@ function App() {
      <Navigation/> 
     <Home/>
     </>
-  )
+  
 
 }
 
