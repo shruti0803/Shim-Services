@@ -3,6 +3,7 @@ import Navigation from "./Components/Navigation"
 
 
 import VideoCarousel from "./Components/VideoCarousel"
+import Home from "./Pages/Home"
 
 
 
@@ -12,7 +13,11 @@ function App() {
     <>
  
      <Navigation/> 
+
+    <Home/>
+
      <Appliance/>
+
     </>
   )
 }
