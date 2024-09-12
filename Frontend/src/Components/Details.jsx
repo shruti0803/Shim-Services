@@ -100,7 +100,7 @@ const Details = () => {
             </ul>
             <div className="mt-2">
               <button className="border-2 border-green-600 text-black px-4 py-2 rounded-md transition-all duration-300 hover:bg-green-600 hover:text-white">
-                Add
+                Book Now
               </button>
             </div>
           </div>

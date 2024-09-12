@@ -108,8 +108,8 @@ const DetailsBeauty = () => {
               ))}
             </ul>
             <div className="mt-2">
-              <button className="border-2 border-pink-600 text-black px-4 py-2 rounded-md transition-all duration-300 hover:bg-pink-600 hover:text-white">
-                Add
+              <button className="border-2 border-green-600 text-black px-4 py-2 rounded-md transition-all duration-300 hover:bg-green-600 hover:text-white">
+                Book Now
               </button>
             </div>
           </div>

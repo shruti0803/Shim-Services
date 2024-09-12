@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import BWlogo from '../assets/BWlogo.jpg'
+import { Link } from 'react-router-dom';
 
 const Navigation = () => {
     const [isNavOpen, setIsNavOpen] = useState(false);
@@ -24,22 +25,24 @@ const Navigation = () => {
                 </div>
                 {/* Show navigation links */}
                 <ul className='hidden lg:flex gap-5 list-none'>
-                    <li>Home</li>
-                    <li>About Us</li>
-                    <li>Services</li>
+                    <Link to='/'>Home</Link>
+                    <Link>About Us</Link>
+                    <Link to='/services'>Services</Link>
                 </ul>
+                <Link to="/becomeSP">
                 <div className='hidden lg:block'>
-                    <button className='bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 ml-4'>Contact Us</button>
+                    <button className='bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 ml-4'>Become Servicer</button>
                 </div>
+                </Link>
             </div>
 
             {/* Conditionally render navigation links based on toggle state */}
             {isNavOpen && (
                 <div className="lg:hidden absolute top-24 left-0 w-full bg-gray-900 py-3 px-5 flex flex-col gap-4">
                     <ul className='list-none'>
-                        <li>Home</li>
-                        <li>About Us</li>
-                        <li>Services</li>
+                        <Link to="/" >Home</Link>
+                        <Link>About Us</Link>
+                        <Link to="/services">Services</Link>
                     </ul>
                 </div>
             )}
