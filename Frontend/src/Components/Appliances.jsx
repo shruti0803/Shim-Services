@@ -64,7 +64,7 @@ const Appliance = () => {
         <div className="mx-4 md:w-1/2 mt-24 pl-5 box-border z-[-1]">
           <Carousel fade>
             <Carousel.Item>
-              <video className="w-full h-125 object-cover" src="https://videos.pexels.com/video-files/8293017/8293017-hd_1920_1080_30fps.mp4" autoPlay muted loop playsInline></video>
+              <video className="w-full h-[400px] object-cover" src="https://videos.pexels.com/video-files/8293017/8293017-hd_1920_1080_30fps.mp4" autoPlay muted loop playsInline></video>
               <Carousel.Caption>
               <div className="bg-white/30 backdrop-blur-sm p-4 rounded-md">
       <h2 className="text-2xl font-bold text-white">
@@ -74,7 +74,7 @@ const Appliance = () => {
               </Carousel.Caption>
             </Carousel.Item>
             <Carousel.Item>
-              <img className="w-full h-125 object-cover" src="https://media.istockphoto.com/id/1469519318/photo/home-appliances-household-kitchen-technics-in-appartments.jpg?s=612x612&w=0&k=20&c=7G4E68TtgAoKInU1jFtZ3JGkbAEtxCZVuMIJ2SWNSTg=" alt="carousel item" />
+              <img className="w-full h-[400px] object-cover" src="https://media.istockphoto.com/id/1469519318/photo/home-appliances-household-kitchen-technics-in-appartments.jpg?s=612x612&w=0&k=20&c=7G4E68TtgAoKInU1jFtZ3JGkbAEtxCZVuMIJ2SWNSTg=" alt="carousel item" />
               <Carousel.Caption>
 
                <div className="bg-white/30 backdrop-blur-sm p-4 rounded-md">
@@ -84,7 +84,7 @@ const Appliance = () => {
               </Carousel.Caption>
             </Carousel.Item>
             <Carousel.Item>
-              <img className="w-full h-125 object-cover" src="https://media.istockphoto.com/id/1347516184/photo/repairman-handshake-in-house-door.jpg?s=612x612&w=0&k=20&c=ePJmBK67AQ1O__VvHkMFKp7UE4rwHbSNhUTNqQ9M2j0=" alt="carousel item" />
+              <img className="w-full h-[400px] object-cover" src="https://media.istockphoto.com/id/1347516184/photo/repairman-handshake-in-house-door.jpg?s=612x612&w=0&k=20&c=ePJmBK67AQ1O__VvHkMFKp7UE4rwHbSNhUTNqQ9M2j0=" alt="carousel item" />
               <Carousel.Caption>
               <div className="bg-white/30 backdrop-blur-sm p-4 rounded-md">
               <h2 className="text-2xl font-bold text-white">All things done Right. At your pace, At your comfort.</h2>
@@ -101,7 +101,26 @@ const Appliance = () => {
         <hr></hr>
           <h2 className='font-bold text-center mt-4'>What we offer</h2>
           <div>
-          <div className='mb-4'>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Reprehenderit rerum vel sapiente porro. Molestias pariatur eos ducimus distinctio quas provident, rerum aliquid voluptas assumenda quis nemo. Voluptate sit quidem iste, impedit vero corrupti aspernatur fugit doloremque, accusantium expedita praesentium debitis.</div>
+          <div className="mb-4">
+  ShimServices provides reliable, expert repair services for a range of home appliances to ensure they run smoothly. Our offerings include:
+  
+  <ul className="list-disc list-inside mt-4">
+    <li><strong>AC Repair & Service:</strong> Comprehensive cleaning, part replacement, and cooling efficiency checks.</li>
+    
+    <li><strong>Refrigerator Repair:</strong> Complete diagnostic, part replacements, and cooling system fixes.</li>
+    
+    <li><strong>Washing Machine Repair:</strong> Expert solutions for motor, drum, and drainage issues.</li>
+    
+    <li><strong>Microwave Repair:</strong> Heating element fixes, part replacements, and safety checks.</li>
+    
+    <li><strong>Television Repair:</strong> Screen and system repairs for both LCD and LED TVs.</li>
+    
+    <li><strong>Geyser Repair:</strong> Thermostat checks, heating element replacement, and leakage fixes.</li>
+  </ul>
+
+  Count on ShimServices for hassle-free, professional appliance repair!
+</div>
+
           <hr></hr>
           <div className='mt-4'>
             <Reviews/>
