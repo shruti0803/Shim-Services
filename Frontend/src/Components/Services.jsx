@@ -58,10 +58,13 @@ function Services() {
             heading="Pest Control"
             image="https://tse3.explicit.bing.net/th?id=OIP.kmrQ-dvG9rAbyCXswDQ-tgHaHa&pid=Api&P=0&h=180"
           />
+          <Link to="/housecleaning" className="text-inherit no-underline">
           <ServiceCard
             heading="House Cleaning"
             image="https://tse2.mm.bing.net/th?id=OIP.8K7xMhlQ1yKYprBgTz8FigAAAA&pid=Api&P=0&h=180"
           />
+          </Link>
+
           <ServiceCard
             heading="Network Services"
             image="https://tse4.mm.bing.net/th?id=OIP.MS6K_WJSKuK97ydOyUTS1AHaFH&pid=Api&P=0&h=180"

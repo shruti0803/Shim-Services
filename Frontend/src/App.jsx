@@ -12,6 +12,7 @@ import BecomeSP from "./Pages/BecameSP"
 import Home from "./Pages/Home"
 import Beauty from './Components/Beauty';
 import BecomeServiceProviderForm from './Pages/BecameSP';
+import HouseCleaning from './Components/HouseCleaning';
 
 
 function App() {
@@ -24,6 +25,7 @@ function App() {
         <Route path="/" element={<Home/>} /> 
         <Route path="/appliance" element={<Appliance />} /> 
         <Route path="/beauty" element={<Beauty/>} /> 
+        <Route path="/housecleaning" element={<HouseCleaning/>} /> 
         <Route path="/services" element={<Services/>} /> 
         <Route path="/becomeSP" element={<BecomeServiceProviderForm/>} /> 
       </Routes>
