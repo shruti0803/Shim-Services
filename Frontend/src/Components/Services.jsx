@@ -20,7 +20,7 @@ function Services() {
           </button>
         </div>
 
-        {/* Update the grid layout here */}
+        {/*grid layout here */}
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 p-8">
           <ServiceCard
             heading="Electrical Repair"
