@@ -64,7 +64,7 @@ const Appliance = () => {
         <div className="mx-4 md:w-1/2 mt-24 pl-5 box-border z-[-1]">
           <Carousel fade>
             <Carousel.Item>
-              <video className="w-full h-125 object-cover" src="https://videos.pexels.com/video-files/8293017/8293017-hd_1920_1080_30fps.mp4" autoPlay muted loop playsInline></video>
+              <video className="w-full h-[400px] object-cover" src="https://videos.pexels.com/video-files/8293017/8293017-hd_1920_1080_30fps.mp4" autoPlay muted loop playsInline></video>
               <Carousel.Caption>
               <div className="bg-white/30 backdrop-blur-sm p-4 rounded-md">
       <h2 className="text-2xl font-bold text-white">
@@ -74,7 +74,7 @@ const Appliance = () => {
               </Carousel.Caption>
             </Carousel.Item>
             <Carousel.Item>
-              <img className="w-full h-125 object-cover" src="https://media.istockphoto.com/id/1469519318/photo/home-appliances-household-kitchen-technics-in-appartments.jpg?s=612x612&w=0&k=20&c=7G4E68TtgAoKInU1jFtZ3JGkbAEtxCZVuMIJ2SWNSTg=" alt="carousel item" />
+              <img className="w-full h-[400px] object-cover" src="https://media.istockphoto.com/id/1469519318/photo/home-appliances-household-kitchen-technics-in-appartments.jpg?s=612x612&w=0&k=20&c=7G4E68TtgAoKInU1jFtZ3JGkbAEtxCZVuMIJ2SWNSTg=" alt="carousel item" />
               <Carousel.Caption>
 
                <div className="bg-white/30 backdrop-blur-sm p-4 rounded-md">
@@ -84,7 +84,7 @@ const Appliance = () => {
               </Carousel.Caption>
             </Carousel.Item>
             <Carousel.Item>
-              <img className="w-full h-125 object-cover" src="https://media.istockphoto.com/id/1347516184/photo/repairman-handshake-in-house-door.jpg?s=612x612&w=0&k=20&c=ePJmBK67AQ1O__VvHkMFKp7UE4rwHbSNhUTNqQ9M2j0=" alt="carousel item" />
+              <img className="w-full h-[400px] object-cover" src="https://media.istockphoto.com/id/1347516184/photo/repairman-handshake-in-house-door.jpg?s=612x612&w=0&k=20&c=ePJmBK67AQ1O__VvHkMFKp7UE4rwHbSNhUTNqQ9M2j0=" alt="carousel item" />
               <Carousel.Caption>
               <div className="bg-white/30 backdrop-blur-sm p-4 rounded-md">
               <h2 className="text-2xl font-bold text-white">All things done Right. At your pace, At your comfort.</h2>
