@@ -1,17 +1,22 @@
-import Navigation from "./Components/Navigation"
-
-
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Navigation from './Components/Navigation';
+import Footer from './Components/Footer';
+import Services from './Components/Services';
+import Appliance from './Components/Appliances';
 
 function App() {
-  
   return (
-    <>
- 
-     <Navigation/>
-     
-     
-    </>
-  )
+    <Router>
+      <Navigation /> {/* Place Navigation outside Routes to display on all pages */}
+      <Routes>
+        <Route path="/" element={<Services />} /> {/* Home route for Services */}
+        <Route path="/appliance" element={<Appliance />} /> {/* Route for Appliance */}
+        {/* Add more routes as needed */}
+      </Routes>
+      <Footer /> {/* Place Footer outside Routes to display on all pages */}
+    </Router>
+  );
 }
 
-export default App
+export default App;
