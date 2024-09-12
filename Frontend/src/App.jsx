@@ -1,6 +1,10 @@
+import Appliance from "./Components/Appliances"
 import Navigation from "./Components/Navigation"
+
+
 import VideoCarousel from "./Components/VideoCarousel"
 import Home from "./Pages/Home"
+
 
 
 function App() {
@@ -9,7 +13,11 @@ function App() {
     <>
  
      <Navigation/> 
+
     <Home/>
+
+     <Appliance/>
+
     </>
   )
 }
