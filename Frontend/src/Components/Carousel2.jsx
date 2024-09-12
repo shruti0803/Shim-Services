@@ -19,11 +19,11 @@ const Carousel2 = () => {
       <Slider {...settings}>
         <div className='text-center'>
           <img
-            src="https://cdn.pixabay.com/photo/2024/03/06/12/13/ev-charger-installation-in-essex-8616406_640.png"
+            src="https://tse3.mm.bing.net/th?id=OIP.-fuLAFDgBJCcY77p8jEw9QHaDt&pid=Api&P=0&h=180"
             alt="Slide 1"
             className="w-100 h-64 object-cover mx-auto"
           />
-          <p className="text-gray-700 mt-4">EV Charger Installation</p>
+          <p className="text-gray-700 mt-4">Cleaning</p>
         </div>
         <div className='text-center'>
           <img
@@ -35,7 +35,7 @@ const Carousel2 = () => {
         </div>
         <div className='text-center'>
           <img
-            src="https://cdn.pixabay.com/photo/2020/01/05/20/06/lipstick-4743984_960_720.jpg"
+            src="https://tse3.mm.bing.net/th?id=OIP.xBvPXJb1cO3coFGWDG4CYgHaE8&pid=Api&P=0&h=180"
             alt="Slide 3"
             className="w-100 h-64 object-cover mx-auto"
           />
@@ -51,7 +51,7 @@ const Carousel2 = () => {
         </div>
         <div className='text-center'>
           <img
-            src="https://media.istockphoto.com/id/509040406/photo/painter-painting-a-wall-with-paint-roller.jpg"
+            src="https://media.istockphoto.com/id/509040406/photo/painter-painting-a-wall-with-paint-roller.jpg?s=612x612&w=0&k=20&c=XRAosOBMqY1WKs_j2Bdt_rlH45-aXu74kMpkfaf5klU="
             alt="Slide 5"
             className="w-100 h-64 object-cover mx-auto"
           />
