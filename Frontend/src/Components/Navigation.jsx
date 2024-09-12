@@ -29,9 +29,11 @@ const Navigation = () => {
                     <Link>About Us</Link>
                     <Link to='/services'>Services</Link>
                 </ul>
+                <Link to="/becomeSP">
                 <div className='hidden lg:block'>
-                    <button className='bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 ml-4'>Contact Us</button>
+                    <button className='bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 ml-4'>Become Servicer</button>
                 </div>
+                </Link>
             </div>
 
             {/* Conditionally render navigation links based on toggle state */}
