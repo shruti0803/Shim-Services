@@ -61,24 +61,34 @@ const Appliance = () => {
         </div>
 
         {/* Right Section */}
-        <div className="md:w-1/2 mt-24 pl-5 box-border z-[-1]">
+        <div className="mx-4 md:w-1/2 mt-24 pl-5 box-border z-[-1]">
           <Carousel fade>
             <Carousel.Item>
               <video className="w-full h-125 object-cover" src="https://videos.pexels.com/video-files/8293017/8293017-hd_1920_1080_30fps.mp4" autoPlay muted loop playsInline></video>
               <Carousel.Caption>
-                <h2 className="text-xl">Where Appliances meet Expertise!</h2>
+              <div className="bg-white/30 backdrop-blur-sm p-4 rounded-md">
+      <h2 className="text-2xl font-bold text-white">
+        Where Appliances meet Expertise!
+      </h2>
+    </div>
               </Carousel.Caption>
             </Carousel.Item>
             <Carousel.Item>
-              <img className="w-full h-125 object-cover" src="https://media.istockphoto.com/id/1267057581/photo/a-repairman-checking-the-air-conditioner.jpg?s=612x612&w=0&k=20&c=jsx63zh_etUL0QALeDZNLeE6yIA3bA2xqsv-bRtFBXM=" alt="carousel item" />
+              <img className="w-full h-125 object-cover" src="https://media.istockphoto.com/id/1469519318/photo/home-appliances-household-kitchen-technics-in-appartments.jpg?s=612x612&w=0&k=20&c=7G4E68TtgAoKInU1jFtZ3JGkbAEtxCZVuMIJ2SWNSTg=" alt="carousel item" />
               <Carousel.Caption>
-                <h2 className="text-xl">Appliance Rescue, Done Right</h2>
+
+               <div className="bg-white/30 backdrop-blur-sm p-4 rounded-md">
+      <h2 className="text-2xl font-bold text-white">
+        Appliance Rescue, Done Right</h2>
+        </div>
               </Carousel.Caption>
             </Carousel.Item>
             <Carousel.Item>
               <img className="w-full h-125 object-cover" src="https://media.istockphoto.com/id/1347516184/photo/repairman-handshake-in-house-door.jpg?s=612x612&w=0&k=20&c=ePJmBK67AQ1O__VvHkMFKp7UE4rwHbSNhUTNqQ9M2j0=" alt="carousel item" />
               <Carousel.Caption>
-                <h2 className="text-xl">All things done Right. At your pace, At your comfort.</h2>
+              <div className="bg-white/30 backdrop-blur-sm p-4 rounded-md">
+              <h2 className="text-2xl font-bold text-white">All things done Right. At your pace, At your comfort.</h2>
+              </div>
               </Carousel.Caption>
             </Carousel.Item>
           </Carousel>
@@ -86,12 +96,14 @@ const Appliance = () => {
       </div>
 
       {/* Additional Section */}
-      <div className="flex p-2.5 m-6">
-        <div className="text-xl w-1/2">
-          <h2 className='font-bold'>What we offer</h2>
+      <div className="flex flex-col-reverse md:flex-row p-2.5 m-6">
+        <div className="flex flex-col text-xl md:w-1/2">
+        <hr></hr>
+          <h2 className='font-bold text-center mt-4'>What we offer</h2>
           <div>
-          <div>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Reprehenderit rerum vel sapiente porro. Molestias pariatur eos ducimus distinctio quas provident, rerum aliquid voluptas assumenda quis nemo. Voluptate sit quidem iste, impedit vero corrupti aspernatur fugit doloremque, accusantium expedita praesentium debitis.</div>
-          <div>
+          <div className='mb-4'>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Reprehenderit rerum vel sapiente porro. Molestias pariatur eos ducimus distinctio quas provident, rerum aliquid voluptas assumenda quis nemo. Voluptate sit quidem iste, impedit vero corrupti aspernatur fugit doloremque, accusantium expedita praesentium debitis.</div>
+          <hr></hr>
+          <div className='mt-4'>
             <Reviews/>
           </div>
           </div>

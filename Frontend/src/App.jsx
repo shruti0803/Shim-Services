@@ -1,4 +1,5 @@
 import Appliance from "./Components/Appliances"
+import Footer from "./Components/Footer"
 import Navigation from "./Components/Navigation"
 
 
@@ -12,7 +13,9 @@ function App() {
     <>
  
      <Navigation/> 
+
      <Appliance/>
+    <Footer/>
     </>
   )
 }
