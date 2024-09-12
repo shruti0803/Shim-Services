@@ -70,7 +70,7 @@ export const Reviews = () => {
 
   return (
     <>
-      <h2 id="technicians" className="text-2xl font-bold my-4">Ratings & Reviews</h2>
+      <h2 id="technicians" className="text-2xl font-bold my-4 text-center">Ratings & Reviews</h2>
       <ul className="list-none m-0 p-0">
         {technicians.map((tech, index) => (
           <li key={index} className="mb-6">

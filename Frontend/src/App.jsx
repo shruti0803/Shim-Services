@@ -1,12 +1,21 @@
+
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Navigation from './Components/Navigation';
 import Footer from './Components/Footer';
 import Services from './Components/Services';
 import Appliance from './Components/Appliances';
+import Footer from "./Components/Footer"
+import Navigation from "./Components/Navigation"
+
+
+import VideoCarousel from "./Components/VideoCarousel"
+import Home from "./Pages/Home"
+
 
 function App() {
   return (
+
     <Router>
       <Navigation /> {/* Place Navigation outside Routes to display on all pages */}
       <Routes>
@@ -17,6 +26,16 @@ function App() {
       <Footer /> {/* Place Footer outside Routes to display on all pages */}
     </Router>
   );
+
+    <>
+ 
+     <Navigation/> 
+
+     <Appliance/>
+    <Footer/>
+    </>
+  )
+
 }
 
 export default App;
