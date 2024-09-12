@@ -8,6 +8,7 @@ import Footer from "./Components/Footer"
 
 
 import VideoCarousel from "./Components/VideoCarousel"
+import BecomeSP from "./Pages/BecameSP"
 import Home from "./Pages/Home"
 import Beauty from './Components/Beauty';
 
@@ -26,7 +27,6 @@ function App() {
       <Footer /> 
     </Router>
   );
-
 }
 
 export default App;
