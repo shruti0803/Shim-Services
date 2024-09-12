@@ -2,33 +2,34 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Navigation from './Components/Navigation';
-import Footer from './Components/Footer';
 import Services from './Components/Services';
 import Appliance from './Components/Appliances';
 import Footer from "./Components/Footer"
-import Navigation from "./Components/Navigation"
 
 
 import VideoCarousel from "./Components/VideoCarousel"
+import BecomeSP from "./Pages/BecameSP"
 import Home from "./Pages/Home"
+import Beauty from './Components/Beauty';
+import BecomeServiceProviderForm from './Pages/BecameSP';
 
 
 function App() {
   return (
 
     <Router>
-      <Navigation /> {/* Place Navigation outside Routes to display on all pages */}
+      <Navigation /> 
       <Routes>
-        <Route path="/" element={<Services />} /> {/* Home route for Services */}
-        <Route path="/appliance" element={<Appliance />} /> {/* Route for Appliance */}
-        {/* Add more routes as needed */}
+
+        <Route path="/" element={<Home/>} /> 
+        <Route path="/appliance" element={<Appliance />} /> 
+        <Route path="/beauty" element={<Beauty/>} /> 
+        <Route path="/services" element={<Services/>} /> 
+        <Route path="/becomeSP" element={<BecomeServiceProviderForm/>} /> 
       </Routes>
-      <Footer /> {/* Place Footer outside Routes to display on all pages */}
+      <Footer /> 
     </Router>
   );
-
-   
-
 }
 
 export default App;

@@ -22,6 +22,7 @@ const Details = () => {
   };
 
   return (
+
     <div>
       <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 gap-4">
         {services.map((service) => (
@@ -136,6 +137,32 @@ const Details = () => {
                 type="submit"
               >
                 Proceed
+
+    <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 gap-4">
+      {services.map((service) => (
+        <div
+          key={service.id}
+          className=" flex flex-col items-center justify-between border border-black rounded-lg p-4 transition-transform duration-300 hover:scale-105 mt-2"
+        >
+          <div className="pb-2">
+            <img
+              src={service.imgSrc}
+              className="h-40 w-40 rounded-lg"
+              alt="service-img"
+            />
+          </div>
+          <div className="pl-2 text-left">
+            <p className="text-green-600">30-DAY WARRANTY</p>
+            <h5 className="font-bold">{service.title}</h5>
+            <ul className="list-disc list-inside">
+              {service.description.map((desc, index) => (
+                <li key={index}>{desc}</li>
+              ))}
+            </ul>
+            <div className="mt-2">
+              <button className="border-2 border-green-600 text-black px-4 py-2 rounded-md transition-all duration-300 hover:bg-green-600 hover:text-white">
+                Book Now
+
               </button>
             </div>
           </form>
