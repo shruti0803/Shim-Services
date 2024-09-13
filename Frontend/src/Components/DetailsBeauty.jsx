@@ -1,6 +1,7 @@
 import React from 'react';
 
 const DetailsBeauty = () => {
+  
   const beautyServices = [
     {
       id: 1,
@@ -100,7 +101,7 @@ const DetailsBeauty = () => {
             />
           </div>
           <div className="pl-2 text-left">
-            <p className="text-pink-600">POPULAR SERVICE</p>
+            <p className="text-green-600">POPULAR SERVICE</p>
             <h5 className="font-bold">{service.title}</h5>
             <ul className="list-disc list-inside">
               {service.description.map((desc, index) => (
