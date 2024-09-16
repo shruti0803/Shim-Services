@@ -13,6 +13,7 @@ import Home from "./Pages/Home"
 import Beauty from './Components/Beauty';
 import BecomeServiceProviderForm from './Pages/BecameSP';
 import HouseCleaning from './Components/HouseCleaning';
+import Orders from './Pages/Orders';
 
 
 function App() {
@@ -27,6 +28,7 @@ function App() {
         <Route path="/beauty" element={<Beauty/>} /> 
         <Route path="/housecleaning" element={<HouseCleaning/>} /> 
         <Route path="/services" element={<Services/>} /> 
+        <Route path="/orders" element={<Orders/>} /> 
         <Route path="/becomeSP" element={<BecomeServiceProviderForm/>} /> 
       </Routes>
       <Footer /> 
