@@ -45,6 +45,7 @@ const Navigation = () => {
                         <li><Link to='/'>Home</Link></li>
                         <li><Link>About Us</Link></li>
                         <li><Link to='/services'>Services</Link></li>
+                        <li><Link to='/orders'>Orders</Link></li>
                         <li><Link to="/becomeSP">Become Servicer</Link></li>
                     </ul>
 
@@ -64,6 +65,7 @@ const Navigation = () => {
                         <li><Link to="/" className='py-2'>Home</Link></li>
                         <li><Link className='py-2'>About Us</Link></li>
                         <li><Link to="/services" className='py-2'>Services</Link></li>
+                        <li><Link to="/orders" className='py-2'>Orders</Link></li>
                         <li><Link to="/becomeSP" className='py-2'>Become Servicer</Link></li>
                     </ul>
                 </div>
