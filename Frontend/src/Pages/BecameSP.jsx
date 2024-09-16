@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
-
+import Select from 'react-select';
 const BecomeServiceProviderForm = () => {
   const [formData, setFormData] = useState({
-    username: '',
     fullName: '',
     email: '',
     phone: '',
-    location: '',
+    city: '', // Changed from location to city
     address: '',
     serviceCategory: '',
     subCategories: [],  // Store selected subcategories here
@@ -37,7 +36,12 @@ const BecomeServiceProviderForm = () => {
       });
     }
   };
-
+  const handleSelectChange = (selectedOptions) => {
+    setFormData({
+      ...formData,
+      languages: selectedOptions.map(option => option.value),
+    });
+  };
   const handleSubCategoryChange = (e) => {
     const { value, checked } = e.target;
     setFormData({
@@ -78,28 +82,92 @@ const BecomeServiceProviderForm = () => {
     'Evaporator Coil Cleaning',
   ];
 
+  const plumberSubCategories = [
+    'Faucet Repair',
+    'Leak Detection',
+    'Pipe Repair', 
+    'Septic Tank Cleaning',
+    'Toilet Repair',
+    'Water Heater Installation',
+  ];
+
+  const electricalSubCategories = [
+    'Ceiling Fan Installation',
+    'Electrical Safety Check Inspection',
+    'Fuse Box Replacement',
+    'Generator Installation',
+    'Light Fixture Installation',
+    'Outlet Replacement',
+    'Wiring Installation',
+  ];
+
+  // Major Indian cities for dropdown
+  const cities = [
+    'Mumbai',
+    'Delhi',
+    'Bangalore',
+    'Hyderabad',
+    'Ahmedabad',
+    'Chennai',
+    'Kolkata',
+    'Surat',
+    'Pune',
+    'Jaipur',
+    'Lucknow',
+    'Kanpur',
+    'Nagpur',
+    'Indore',
+    'Thane',
+    'Bhopal',
+    'Visakhapatnam',
+    'Patna',
+    'Vadodara',
+    'Ghaziabad',
+    'Ludhiana',
+  ];
+  const languageOptions = [
+    { value: 'English', label: 'English' },
+    { value: 'Hindi', label: 'Hindi' },
+    { value: 'Spanish', label: 'Spanish' },
+    { value: 'French', label: 'French' },
+    { value: 'German', label: 'German' },
+    // Add more language options as needed
+  ];
+  const customStyles = {
+    multiValue: (base) => ({
+      ...base,
+      borderRadius: '20px',
+      backgroundColor: '#f0f0f0',
+      margin: '2px',
+    }),
+    multiValueLabel: (base) => ({
+      ...base,
+      color: '#333',
+    }),
+    multiValueRemove: (base) => ({
+      ...base,
+      color: '#e60000',
+      ':hover': {
+        backgroundColor: '#e60000',
+        color: 'white',
+      },
+    }),
+    container: (base) => ({
+      ...base,
+      marginTop: '0.5rem',
+    }),
+    menu: (base) => ({
+      ...base,
+      borderRadius: '8px',
+      boxShadow: '0 0 0 1px rgba(0, 0, 0, 0.1)',
+    }),
+  };
   return (
-    
     <div className="max-w-3xl mx-auto p-6 bg-white shadow-md rounded-lg">
       <h2 className="text-3xl font-serif font-bold mb-6 text-center">Become a Service Provider</h2>
       <form onSubmit={handleSubmit}>
         <div className="grid grid-cols-1 gap-4">
           {/* Service Provider Information */}
-          <div>
-            <label className="block font-medium">Username</label>
-            <input
-              type="text"
-              name="username"
-              value={formData.username}
-              onChange={handleChange}
-              className="mt-1 block w-full p-2 border border-gray-300 rounded"
-              required
-              placeholder="Create a unique username"
-              pattern="[A-Za-z0-9_]{3,15}"  // Example criteria: 3-15 alphanumeric characters or underscores
-              title="Username should be 3-15 characters long, and can include letters, numbers, and underscores."
-            />
-          </div>
-
           <div>
             <label className="block font-medium">Full Name</label>
             <input
@@ -137,18 +205,21 @@ const BecomeServiceProviderForm = () => {
           </div>
 
           <div>
-            <label className="block font-medium">Location</label>
-            <input
-              type="text"
-              name="location"
-              value={formData.location}
+            <label className="block font-medium">City</label>
+            <select
+              name="city"
+              value={formData.city}
               onChange={handleChange}
               className="mt-1 block w-full p-2 border border-gray-300 rounded"
               required
-            />
+            >
+              <option value="">Select City</option>
+              {cities.map((city) => (
+                <option key={city} value={city}>{city}</option>
+              ))}
+            </select>
           </div>
 
-          {/* Address */}
           <div>
             <label className="block font-medium">Address</label>
             <input
@@ -161,7 +232,6 @@ const BecomeServiceProviderForm = () => {
             />
           </div>
 
-          {/* Service Information */}
           <div>
             <label className="block font-medium">Service Category</label>
             <select
@@ -181,6 +251,25 @@ const BecomeServiceProviderForm = () => {
           </div>
 
           {/* Conditional Subcategories */}
+          {formData.serviceCategory === 'Electrician' && (
+            <div>
+              <label className="block font-medium">Select Services</label>
+              <div className="space-y-2">
+                {electricalSubCategories.map((subCategory) => (
+                  <label key={subCategory} className="flex items-center">
+                    <input
+                      type="checkbox"
+                      value={subCategory}
+                      checked={formData.subCategories.includes(subCategory)}
+                      onChange={handleSubCategoryChange}
+                      className="mr-2"
+                    />
+                    {subCategory}
+                  </label>
+                ))}
+              </div>
+            </div>
+          )}
           {formData.serviceCategory === 'Beauty Services' && (
             <div>
               <label className="block font-medium">Select Services</label>
@@ -200,7 +289,25 @@ const BecomeServiceProviderForm = () => {
               </div>
             </div>
           )}
-
+          {formData.serviceCategory === 'Plumber' && (
+            <div>
+              <label className="block font-medium">Select Services</label>
+              <div className="space-y-2">
+                {plumberSubCategories.map((subCategory) => (
+                  <label key={subCategory} className="flex items-center">
+                    <input
+                      type="checkbox"
+                      value={subCategory}
+                      checked={formData.subCategories.includes(subCategory)}
+                      onChange={handleSubCategoryChange}
+                      className="mr-2"
+                    />
+                    {subCategory}
+                  </label>
+                ))}
+              </div>
+            </div>
+          )}
           {formData.serviceCategory === 'Appliance Repair' && (
             <div>
               <label className="block font-medium">Select Services</label>
@@ -234,65 +341,6 @@ const BecomeServiceProviderForm = () => {
           </div>
 
           <div>
-            <label className="block font-medium">Certifications (Optional)</label>
-            <input
-              type="text"
-              name="certifications"
-              value={formData.certifications}
-              onChange={handleChange}
-              className="mt-1 block w-full p-2 border border-gray-300 rounded"
-            />
-          </div>
-
-         
-
-        
-
-
-          <div>
-            <label className="block font-medium">Languages Spoken (Optional)</label>
-            <input
-              type="text"
-              name="languages"
-              value={formData.languages}
-              onChange={handleChange}
-              className="mt-1 block w-full p-2 border border-gray-300 rounded"
-            />
-          </div>
-
-          {/* Pricing Option */}
-          <div>
-            <label className="block font-medium">Pricing Option</label>
-            <div className="flex items-center space-x-4">
-              <label className="flex items-center">
-                <input
-                  type="radio"
-                  name="pricingType"
-                  value="hourly"
-                  checked={formData.pricingType === 'hourly'}
-                  onChange={handleChange}
-                  className="mr-2"
-                />
-                Hourly Rate
-              </label>
-              <label className="flex items-center">
-                <input
-                  type="radio"
-                  name="pricingType"
-                  value="perWork"
-                  checked={formData.pricingType === 'perWork'}
-                  onChange={handleChange}
-                  className="mr-2"
-                />
-                Per Work Rate
-              </label>
-            </div>
-          </div>
-
-          
-        
-
-          <div>
             <label className="block font-medium">Government ID</label>
             <input
               type="text"
@@ -304,16 +352,65 @@ const BecomeServiceProviderForm = () => {
             />
           </div>
 
-          <div className="flex items-center">
+          <div>
+            <label className="block font-medium">Certifications (if any)</label>
             <input
-              type="checkbox"
-              name="termsAccepted"
-              checked={formData.termsAccepted}
+              type="text"
+              name="certifications"
+              value={formData.certifications}
               onChange={handleChange}
-              className="mr-2"
-              required
+              className="mt-1 block w-full p-2 border border-gray-300 rounded"
             />
-            <label className="text-sm">I accept the terms and conditions</label>
+          </div>
+
+          <div>
+            <label className="block font-medium">Languages Spoken</label>
+            <Select
+              isMulti
+              name="languages"
+              options={languageOptions}
+              value={languageOptions.filter(option => formData.languages.includes(option.value))}
+              onChange={handleSelectChange}
+              styles={customStyles}
+              className="basic-multi-select"
+              classNamePrefix="select"
+              placeholder="Select languages"
+            />
+          </div>
+
+          <div>
+            <label className="block font-medium">Pricing Type</label>
+            <select
+              name="pricingType"
+              value={formData.pricingType}
+              onChange={handleChange}
+              className="mt-1 block w-full p-2 border border-gray-300 rounded"
+            >
+              <option value="hourly">Hourly</option>
+              <option value="perWork">Per Work</option>
+            </select>
+          </div>
+
+        
+
+         
+
+        
+
+      
+
+          <div>
+            <label className="flex items-center">
+              <input
+                type="checkbox"
+                name="termsAccepted"
+                checked={formData.termsAccepted}
+                onChange={handleChange}
+                className="mr-2"
+                required
+              />
+              I accept the terms and conditions
+            </label>
           </div>
 
           <div className="mt-6">
@@ -327,7 +424,6 @@ const BecomeServiceProviderForm = () => {
         </div>
       </form>
     </div>
-    
   );
 };
 
