@@ -2,7 +2,7 @@ import React, { useRef, useEffect } from 'react';
 import Carousel from 'react-bootstrap/Carousel';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Reviews } from './Reviews';
-import DetailsBeauty from './DetailsBeauty';
+import DetailsHouseCleaning from './DetailsHouseCleaning';
 
 const Card = ({ imageSrc, title }) => (
   <div className="m-4 p-1 text-center w-30 h-32 text-gray-900 transition-shadow duration-300 overflow-visible hover:shadow-lg">
@@ -11,16 +11,15 @@ const Card = ({ imageSrc, title }) => (
   </div>
 );
 
-const Beauty = () => {
+const HouseCleaning = () => {
   const cardItems = [
-    { id: 1, imageSrc: 'https://cdn.pixabay.com/photo/2018/04/03/23/04/woman-3288365_1280.jpg', title: 'Hair Styling' },
-    { id: 2, imageSrc: 'https://cdn.pixabay.com/photo/2020/03/30/18/31/portrait-4985147_1280.jpg', title: 'Bridal Makeup' },
-    { id: 3, imageSrc: 'https://cdn.pixabay.com/photo/2021/08/19/09/18/woman-6557552_1280.jpg', title: 'Facial Treatment' },
-    { id: 4, imageSrc: 'https://cdn.pixabay.com/photo/2015/07/28/22/06/nails-865121_1280.jpg', title: 'Manicure/Pedicure' },
-    { id: 5, imageSrc: 'https://cdn.pixabay.com/photo/2019/10/11/12/33/make-up-4541782_1280.jpg', title: 'Eyebrow Threading' },
-    { id: 6, imageSrc: 'https://cdn.pixabay.com/photo/2020/03/08/14/53/makeup-4912678_1280.jpg', title: 'Skin Care Treatment' },
+    { id: 1, imageSrc: 'https://cdn.pixabay.com/photo/2024/01/16/07/51/ai-generated-8511571_1280.jpg', title: 'Home Cleaning' },
+    { id: 2, imageSrc: 'https://cdn.pixabay.com/photo/2021/07/19/04/35/workers-6477163_1280.jpg', title: 'Office Cleaning' },
+    { id: 3, imageSrc: 'https://cdn.pixabay.com/photo/2014/02/17/14/28/vacuum-cleaner-268179_1280.jpg', title: 'Carpet Cleaning' },
+    { id: 4, imageSrc: 'https://cdn.pixabay.com/photo/2021/01/18/16/56/blinds-5928691_1280.jpg', title: 'Window Cleaning' },
+    { id: 5, imageSrc: 'https://cdn.pixabay.com/photo/2022/07/31/18/29/road-7356556_1280.jpg', title: 'Post-Construction Cleaning' },
+    { id: 6, imageSrc: 'https://cdn.pixabay.com/photo/2017/01/31/12/58/graffiti-2023845_1280.jpg', title: 'Move-In/Move-Out Cleaning' },
   ];
-
   const leftSectionRef = useRef(null);
 
   useEffect(() => {
@@ -47,9 +46,9 @@ const Beauty = () => {
           ref={leftSectionRef}
         >
           <div className="mb-2.5 mt-2.5 pl-4">
-            <h2 className="text-5xl font-extrabold text-center mb-4">Beauty Services</h2>
+            <h2 className="text-5xl font-extrabold text-center mb-4">House Cleaning Services</h2>
             <p className="mt-2">
-              Elevate Your Glamour. Step into ShimServices' World: Where Beauty is Celebrated, Confidence Reigns!
+              Experience ShimServices' superior house cleaning—efficiency, thoroughness, and a commitment to pristine living spaces.
             </p>
             <div className="flex items-center underline">
               <img
@@ -57,7 +56,7 @@ const Beauty = () => {
                 className="h-5 w-20 mt-2"
                 alt="rating"
               />
-              <p className="ml-2">6M+ bookings till now</p>
+              <p className="ml-2">2M+ satisfied clients</p>
             </div>
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-4">
@@ -73,7 +72,7 @@ const Beauty = () => {
             <Carousel.Item>
               <video
                 className="w-full h-[400px] object-cover"
-                src="https://videos.pexels.com/video-files/8830239/8830239-uhd_3840_2160_25fps.mp4"
+                src="https://videos.pexels.com/video-files/6196256/6196256-uhd_2560_1440_25fps.mp4"
                 autoPlay
                 muted
                 loop
@@ -81,31 +80,31 @@ const Beauty = () => {
               ></video>
               <Carousel.Caption>
                 <div className="bg-white/30 backdrop-blur-sm p-4 rounded-md">
-                  <h2 className="text-2xl font-bold text-white">Discover Your ShimStyle: Unveil Beauty, Embrace Grace</h2>
+                  <h2 className="text-2xl font-bold text-white">Discover ShimServices: Where Clean Meets Comfort</h2>
                 </div>
               </Carousel.Caption>
             </Carousel.Item>
             <Carousel.Item>
               <img
                 className="w-full h-[400px] object-cover"
-                src="https://cdn.pixabay.com/photo/2020/08/30/14/57/beautician-5529805_1280.jpg"
+                src="https://cdn.pixabay.com/photo/2024/03/28/05/50/cleaning-8660309_1280.jpg"
                 alt="carousel item"
               />
               <Carousel.Caption>
                 <div className="bg-white/30 backdrop-blur-sm p-4 rounded-md">
-                  <h2 className="text-2xl font-bold text-white">Discover ShimmerSculpt, Where Elegance Reigns</h2>
+                  <h2 className="text-2xl font-bold text-white">Thorough Cleaning for Your Peace of Mind</h2>
                 </div>
               </Carousel.Caption>
             </Carousel.Item>
             <Carousel.Item>
               <img
                 className="w-full h-[400px] object-cover"
-                src="https://cdn.pixabay.com/photo/2017/07/31/22/59/salon-2561845_1280.jpg"
+                src="https://cdn.pixabay.com/photo/2023/12/17/09/47/door-8453898_1280.jpg"
                 alt="carousel item"
               />
               <Carousel.Caption>
                 <div className="bg-white/30 backdrop-blur-sm p-4 rounded-md">
-                  <h2 className="text-2xl font-bold text-white">All things done Right. At your pace, At your comfort.</h2>
+                  <h2 className="text-2xl font-bold text-white">Clean Spaces for Healthier Living</h2>
                 </div>
               </Carousel.Caption>
             </Carousel.Item>
@@ -119,26 +118,18 @@ const Beauty = () => {
           <hr></hr>
           <h2 className="font-bold text-center mt-4">What we offer</h2>
           <div>
-          <div className="mb-4">
-  At ShimServices, we offer a range of beauty services to elevate your look and boost your confidence. Whether it's a big event or self-care, our services include:
-  
-  <ul className="list-disc list-inside mt-4">
-    <li><strong>Hair Styling:</strong> Trendy cuts, coloring, and highlights to refresh your look.</li>
-    
-    <li><strong>Bridal Makeup:</strong> Flawless makeup to make your special day perfect.</li>
-    
-    <li><strong>Facial Treatments:</strong> Hydrating, anti-aging, and customized facials for glowing skin.</li>
-    
-    <li><strong>Manicure & Pedicure:</strong> Luxurious nail care, from classic to intricate nail art.</li>
-    
-    <li><strong>Threading & Waxing:</strong> Precise shaping and smooth skin with professional care.</li>
-    
-    <li><strong>Men's Grooming:</strong> Tailored grooming services including beard trims and facials.</li>
-  </ul>
-
-  Let us help you look and feel your best at ShimServices!
-</div>
-
+            <div className="mb-4">
+              At ShimServices, we provide a wide range of house cleaning services to ensure your home is sparkling clean and hygienic. Our services include:
+              <ul className="list-disc list-inside mt-4">
+                <li><strong>Home Cleaning:</strong> Complete cleaning for all rooms, including dusting, mopping, and surface sanitization.</li>
+                <li><strong>Office Cleaning:</strong> Professional cleaning for your workplace to keep it safe and spotless.</li>
+                <li><strong>Carpet Cleaning:</strong> Deep cleaning and stain removal to restore your carpets to their original beauty.</li>
+                <li><strong>Window Cleaning:</strong> Streak-free window cleaning for crystal-clear views.</li>
+                <li><strong>Post-Construction Cleaning:</strong> Thorough cleaning after renovation or construction projects to remove debris and dust.</li>
+                <li><strong>Move-In/Move-Out Cleaning:</strong> Comprehensive cleaning to ensure your new or former home is spotless and ready for the next resident.</li>
+              </ul>
+              Let ShimServices take care of your cleaning needs so you can relax and enjoy a fresh, clean home.
+            </div>
             <hr></hr>
             <div className="mt-4">
               <Reviews />
@@ -146,11 +137,11 @@ const Beauty = () => {
           </div>
         </div>
         <div className="flex-6">
-          <DetailsBeauty/>
+          <DetailsHouseCleaning />
         </div>
       </div>
     </>
   );
 };
 
-export default Beauty;
+export default HouseCleaning;
