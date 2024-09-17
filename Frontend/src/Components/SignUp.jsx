@@ -1,49 +1,30 @@
+// src/components/SignUp.jsx
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext'; // Import useAuth
 
-const SignUp = ({ onSwitchToLogin }) => {
+const SignUp = ({ onSwitchToLogin, closeDialog }) => { // Added onCloseDialog prop
     const [signupValues, setSignupValues] = useState({
         email: '',
-        username: '',
+        fullname: '',
         password: '',
         confirmPassword: '',
         phone: ''
     });
     const [errorMessages, setErrorMessages] = useState({});
     const [successMessage, setSuccessMessage] = useState('');
-    const navigate = useNavigate(); // Hook for navigation
+    const navigate = useNavigate();
+    const { updateCurrentUser } = useAuth(); // Use AuthContext
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setSignupValues(prev => ({ ...prev, [name]: value }));
-
-        // Clear error messages related to the changed field
         setErrorMessages(prev => ({ ...prev, [name]: '' }));
     };
 
-    const validateField = async (field, value) => {
-        try {
-            const response = await fetch(`http://localhost:4002/customers/validate/${field}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ [field]: value }),
-            });
-
-            const result = await response.json();
-            if (!response.ok) {
-                setErrorMessages(prev => ({ ...prev, [field]: result.error || `Error validating ${field}` }));
-            } else {
-                setErrorMessages(prev => ({ ...prev, [field]: '' }));
-            }
-        } catch (error) {
-            setErrorMessages(prev => ({ ...prev, [field]: 'Validation error. Please try again.' }));
-        }
-    };
- 
     const handleSignUp = async () => {
-        const { email, username, password, confirmPassword, phone } = signupValues;
+        const { email, fullname, password, confirmPassword, phone } = signupValues;
 
         if (password !== confirmPassword) {
             setErrorMessages({ confirmPassword: 'Passwords do not match' });
@@ -51,25 +32,16 @@ const SignUp = ({ onSwitchToLogin }) => {
         }
 
         try {
-            // Check for existing email or username before attempting to create an account
-            await validateField('email', email);
-            await validateField('username', username);
-
-            // If there are any error messages, stop further processing
-            if (Object.values(errorMessages).some(msg => msg)) return;
-
-            // Proceed with signup if no validation errors
             const response = await fetch('http://localhost:4002/customers', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
+                    C_username: password,
+                    C_Name: fullname,
                     C_Email: email,
-                    C_username: username,
                     C_Phone: phone,
-                    C_Name: username,
-                    C_Password: password // Ensure password is included
                 }),
             });
 
@@ -77,10 +49,13 @@ const SignUp = ({ onSwitchToLogin }) => {
 
             if (response.ok) {
                 setSuccessMessage('Account created successfully');
-                setErrorMessages({}); // Clear all errors on success
+                setErrorMessages({});
                 setTimeout(() => {
+                    // Call onCloseDialog to close the dialog
+                    closeDialog();
+                    // Navigate to /option page
                     navigate('/option');
-                }, 1000); // Delay navigation for a moment to let user see success message
+                }, 1000);
             } else {
                 setErrorMessages({ general: result.error || 'Error occurred during signup' });
                 setSuccessMessage('');
@@ -109,13 +84,13 @@ const SignUp = ({ onSwitchToLogin }) => {
                     {errorMessages.email && <p className='text-red-600 text-sm'>{errorMessages.email}</p>}
                     <input
                         type="text"
-                        name="username"
-                        value={signupValues.username}
+                        name="fullname"
+                        value={signupValues.fullname}
                         onChange={handleInputChange}
-                        placeholder="Username"
+                        placeholder="Full Name"
                         className="p-3 border border-gray-300 text-black rounded text-sm w-full"
                     />
-                    {errorMessages.username && <p className='text-red-600 text-sm'>{errorMessages.username}</p>}
+                    {errorMessages.fullname && <p className='text-red-600 text-sm'>{errorMessages.fullname}</p>}
                     <input
                         type="password"
                         name="password"
