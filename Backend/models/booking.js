@@ -37,3 +37,14 @@ export const addBooking = (bookingData, callback) => {
     }
   );
 };
+export const deleteBooking = (bookingId, callback) => {
+  const query = 'DELETE FROM booking WHERE Book_ID = ?';
+
+  connection.query(query, [bookingId], (err, result) => {
+    if (err) {
+      console.error('Error deleting booking:', err);
+      return callback({ error: err.code, message: err.message }, null);
+    }
+    callback(null, result);
+  });
+};

@@ -3,7 +3,7 @@ import cors from 'cors';
 import dotenv from 'dotenv'; // Load environment variables
 import { getAllServiceProviders, addServiceProvider } from './models/serviceProvider.js';
 import { getAllCustomers, addCustomer } from './models/customer.js';
-import { getAllBookings, addBooking } from './models/booking.js';
+import { getAllBookings, addBooking,deleteBooking } from './models/booking.js';
 import { getAllServices, addService } from './models/service.js'; // Import service functions
 
 // Load environment variables
@@ -102,6 +102,18 @@ app.post('/bookings', (req, res) => {
       return res.status(500).json({ error: 'Failed to add booking' });
     }
     res.status(201).json({ message: 'Booking added', result });
+  });
+});
+
+app.delete('/bookings/:id', (req, res) => {
+  const { id } = req.params;
+
+  deleteBooking(id, (err, result) => {
+    if (err) {
+      console.error('Error deleting booking:', err);
+      return res.status(500).json({ error: 'Failed to delete booking' });
+    }
+    res.status(200).json({ message: 'Booking deleted successfully', result });
   });
 });
 
