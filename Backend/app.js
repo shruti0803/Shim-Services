@@ -4,6 +4,10 @@ import dotenv from 'dotenv'; // Load environment variables
 import { getAllServiceProviders, addServiceProvider } from './models/serviceProvider.js';
 import { getAllCustomers, addCustomer } from './models/customer.js';
 import { getAllBookings, addBooking } from './models/booking.js';
+import { getAllServices, addService } from './models/service.js'; // Import service functions
+
+// Load environment variables
+dotenv.config();
 
 // Load environment variables
 dotenv.config();
@@ -35,6 +39,9 @@ app.post('/serviceproviders', (req, res) => {
   const newProvider = req.body;
 
   // Validate request data here if needed
+  if (!newProvider.name || !newProvider.category) {
+    return res.status(400).json({ error: 'Missing required fields: name, category' });
+  }
 
   addServiceProvider(newProvider, (err, result) => {
     if (err) {
@@ -60,6 +67,9 @@ app.post('/customers', (req, res) => {
   const newCustomer = req.body;
 
   // Validate request data here if needed
+  if (!newCustomer.username || !newCustomer.email) {
+    return res.status(400).json({ error: 'Missing required fields: username, email' });
+  }
 
   addCustomer(newCustomer, (err, result) => {
     if (err) {
@@ -85,6 +95,9 @@ app.post('/bookings', (req, res) => {
   const newBooking = req.body;
 
   // Validate request data here if needed
+  if (!newBooking.Service_Name || !newBooking.Book_Date || !newBooking.Book_City) {
+    return res.status(400).json({ error: 'Missing required fields: Service_Name, Book_Date, Book_City' });
+  }
 
   addBooking(newBooking, (err, result) => {
     if (err) {
@@ -92,6 +105,34 @@ app.post('/bookings', (req, res) => {
       return res.status(500).json({ error: 'Failed to add booking' });
     }
     res.status(201).json({ message: 'Booking added', result });
+  });
+});
+
+// Service Routes
+app.get('/services', (req, res) => {
+  getAllServices((err, results) => {
+    if (err) {
+      console.error('Error retrieving services:', err);
+      return res.status(500).json({ error: 'Failed to retrieve services' });
+    }
+    res.json(results);
+  });
+});
+
+app.post('/services', (req, res) => {
+  const newService = req.body;
+
+  // Validate request data here if needed
+  if (!newService.Service_Name || !newService.Service_Category) {
+    return res.status(400).json({ error: 'Missing required fields: Service_Name, Service_Category' });
+  }
+
+  addService(newService, (err, result) => {
+    if (err) {
+      console.error('Error adding service:', err);
+      return res.status(500).json({ error: 'Failed to add service' });
+    }
+    res.status(201).json({ message: 'Service added', result });
   });
 });
 
