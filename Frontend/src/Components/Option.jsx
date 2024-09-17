@@ -1,10 +1,23 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-const Options = ({ onClose }) => {
+const Option = ({ onClose }) => {
     const [selectedOption, setSelectedOption] = useState('');
+    const navigate = useNavigate(); // Initialize the navigate function
 
     const handleOptionChange = (event) => {
         setSelectedOption(event.target.value);
+    };
+
+    const handleApply = () => {
+        if (selectedOption === 'customer') {
+            navigate('/'); // Redirect to home page for customers
+        } else if (selectedOption === 'serviceProvider') {
+            navigate('/becomeSP'); // Redirect to the service provider page
+        }
+
+        // Close the modal after navigation
+        onClose();
     };
 
     return (
@@ -61,7 +74,10 @@ const Options = ({ onClose }) => {
                     </div>
                 </div>
                 {selectedOption && (
-                    <button className='mt-4 p-4 bg-green-600 text-white rounded-lg hover:bg-green-700'>
+                    <button 
+                        onClick={handleApply} // Call handleApply on button click
+                        className='mt-4 p-4 bg-green-600 text-white rounded-lg hover:bg-green-700'
+                    >
                         {selectedOption === 'customer' ? 'Apply as a Customer' : 'Apply as a Service Provider'}
                     </button>
                 )}
@@ -70,4 +86,4 @@ const Options = ({ onClose }) => {
     );
 };
 
-export default Options;
+export default Option;

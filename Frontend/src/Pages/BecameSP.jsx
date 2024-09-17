@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import Select from 'react-select';
 const BecomeServiceProviderForm = () => {
   const [formData, setFormData] = useState({
@@ -128,9 +129,9 @@ const BecomeServiceProviderForm = () => {
   const languageOptions = [
     { value: 'English', label: 'English' },
     { value: 'Hindi', label: 'Hindi' },
-    { value: 'Spanish', label: 'Spanish' },
-    { value: 'French', label: 'French' },
-    { value: 'German', label: 'German' },
+    { value: 'Gujrati', label: 'Gujrati' },
+    { value: 'Marathi', label: 'Marathi' },
+    { value: 'Bengali', label: 'Bengali' },
     // Add more language options as needed
   ];
   const customStyles = {
@@ -414,12 +415,12 @@ const BecomeServiceProviderForm = () => {
           </div>
 
           <div className="mt-6">
-            <button
+            <Link to="/"
               type="submit"
-              className="w-full bg-green-700 text-white py-2 px-4 rounded-lg hover:bg-green-800 transition duration-200"
+              className="w-full bg-green-700 text-center text-white py-2 px-4 rounded-lg hover:bg-green-800 transition duration-200"
             >
               Submit
-            </button>
+            </Link>
           </div>
         </div>
       </form>

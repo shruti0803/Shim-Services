@@ -25,22 +25,33 @@ export const addCustomer = (customerData, callback) => {
       return callback({ error: 'Email already exists' }, null);
     }
 
-    // Insert query for adding new customer
-    const query = `
-      INSERT INTO customer (C_username, C_Name, C_Email, C_Phone)
-      VALUES (?, ?, ?, ?)
-    `;
-
-    connection.query(
-      query, 
-      [C_username, C_Name, C_Email, C_Phone],
-      (err, result) => {
-        if (err) {
-          console.error('Error inserting customer:', err);
-          return callback({ error: err.code, message: err.message }, null);
-        }
-        callback(null, result);
+    // Check if username already exists
+    connection.query('SELECT * FROM customer WHERE C_username = ?', [C_username], (err, results) => {
+      if (err) {
+        console.error('Error checking username:', err);
+        return callback(err, null);
       }
-    );
+      if (results.length > 0) {
+        return callback({ error: 'Username not available' }, null);
+      }
+
+      // Insert query for adding new customer
+      const query = `
+        INSERT INTO customer (C_username, C_Name, C_Email, C_Phone)
+        VALUES (?, ?, ?, ?)
+      `;
+
+      connection.query(
+        query, 
+        [C_username, C_Name, C_Email, C_Phone],
+        (err, result) => {
+          if (err) {
+            console.error('Error inserting customer:', err);
+            return callback({ error: err.code, message: err.message }, null);
+          }
+          callback(null, result);
+        }
+      );
+    });
   });
 };
