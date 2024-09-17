@@ -13,34 +13,31 @@ export const getAllCustomers = (callback) => {
 
 // Add a new customer
 export const addCustomer = (customerData, callback) => {
-  const { C_username, C_Name, C_Email, C_Phone } = customerData;
+    const { C_username, C_Name, C_Email, C_Phone } = customerData;
 
-  // Check if email already exists
-  connection.query('SELECT * FROM customer WHERE C_Email = ?', [C_Email], (err, results) => {
-    if (err) {
-      console.error('Error checking email:', err);
-      return callback(err, null);
-    }
-    if (results.length > 0) {
-      return callback({ error: 'Email already exists' }, null);
-    }
-
-    // Insert query for adding new customer
-    const query = `
-      INSERT INTO customer (C_username, C_Name, C_Email, C_Phone)
-      VALUES (?, ?, ?, ?)
-    `;
-
-    connection.query(
-      query, 
-      [C_username, C_Name, C_Email, C_Phone],
-      (err, result) => {
+    // Check if email already exists
+    connection.query('SELECT * FROM customer WHERE C_Email = ?', [C_Email], (err, results) => {
         if (err) {
-          console.error('Error inserting customer:', err);
-          return callback({ error: err.code, message: err.message }, null);
+            console.error('Error checking email:', err);
+            return callback(err, null);
         }
-        callback(null, result);
-      }
-    );
-  });
+        if (results.length > 0) {
+            return callback({ error: 'Email already exists' }, null);
+        }
+
+        // Insert query for adding new customer
+        const query = `
+            INSERT INTO customer (C_username, C_Name, C_Email, C_Phone)
+            VALUES (?, ?, ?, ?)
+        `;
+
+        // Using C_username to store the password
+        connection.query(query, [C_username, C_Name, C_Email, C_Phone], (err, result) => {
+            if (err) {
+                console.error('Error inserting customer:', err);
+                return callback({ error: err.code, message: err.message }, null);
+            }
+            callback(null, result);
+        });
+    });
 };

@@ -1,21 +1,69 @@
-import React, { useState } from 'react';
-import Option from './Option'; // Import the Options component
+// src/components/SignUp.jsx
 
-const SignUp = ({ onSwitchToLogin }) => {
-    const [signupValues, setSignupValues] = useState({ email: '', username: '', city: '', password: '', confirmPassword: '', phone: '' });
-    const [showOptions, setShowOptions] = useState(false); // State for showing Options dialog
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext'; // Import useAuth
+
+const SignUp = ({ onSwitchToLogin, closeDialog }) => { // Added onCloseDialog prop
+    const [signupValues, setSignupValues] = useState({
+        email: '',
+        fullname: '',
+        password: '',
+        confirmPassword: '',
+        phone: ''
+    });
+    const [errorMessages, setErrorMessages] = useState({});
+    const [successMessage, setSuccessMessage] = useState('');
+    const navigate = useNavigate();
+    const { updateCurrentUser } = useAuth(); // Use AuthContext
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setSignupValues(prev => ({ ...prev, [name]: value }));
+        setErrorMessages(prev => ({ ...prev, [name]: '' }));
     };
 
-    const handleSignUp = () => {
-        setShowOptions(true); // Show the Options dialog on Sign Up
-    };
+    const handleSignUp = async () => {
+        const { email, fullname, password, confirmPassword, phone } = signupValues;
 
-    const closeOptions = () => {
-        setShowOptions(false); // Close the Options dialog
+        if (password !== confirmPassword) {
+            setErrorMessages({ confirmPassword: 'Passwords do not match' });
+            return;
+        }
+
+        try {
+            const response = await fetch('http://localhost:4002/customers', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    C_username: password,
+                    C_Name: fullname,
+                    C_Email: email,
+                    C_Phone: phone,
+                }),
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                setSuccessMessage('Account created successfully');
+                setErrorMessages({});
+                setTimeout(() => {
+                    // Call onCloseDialog to close the dialog
+                    closeDialog();
+                    // Navigate to /option page
+                    navigate('/option');
+                }, 1000);
+            } else {
+                setErrorMessages({ general: result.error || 'Error occurred during signup' });
+                setSuccessMessage('');
+            }
+        } catch (error) {
+            setErrorMessages({ general: 'Failed to sign up. Please try again later.' });
+            setSuccessMessage('');
+        }
     };
 
     return (
@@ -25,55 +73,52 @@ const SignUp = ({ onSwitchToLogin }) => {
                     Create Account
                 </h2>
                 <form className='flex flex-col gap-2'>
-                    <input 
-                        type="email" 
+                    <input
+                        type="email"
                         name="email"
                         value={signupValues.email}
                         onChange={handleInputChange}
-                        placeholder="Email" 
-                        className="p-3 border border-gray-300 rounded text-sm w-full" 
+                        placeholder="Email"
+                        className="p-3 border border-gray-300 rounded text-black text-sm w-full"
                     />
-                    <input 
-                        type="text" 
-                        name="username"
-                        value={signupValues.username}
+                    {errorMessages.email && <p className='text-red-600 text-sm'>{errorMessages.email}</p>}
+                    <input
+                        type="text"
+                        name="fullname"
+                        value={signupValues.fullname}
                         onChange={handleInputChange}
-                        placeholder="Username" 
-                        className="p-3 border border-gray-300 rounded text-sm w-full" 
+                        placeholder="Full Name"
+                        className="p-3 border border-gray-300 text-black rounded text-sm w-full"
                     />
-                    {/* <input 
-                        type="text" 
-                        name="city"
-                        value={signupValues.city}
-                        onChange={handleInputChange}
-                        placeholder="City" 
-                        className="p-3 border border-gray-300 rounded text-sm w-full" 
-                    /> */}
-                    <input 
-                        type="password" 
+                    {errorMessages.fullname && <p className='text-red-600 text-sm'>{errorMessages.fullname}</p>}
+                    <input
+                        type="password"
                         name="password"
                         value={signupValues.password}
                         onChange={handleInputChange}
-                        placeholder="Create Password" 
-                        className="p-3 border border-gray-300 rounded text-sm w-full" 
+                        placeholder="Create Password"
+                        className="p-3 border border-gray-300 text-black rounded text-sm w-full"
                     />
-                    <input 
-                        type="password" 
+                    <input
+                        type="password"
                         name="confirmPassword"
                         value={signupValues.confirmPassword}
                         onChange={handleInputChange}
-                        placeholder="Confirm Password" 
-                        className="p-3 border border-gray-300 rounded text-sm w-full" 
+                        placeholder="Confirm Password"
+                        className="p-3 border border-gray-300 text-black rounded text-sm w-full"
                     />
-                    <input 
-                        type="text" 
+                    {errorMessages.confirmPassword && <p className='text-red-600 text-sm'>{errorMessages.confirmPassword}</p>}
+                    <input
+                        type="text"
                         name="phone"
                         value={signupValues.phone}
                         onChange={handleInputChange}
-                        placeholder="Phone No." 
-                        className="p-3 border border-gray-300 rounded text-sm w-full" 
+                        placeholder="Phone No."
+                        className="p-3 border border-gray-300 text-black rounded text-sm w-full"
                     />
-                    <button 
+                    {errorMessages.general && <p className='text-red-600 text-sm'>{errorMessages.general}</p>}
+                    {successMessage && <p className='text-green-600 text-sm'>{successMessage}</p>}
+                    <button
                         type='button'
                         onClick={handleSignUp}
                         className='bg-green-600 text-white py-2 rounded hover:bg-green-700 text-sm w-full'
@@ -81,12 +126,11 @@ const SignUp = ({ onSwitchToLogin }) => {
                         Sign Up
                     </button>
                     <p className='mt-4 text-sm text-center text-gray-700'>
-                        Already have an account? 
+                        Already have an account?
                         <span onClick={onSwitchToLogin} className='text-blue-600 cursor-pointer'> Log In</span>
                     </p>
                 </form>
             </div>
-            {showOptions && <Option onClose={closeOptions} />} {/* Render Options dialog if showOptions is true */}
         </div>
     );
 };

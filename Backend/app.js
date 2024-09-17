@@ -61,19 +61,19 @@ app.get('/customers', (req, res) => {
 });
 
 app.post('/customers', (req, res) => {
+  console.log(req.body); // Log the request body
   const newCustomer = req.body;
 
-  // Validate request data here if needed
-  if (!newCustomer.username || !newCustomer.email) {
-    return res.status(400).json({ error: 'Missing required fields: username, email' });
+  // Validate request data
+  if (!newCustomer.C_Email) {
+      return res.status(400).json({ error: 'Missing required fields: email' });
   }
 
   addCustomer(newCustomer, (err, result) => {
-    if (err) {
-      console.error('Error adding customer:', err);
-      return res.status(500).json({ error: 'Failed to add customer' });
-    }
-    res.status(201).json({ message: 'Customer added', result });
+      if (err) {
+          return res.status(500).json({ error: err.error || 'Failed to add customer' });
+      }
+      res.status(201).json({ message: 'Customer added', result });
   });
 });
 
@@ -148,5 +148,5 @@ app.post('/services', (req, res) => {
 // Start the server
 const PORT = process.env.PORT || 4002;
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+    console.log(`Server is running on port ${PORT}`);
 });
