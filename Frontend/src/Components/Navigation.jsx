@@ -1,19 +1,41 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import BWlogo from '../assets/BWlogo.jpg';
-import { Link } from 'react-router-dom';
-import DialogBox from './DialogBox'; // Import the new DialogBox component
+import { Link, useLocation } from 'react-router-dom';
+import DialogBox from './DialogBox';
+import { useAuth } from '../context/AuthContext';
 
 const Navigation = () => {
-    const [isNavOpen, setIsNavOpen] = useState(false); // Controls dialog visibility
-    const [isLoginForm, setIsLoginForm] = useState(true); // Controls form toggle (login/signup)
+    const [isNavOpen, setIsNavOpen] = useState(false);
+    const [isLoginForm, setIsLoginForm] = useState(true);
+    const [dropdownOpen, setDropdownOpen] = useState(false);
+    const { currentUser, logout } = useAuth();
+    const dropdownRef = useRef(null);
+    const location = useLocation();
 
-    const toggleForm = () => {
-        setIsLoginForm(!isLoginForm);
+    const toggleForm = () => setIsLoginForm(!isLoginForm);
+    const closeDialog = () => setIsNavOpen(false);
+
+    const handleLogout = () => {
+        logout();
+        setDropdownOpen(false);
     };
 
-    const closeDialog = () => {
-        setIsNavOpen(false); // Close the dialog
-    };
+    // Close dropdown if clicked outside
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+                setDropdownOpen(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
+
+    // Close dropdown on route change
+    useEffect(() => {
+        setDropdownOpen(false);
+    }, [location]);
 
     return (
         <div className='bg-black flex items-center h-24 md:h-20 lg:h-18 sticky top-0 z-10 px-3 text-lg text-white'>
@@ -28,10 +50,37 @@ const Navigation = () => {
                     <img src={BWlogo} alt="Logo" className='h-20' />
                 </div>
 
-                {/* Login button */}
-                <button onClick={() => setIsNavOpen(true)} className='bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 ml-4'>
-                    Log In
-                </button>
+                {/* Login button or User icon */}
+                {currentUser ? (
+                    <div className='flex items-center ml-4 relative'>
+                        <div 
+                            className='flex items-center justify-center w-8 h-8 bg-gray-600 text-white rounded-full cursor-pointer' 
+                            onClick={() => setDropdownOpen(!dropdownOpen)}
+                            ref={dropdownRef}
+                        >
+                            {currentUser.C_Name[0]} {/* Display the first letter of the user's name */}
+                        </div>
+                        {dropdownOpen && (
+                            <div className='absolute right-0 mt-2 w-40 bg-white text-black rounded-md shadow-lg' ref={dropdownRef}>
+                                <ul className='list-none p-2'>
+                                    <li className='p-2 hover:bg-gray-200'>
+                                        <Link to='/profile'>My Profile</Link>
+                                    </li>
+                                    <li className='p-2 hover:bg-gray-200'>
+                                        <Link to='/settings'>Settings</Link>
+                                    </li>
+                                    <li className='p-2 hover:bg-gray-200 cursor-pointer' onClick={handleLogout}>
+                                        Logout
+                                    </li>
+                                </ul>
+                            </div>
+                        )}
+                    </div>
+                ) : (
+                    <button onClick={() => setIsNavOpen(true)} className='bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 ml-4'>
+                        Log In
+                    </button>
+                )}
             </div>
 
             {/* Desktop view */}
@@ -47,9 +96,36 @@ const Navigation = () => {
                         <li><Link to='/orders'>Orders</Link></li>
                         <li><Link to="/becomeSP">Become Servicer</Link></li>
                     </ul>
-                    <button onClick={() => setIsNavOpen(true)} className='bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700'>
-                        Log In
-                    </button>
+                    {currentUser ? (
+                        <div className='relative flex items-center'>
+                            <div 
+                                className='flex items-center justify-center w-10 h-10 bg-green-600 text-white rounded-full cursor-pointer' 
+                                onClick={() => setDropdownOpen(!dropdownOpen)}
+                                ref={dropdownRef}
+                            >
+                                {currentUser.C_Name[0]} {/* Display the first letter of the user's name */}
+                            </div>
+                            {dropdownOpen && (
+                                <div className='absolute top-12 right-0 mt-2 w-40 bg-white text-black rounded-md shadow-lg' ref={dropdownRef}>
+                                    <ul className='list-none p-2'>
+                                        <li className='p-2 hover:bg-gray-200'>
+                                            <Link to='/profile'>My Profile</Link>
+                                        </li>
+                                        <li className='p-2 hover:bg-gray-200'>
+                                            <Link to='/settings'>Settings</Link>
+                                        </li>
+                                        <li className='p-2 hover:bg-gray-200 cursor-pointer' onClick={handleLogout}>
+                                            Logout
+                                        </li>
+                                    </ul>
+                                </div>
+                            )}
+                        </div>
+                    ) : (
+                        <button onClick={() => setIsNavOpen(true)} className='bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700'>
+                            Log In
+                        </button>
+                    )}
                 </div>
             </div>
 

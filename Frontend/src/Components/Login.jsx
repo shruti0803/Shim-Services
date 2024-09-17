@@ -15,28 +15,48 @@ const Login = ({ onSwitchToSignUp, closeDialog }) => {
 
     const handleLogin = async (e) => {
         e.preventDefault();
-
+    
         try {
-            const response = await fetch('http://localhost:4002/customers');
-            const customers = await response.json();
-
+            // Fetch customers
+            const customerResponse = await fetch('http://localhost:4002/customers');
+            const customers = await customerResponse.json();
+    
+            // Fetch service providers
+            const providerResponse = await fetch('http://localhost:4002/serviceproviders');
+            const providers = await providerResponse.json();
+    
+            // Find matching customer
             const customer = customers.find(c => c.C_Email === loginValues.email);
-
+    
             if (customer && customer.C_username === loginValues.password) {
                 login(customer);
                 setSuccessMessage('Login successful!');
                 setErrorMessage('');
                 closeDialog(); // Close the dialog after successful login
-            } else {
-                setErrorMessage('Invalid email or password');
-                setSuccessMessage('');
+                return;
             }
+    
+            // Find matching service provider
+            const provider = providers.find(p => p.SP_Email === loginValues.email);
+    
+            if (provider && provider.SP_Username === loginValues.password) {
+                login(provider);
+                setSuccessMessage('Login successful!');
+                setErrorMessage('');
+                closeDialog(); // Close the dialog after successful login
+                return;
+            }
+    
+            // If no match found
+            setErrorMessage('Invalid email or password');
+            setSuccessMessage('');
         } catch (error) {
             console.error('Error during login:', error);
             setErrorMessage('Failed to login. Please try again.');
             setSuccessMessage('');
         }
     };
+    
 
     return (
         <div className='flex items-center justify-center w-full p-6'>

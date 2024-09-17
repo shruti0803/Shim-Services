@@ -1,29 +1,26 @@
-import React, { createContext, useContext, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+// AuthContext.jsx
+import React, { createContext, useState, useContext } from 'react';
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-    const [user, setUser] = useState(null); // Store logged-in user
-    const navigate = useNavigate(); // For redirecting
+    const [currentUser, setCurrentUser] = useState(null);
 
-    const login = (userData) => {
-        setUser(userData);
-        navigate('/profile'); // Redirect to profile page
+    const login = (user) => {
+        console.log('Logging in user:', user); // Debug log
+        setCurrentUser(user);
     };
 
     const logout = () => {
-        setUser(null);
-        navigate('/login'); // Redirect to login page
+        console.log('Logging out user'); // Debug log
+        setCurrentUser(null);
     };
 
     return (
-        <AuthContext.Provider value={{ user, login, logout }}>
+        <AuthContext.Provider value={{ currentUser, login, logout }}>
             {children}
         </AuthContext.Provider>
     );
 };
 
-export const useAuth = () => {
-    return useContext(AuthContext);
-};
+export const useAuth = () => useContext(AuthContext);
