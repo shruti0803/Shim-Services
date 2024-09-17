@@ -14,12 +14,15 @@ import Beauty from './Components/Beauty';
 import BecomeServiceProviderForm from './Pages/BecameSP';
 import HouseCleaning from './Components/HouseCleaning';
 import Orders from './Pages/Orders';
+import { AuthProvider } from './context/AuthContext';
+import ProfilePage from './Pages/Profile';
 
 
 function App() {
   return (
 
     <Router>
+      <AuthProvider>
       <Navigation /> 
       <Routes>
 
@@ -30,8 +33,10 @@ function App() {
         <Route path="/services" element={<Services/>} /> 
         <Route path="/orders" element={<Orders/>} /> 
         <Route path="/becomeSP" element={<BecomeServiceProviderForm/>} /> 
+        <Route path="/profile" element={<ProfilePage/>} /> 
       </Routes>
-      <Footer /> 
+      <Footer />
+      </AuthProvider> 
     </Router>
   );
 }
