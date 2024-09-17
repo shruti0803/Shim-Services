@@ -1,6 +1,19 @@
 {
   "dependencies": {
+<<<<<<< HEAD
     "@fortawesome/free-solid-svg-icons": "^6.6.0",
     "@fortawesome/react-fontawesome": "^0.2.2"
+=======
+    "dotenv": "^16.4.5",
+    "express": "^4.21.0",
+    "mysql2": "^3.11.3"
+  },
+  "scripts": {
+    "start:backend": "nodemon backend/app.js"
+  },
+  "type": "module",
+  "devDependencies": {
+    "nodemon": "^3.1.4"
+>>>>>>> 41e8d49cd201e164c7ca68ab9a18927a78a09b57
   }
 }
