@@ -93,8 +93,14 @@ const Navigation = () => {
                         <li><Link to='/'>Home</Link></li>
                         <li><Link>About Us</Link></li>
                         <li><Link to='/services'>Services</Link></li>
-                        <li><Link to='/orders'>Orders</Link></li>
-                        <li><Link to="/becomeSP">Become Servicer</Link></li>
+
+                        {/* Show "Orders" and "Become a Servicer" only if the user is logged in */}
+                        {currentUser && (
+                            <>
+                                <li><Link to='/orders'>Orders</Link></li>
+                                <li><Link to="/becomeSP">Become a Servicer</Link></li>
+                            </>
+                        )}
                     </ul>
                     {currentUser ? (
                         <div className='relative flex items-center'>
