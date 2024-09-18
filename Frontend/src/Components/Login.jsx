@@ -27,6 +27,8 @@ const Login = ({ onSwitchToSignUp, closeDialog }) => {
     
             // Find matching customer
             const customer = customers.find(c => c.C_Email === loginValues.email);
+            console.log("customer",customer);
+            
     
             if (customer && customer.C_username === loginValues.password) {
                 login(customer);

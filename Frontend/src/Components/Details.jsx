@@ -9,50 +9,82 @@ const Details = () => {
     {
       id: 1,
       imgSrc: 'https://media.istockphoto.com/id/1353114711/photo/close-up-image-of-unrecognisable-person-doing-a-maintenance-service-on-a-household-filtration.jpg?s=612x612&w=0&k=20&c=NIMYCik-K0SUHDoI3FVD_9x9qcsBGyXf0kkfzHBbg-g=',
-      title: 'Water Purifier Repair Service',
-      description: ['Full water purifier servicing', 'Filter replacement and cleaning']
+      title: 'Appliance Compressor',
+      description: [
+        'Thorough servicing of appliance compressors',
+        'Filter replacement and comprehensive cleaning'
+      ],
+      price: 120
     },
     {
       id: 2,
       imgSrc: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcThf6ou9ZEt19JPPZtaTeI2bcjfaHRMczbFEbVEjPem8Qwkos-0Pe9RFjRePotO5_uCvJk&usqp=CAU',
-      title: 'Power Saver AC Service',
-      description: ['Advanced jet-technology service', 'Deep jet cleaning of outdoor units']
+      title: 'Appliance Filter Replacement',
+      description: [
+        'Advanced filter replacement technology',
+        'Deep cleaning of air filters'
+      ],
+      price: 80
     },
     {
       id: 3,
-      imgSrc: 'https://media.istockphoto.com/id/1410733729/photo/handyman-fixing-a-fridge-at-a-house.jpg?s=612x612&w=0&k=20&c=38J7yR303totw1TQl7CKiJaLNv7-Vor4AWGhw96Ekxw=',
-      title: 'Refrigerator Repair Service',
-      description: ['Comprehensive refrigerator service', 'Repair and part replacement']
+      imgSrc: 'https://tse4.mm.bing.net/th?id=OIP.A_j-Llwh9Y2sSRsuX3GoqQHaDu&pid=Api&P=0&h=180',
+      title: 'Appliance Gas Refill',
+      description: [
+        'Complete gas refill for refrigerators',
+        'Includes inspection and repair of leaks'
+      ],
+      price: 100
     },
     {
       id: 4,
-      imgSrc: 'https://media.istockphoto.com/id/2140183630/photo/repairman-using-a-screwdriver-disassembles-a-washing-machine-for-repair.jpg?s=612x612&w=0&k=20&c=vpLsKVsKm8LEUIBknDNzyrB8jQQHVL2Ib8oG72ymazM=',
-      title: 'Washing Machine Repair',
-      description: ['Expert washing machine repair', 'Full diagnostic and cleaning']
+      imgSrc: 'https://tse4.mm.bing.net/th?id=OIP.vm36fnWRKXKChjahir4uEwHaE8&pid=Api&P=0&h=180',
+      title: 'Appliance Installation',
+      description: [
+        'Expert installation of new appliances',
+        'Full diagnostic and testing post-installation'
+      ],
+      price: 120
     },
     {
       id: 5,
       imgSrc: 'https://media.istockphoto.com/id/1347513910/photo/microwave-control.jpg?s=612x612&w=0&k=20&c=kTHeSYMCHxPSHTqoy2U_RjqnA01tvaQvqymofctrITI=',
-      title: 'Microwave Repair Service',
-      description: ['Full microwave repair service', 'Part replacement and safety check']
+      title: 'Appliance Servicing',
+      description: [
+        'Comprehensive servicing for appliances',
+        'Includes repairs and safety checks'
+      ],
+      price: 80
     },
     {
       id: 6,
-      imgSrc: 'https://media.istockphoto.com/id/1403026048/photo/master-repairs-tv-set-connector-with-screwdriver-at-table.jpg?s=612x612&w=0&k=20&c=H5fj3hAarGgQ7coAwGtjixUaQ8RzrN4lSfU_uq05o28=',
-      title: 'Television Repair Service',
-      description: ['Screen and part repair', 'Full system diagnostic']
+      imgSrc: 'https://tse1.mm.bing.net/th?id=OIP.MOl_Fp2e77BMIhd8KwNw3QHaEI&pid=Api&P=0&h=180',
+      title: 'Duct Cleaning',
+      description: [
+        'Thorough cleaning of HVAC ducts',
+        'Includes inspection and removal of debris'
+      ],
+      price: 80
     },
     {
       id: 7,
       imgSrc: 'https://media.istockphoto.com/id/1410734240/photo/electrician-installing-an-oven-at-a-house.jpg?s=612x612&w=0&k=20&c=o9AL96Rg__M4QPnunpKh2ECo3dnGQr8oBRuTgIrJVG0=',
-      title: 'Oven Repair Service',
-      description: ['Oven service and cleaning', 'Heating element replacement']
+      title: 'Evaporator Coil Cleaning',
+      description: [
+        'Detailed cleaning of evaporator coils',
+        'Includes inspection and maintenance of the coil'
+      ],
+      price: 85
     },
     {
       id: 8,
       imgSrc: 'https://media.istockphoto.com/id/542214568/photo/he-knows-those-pipes-like-the-back-of-his-hands.jpg?s=612x612&w=0&k=20&c=O62eQCe5qKBpiffhcn53lUdNSmCA-PtNDhgbugtjN8k=',
-      title: 'Geyser Repair Service',
-      description: ['Expert geyser repair', 'Thermostat and element check']
+      title: 'Thermostat Replacement',
+      description: [
+        'Replacement of faulty thermostats',
+        'Includes calibration and testing'
+      ],
+      price: 70
     }
   ];
 
@@ -89,6 +121,8 @@ const Details = () => {
                   <li key={index}>{desc}</li>
                 ))}
               </ul>
+              <p className='font-bold text-green-600'>Initial Price: ₹{service.price}</p>
+
               <div className="mt-2">
                 <button
                   onClick={() => openDialog(service)}  // Trigger the modal

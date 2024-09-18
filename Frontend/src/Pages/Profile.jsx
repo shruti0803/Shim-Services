@@ -1,177 +1,140 @@
-import React, { useState } from 'react';
-import { FaStar, FaPencilAlt } from 'react-icons/fa'; // For star and pencil icons
-import { FiUser } from 'react-icons/fi'; // For avatar icon
+import React, { useState } from "react";
+import "@fortawesome/fontawesome-free/css/all.min.css";
 
-const ProfilePage = () => {
-  const [ongoingOrders, setOngoingOrders] = useState([
+const Profile = () => {
+  // Example orders data (you can fetch this from an API or database)
+  const orders = [
     {
-      id: 1,
-      title: 'Order 1',
-      customerName: 'Alice Smith',
-      service: 'Plumbing',
-      location: 'Downtown City',
-      time: '10:00 AM',
-      status: 'pending',
+      title: "Home Cleaning",
+      status: "Pending",
+      date: "2024-09-18",
+      customer: "John Doe",
     },
     {
-      id: 2,
-      title: 'Order 2',
-      customerName: 'Bob Johnson',
-      service: 'Cleaning',
-      location: 'Uptown City',
-      time: '02:00 PM',
-      status: 'pending',
+      title: "Plumbing Service",
+      status: "Pending",
+      date: "2024-09-20",
+      customer: "Jane Smith",
     },
-  ]);
+  ];
 
-  const [pastOrders] = useState([
-    {
-      id: 1,
-      title: 'Order A',
-      customerName: 'Sarah Lee',
-      service: 'Electrician',
-      location: 'Westside City',
-      time: '11:00 AM',
-      date: '2024-09-15',
-    },
-    {
-      id: 2,
-      title: 'Order B',
-      customerName: 'David Miller',
-      service: 'Gardening',
-      location: 'Eastside City',
-      time: '03:00 PM',
-      date: '2024-09-10',
-    },
-  ]);
+  const isServiceProvider = false; // Change this to false to hide orders
 
-  const [username, setUsername] = useState('John Doe');
-  const [isEditing, setIsEditing] = useState(false);
-  const [rating, setRating] = useState(4);
-  const [profession, setProfession] = useState('Plumber'); // Plumber or Electrician
+  // State to manage order actions (accept/decline)
+  const [orderStatuses, setOrderStatuses] = useState(
+    orders.map((order) => order.status)
+  );
 
-  const handleOrderAction = (id, action) => {
-    setOngoingOrders(orders =>
-      orders.map(order =>
-        order.id === id ? { ...order, status: action === 'accept' ? 'accepted' : 'declined' } : order
-      )
-    );
+  const handleAccept = (index) => {
+    const updatedStatuses = [...orderStatuses];
+    updatedStatuses[index] = "Accepted";
+    setOrderStatuses(updatedStatuses);
+  };
+
+  const handleDecline = (index) => {
+    const updatedStatuses = [...orderStatuses];
+    updatedStatuses[index] = "Declined";
+    setOrderStatuses(updatedStatuses);
   };
 
   return (
-    <div className="flex flex-col md:flex-row w-full h-screen font-sans">
-      {/* Left section for personal details */}
-      <div className="w-full md:w-1/4 p-6 bg-gray-100 rounded-lg shadow-lg">
-        <h2 className="text-3xl font-bold mb-4 text-gray-800">Personal Details</h2>
-
-        {/* Profile Picture Avatar */}
-        <div className="flex items-center mb-4">
-          <div className="w-16 h-16 rounded-full bg-gray-300 flex items-center justify-center">
-            <FiUser className="text-4xl text-white" />
-          </div>
-          <div className="ml-4">
-            <div className="flex items-center">
-              {/* Editable Username */}
-              {isEditing ? (
-                <input
-                  type="text"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  className="px-3 py-1 bg-white border border-gray-300 rounded-md text-sm focus:ring-indigo-500 focus:border-indigo-500"
-                />
-              ) : (
-                <p className="text-xl font-semibold text-gray-900">{username}</p>
-              )}
-              <FaPencilAlt
-                onClick={() => setIsEditing(!isEditing)}
-                className="ml-2 cursor-pointer text-gray-500 hover:text-gray-700"
-              />
-            </div>
-            <p className="text-sm text-gray-500">Username</p>
-          </div>
+    <div className="flex justify-between p-6 bg-gray-100 min-h-screen">
+      {/* Left Section - Personal Information */}
+      <div className="w-1/3 bg-white p-6 rounded-lg shadow-md">
+        <div className="text-center">
+          {/* Profile Picture */}
+          <img
+            src="https://via.placeholder.com/150"
+            alt="Profile"
+            className="rounded-full w-32 mx-auto"
+          />
+          <h2 className="text-2xl font-bold mt-4">Shruti</h2>
+          <p className="text-gray-500">shruticha@gmail.com</p>
         </div>
 
-        {/* Rating Stars */}
-        <div className="mt-4">
-          <label className="block text-sm font-medium text-gray-700">Rating</label>
-          <div className="flex items-center mt-2">
-            {[...Array(5)].map((_, index) => (
-              <FaStar
-                key={index}
-                className={`cursor-pointer ${index < rating ? 'text-yellow-500' : 'text-gray-300'}`}
-                onClick={() => setRating(index + 1)}
-              />
-            ))}
+        <div className="mt-6 space-y-4">
+          {/* Icons and Information */}
+          <div className="flex items-center">
+            <i className="fas fa-map-marker-alt text-gray-600"></i>
+            <p className="ml-2">Located in Varanasi</p>
           </div>
-        </div>
+          <div className="flex items-center">
+            <i className="fas fa-calendar-alt text-gray-600"></i>
+            <p className="ml-2">Joined in September 2024</p>
+          </div>
+          <div className="flex items-center">
+            <i className="fas fa-language text-gray-600"></i>
+            <p className="ml-2">English (Conversational)</p>
+          </div>
+          <div className="flex items-center">
+            <i className="fas fa-clock text-gray-600"></i>
+            <p className="ml-2">Preferred hours: Sat-Wed, 1:00 AM-3:00 AM</p>
+          </div>
 
-        {/* Profession (Plumber/Electrician) */}
-        <div className="mt-4">
-          <label className="block text-sm font-medium text-gray-700">Profession</label>
-          <p className="text-lg text-gray-900">{profession}</p>
-        </div>
-
-        {/* Email, Phone, Location */}
-        <div className="mt-4">
-          <p className="text-sm"><strong>Email:</strong> john.doe@example.com</p>
-          <p className="text-sm"><strong>Phone:</strong> +1234567890</p>
-          <p className="text-sm"><strong>Location:</strong> City, Country</p>
+          {/* Edit Button */}
+          <button className="flex items-center justify-center bg-gray-200 text-black py-2 px-4 rounded-md mt-4 hover:bg-gray-300">
+            <i className="fas fa-pencil-alt mr-2"></i>Edit
+          </button>
         </div>
       </div>
 
-      {/* Right section for orders */}
-      <div className="w-full md:w-3/4 p-6">
-        {/* Ongoing Orders */}
-        <div className="mb-6">
-          <h2 className="text-3xl font-bold mb-4 text-gray-800">Ongoing Orders</h2>
-          {ongoingOrders.map(order => (
-            <div
-              key={order.id}
-              className={`p-4 mb-4 border rounded-lg transition-all duration-300 ${
-                order.status === 'accepted' ? 'bg-green-100 border-green-500' : 'bg-white'
-              }`}
-            >
-              <p className="text-lg font-medium text-gray-700"><strong>Service:</strong> {order.service}</p>
-              <p className="text-md text-gray-600"><strong>Customer Name:</strong> {order.customerName}</p>
-              <p className="text-md text-gray-600"><strong>Location:</strong> {order.location}</p>
-              <p className="text-md text-gray-600"><strong>Time:</strong> {order.time}</p>
-              <p className="text-md text-gray-600"><strong>Status:</strong> {order.status}</p>
-              {order.status === 'pending' && (
-                <div className="mt-2">
-                  <button
-                    onClick={() => handleOrderAction(order.id, 'accept')}
-                    className="mr-2 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+      {/* Right Section - Orders or Explore Button */}
+      <div className="w-2/3 flex items-center justify-center bg-white p-6 rounded-lg shadow-md">
+        {isServiceProvider ? (
+          orders && orders.length > 0 ? (
+            <div className="w-full">
+              {/* Orders */}
+              <h2 className="text-xl font-semibold mb-4">Your Orders</h2>
+              <ul className="space-y-4">
+                {orders.map((order, index) => (
+                  <li
+                    key={index}
+                    className="p-4 bg-gray-100 rounded-md shadow-md"
                   >
-                    Accept
-                  </button>
-                  <button
-                    onClick={() => handleOrderAction(order.id, 'decline')}
-                    className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
-                  >
-                    Decline
-                  </button>
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
+                    <h3 className="text-lg font-bold">{order.title}</h3>
+                    <p>Customer: {order.customer}</p>
+                    <p>Date: {order.date}</p>
+                    <p>Status: {orderStatuses[index]}</p>
 
-        {/* Past Orders */}
-        <div>
-          <h2 className="text-3xl font-bold mb-4 text-gray-800">Past Orders</h2>
-          {pastOrders.map(order => (
-            <div key={order.id} className="p-4 mb-4 border rounded-lg bg-gray-50 hover:shadow-md transition-all duration-300">
-              <p className="text-lg font-medium text-gray-700"><strong>Service:</strong> {order.service}</p>
-              <p className="text-md text-gray-600"><strong>Customer Name:</strong> {order.customerName}</p>
-              <p className="text-md text-gray-600"><strong>Location:</strong> {order.location}</p>
-              <p className="text-md text-gray-600"><strong>Time:</strong> {order.time}</p>
-              <p className="text-md text-gray-600"><strong>Date:</strong> {order.date}</p>
+                    {/* Accept/Decline Buttons */}
+                    {orderStatuses[index] === "Pending" && (
+                      <div className="mt-2 flex space-x-4">
+                        <button
+                          className="bg-green-500 text-white py-1 px-4 rounded-md"
+                          onClick={() => handleAccept(index)}
+                        >
+                          Accept
+                        </button>
+                        <button
+                          className="bg-red-500 text-white py-1 px-4 rounded-md"
+                          onClick={() => handleDecline(index)}
+                        >
+                          Decline
+                        </button>
+                      </div>
+                    )}
+                  </li>
+                ))}
+              </ul>
             </div>
-          ))}
-        </div>
+          ) : (
+            <p className="text-gray-500">No orders found.</p>
+          )
+        ) : (
+          <div>
+          <img
+            src="https://www.svgrepo.com/show/259579/search.svg"
+            alt="Profile"
+            className=" m-4 p-4 h-full w-96  mx-auto"
+          />
+          <button className="bg-green-600 py-2 px-6 rounded-lg">
+            Explore Services
+          </button>
+          </div>
+        )}
       </div>
     </div>
   );
 };
 
-export default ProfilePage;
+export default Profile;

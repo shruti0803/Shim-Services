@@ -20,6 +20,7 @@ const BecomeServiceProviderForm = () => {
     governmentID: '',
     termsAccepted: false,
   });
+  
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -163,6 +164,7 @@ const BecomeServiceProviderForm = () => {
       boxShadow: '0 0 0 1px rgba(0, 0, 0, 0.1)',
     }),
   };
+  
   return (
     <div className="max-w-3xl mx-auto p-6 bg-white shadow-md rounded-lg">
       <h2 className="text-3xl font-serif font-bold mb-6 text-center">Become a Service Provider</h2>
@@ -364,63 +366,89 @@ const BecomeServiceProviderForm = () => {
             />
           </div>
 
-          <div>
+                   {/* Languages Spoken */}
+                   <div>
             <label className="block font-medium">Languages Spoken</label>
             <Select
               isMulti
               name="languages"
               options={languageOptions}
+              styles={customStyles}
               value={languageOptions.filter(option => formData.languages.includes(option.value))}
               onChange={handleSelectChange}
-              styles={customStyles}
-              className="basic-multi-select"
-              classNamePrefix="select"
-              placeholder="Select languages"
+              className="mt-1 block w-full"
             />
           </div>
 
+          {/* Government ID */}
           <div>
-            <label className="block font-medium">Pricing Type</label>
-            <select
-              name="pricingType"
-              value={formData.pricingType}
+            <label className="block font-medium">Government ID</label>
+            <input
+              type="text"
+              name="governmentID"
+              value={formData.governmentID}
               onChange={handleChange}
               className="mt-1 block w-full p-2 border border-gray-300 rounded"
-            >
-              <option value="hourly">Hourly</option>
-              <option value="perWork">Per Work</option>
-            </select>
+              required
+            />
           </div>
 
-        
-
-         
-
-        
-
-      
-
+          {/* Availability */}
           <div>
-            <label className="flex items-center">
+            <label className="block font-medium">Availability</label>
+            <div className="grid grid-cols-2 gap-2">
+              {['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'].map((day) => (
+                <div key={day}>
+                  <label className="block font-medium">{day}</label>
+                  <select
+                    name={day.toLowerCase()}
+                    value={formData[day.toLowerCase()]}
+                    onChange={handleChange}
+                    className="mt-1 block w-full p-2 border border-gray-300 rounded"
+                    required
+                  >
+                    <option value="Available">Available</option>
+                    <option value="Not Available">Not Available</option>
+                  </select>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Working Hours */}
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block font-medium">Start Hour</label>
               <input
-                type="checkbox"
-                name="termsAccepted"
-                checked={formData.termsAccepted}
+                type="time"
+                name="startHour"
+                value={formData.startHour}
                 onChange={handleChange}
-                className="mr-2"
+                className="mt-1 block w-full p-2 border border-gray-300 rounded"
                 required
               />
-              I accept the terms and conditions
-            </label>
+            </div>
+            <div>
+              <label className="block font-medium">End Hour</label>
+              <input
+                type="time"
+                name="endHour"
+                value={formData.endHour}
+                onChange={handleChange}
+                className="mt-1 block w-full p-2 border border-gray-300 rounded"
+                required
+              />
+            </div>
           </div>
 
+          {/* Submit Button */}
           <div className="mt-6">
-            <Link to="/"
+            <button
               type="submit"
-              className="w-full bg-green-700 text-center text-white py-2 px-4 rounded-lg hover:bg-green-800 transition duration-200"
+              className="w-full py-3 bg-blue-500 text-white font-bold rounded hover:bg-blue-600"
             >
               Submit
-            </Link>
+            </button>
           </div>
         </div>
       </form>
@@ -429,3 +457,4 @@ const BecomeServiceProviderForm = () => {
 };
 
 export default BecomeServiceProviderForm;
+
