@@ -536,9 +536,9 @@ const BecomeServiceProviderForm = () => {
           <div>
             <label className="inline-flex items-center">
               <input
-                type="checkbox"
-                name="termsAccepted"
-                checked={formData.termsAccepted}
+                type="time"
+                name="endHour"
+                value={formData.endHour}
                 onChange={handleChange}
                 className="form-checkbox"
                 required
@@ -568,3 +568,4 @@ const BecomeServiceProviderForm = () => {
 };
 
 export default BecomeServiceProviderForm;
+
