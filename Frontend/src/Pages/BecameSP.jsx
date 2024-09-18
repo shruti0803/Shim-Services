@@ -198,7 +198,7 @@ const BecomeServiceProviderForm = () => {
   const cities = [
     'Mumbai', 'Delhi', 'Bangalore', 'Hyderabad', 'Ahmedabad',
     'Chennai', 'Kolkata', 'Surat', 'Pune', 'Jaipur', 'Lucknow', 
-    'Kanpur', 'Nagpur', 'Indore', 'Thane', 'Bhopal', 'Visakhapatnam',
+    'Kanpur', 'Nagpur', 'Indore', 'Thane', 'Bhopal', 'Visakhapatnam','Faridabad','Ludhiana','Ghaziabad','Varanasi','Meerut','Agra','Rajkot','Vadodara','Vasai-Vihar','Pimrpi-Chinchwad','Nashik','Chhindwara','Patna','Ranchi'
   ];
 
   const languageOptions = [
