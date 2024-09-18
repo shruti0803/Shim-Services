@@ -26,7 +26,7 @@ function Orders() {
         
         
         // Filter bookings based on the current user's username
-        const filteredOrders = data.filter(order => order.C_username === currentUser.C_username);
+        const filteredOrders = data.filter(order => order.U_email === currentUser.U_email);
 
         console.log("fetched",filteredOrders);
         

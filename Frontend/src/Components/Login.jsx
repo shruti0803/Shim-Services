@@ -21,26 +21,11 @@ const Login = ({ onSwitchToSignUp, closeDialog }) => {
             const customerResponse = await fetch('http://localhost:4002/customers');
             const customers = await customerResponse.json();
     
-            // Fetch service providers
-            const providerResponse = await fetch('http://localhost:4002/serviceproviders');
-            const providers = await providerResponse.json();
-    
             // Find matching customer
-            const customer = customers.find(c => c.C_Email === loginValues.email);
+            const customer = customers.find(c => c.U_Email === loginValues.email);
     
-            if (customer && customer.C_username === loginValues.password) {
+            if (customer && customer.U_Password === loginValues.password) {
                 login(customer);
-                setSuccessMessage('Login successful!');
-                setErrorMessage('');
-                closeDialog(); // Close the dialog after successful login
-                return;
-            }
-    
-            // Find matching service provider
-            const provider = providers.find(p => p.SP_Email === loginValues.email);
-    
-            if (provider && provider.SP_Username === loginValues.password) {
-                login(provider);
                 setSuccessMessage('Login successful!');
                 setErrorMessage('');
                 closeDialog(); // Close the dialog after successful login
@@ -56,7 +41,6 @@ const Login = ({ onSwitchToSignUp, closeDialog }) => {
             setSuccessMessage('');
         }
     };
-    
 
     return (
         <div className='flex items-center justify-center w-full p-6'>

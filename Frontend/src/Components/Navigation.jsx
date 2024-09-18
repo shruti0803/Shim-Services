@@ -12,9 +12,12 @@ const Navigation = () => {
     const dropdownRef = useRef(null);
     const location = useLocation();
 
+    // Toggle between login and signup form
     const toggleForm = () => setIsLoginForm(!isLoginForm);
+    // Close the dialog
     const closeDialog = () => setIsNavOpen(false);
 
+    // Handle user logout
     const handleLogout = () => {
         logout();
         setDropdownOpen(false);
@@ -37,6 +40,9 @@ const Navigation = () => {
         setDropdownOpen(false);
     }, [location]);
 
+    // Get user initials
+    const userInitials = currentUser?.U_Name?.charAt(0) || '';
+
     return (
         <div className='bg-black flex items-center h-24 md:h-20 lg:h-18 sticky top-0 z-10 px-3 text-lg text-white'>
             {/* Mobile view container */}
@@ -58,7 +64,7 @@ const Navigation = () => {
                             onClick={() => setDropdownOpen(!dropdownOpen)}
                             ref={dropdownRef}
                         >
-                            {currentUser.C_Name[0]} {/* Display the first letter of the user's name */}
+                            {userInitials}
                         </div>
                         {dropdownOpen && (
                             <div className='absolute right-0 mt-2 w-40 bg-white text-black rounded-md shadow-lg' ref={dropdownRef}>
@@ -94,11 +100,13 @@ const Navigation = () => {
                         <li><Link>About Us</Link></li>
                         <li><Link to='/services'>Services</Link></li>
 
-                        {/* Show "Orders" and "Become a Servicer" only if the user is logged in */}
+                        {/* Show "Orders" and "Become a Servicer" based on user login and is_SP status */}
                         {currentUser && (
                             <>
                                 <li><Link to='/orders'>Orders</Link></li>
-                                <li><Link to="/becomeSP">Become a Servicer</Link></li>
+                                {!currentUser.is_SP && (
+                                    <li><Link to="/becomeSP">Become a Servicer</Link></li>
+                                )}
                             </>
                         )}
                     </ul>
@@ -109,7 +117,7 @@ const Navigation = () => {
                                 onClick={() => setDropdownOpen(!dropdownOpen)}
                                 ref={dropdownRef}
                             >
-                                {currentUser.C_Name[0]} {/* Display the first letter of the user's name */}
+                                {userInitials}
                             </div>
                             {dropdownOpen && (
                                 <div className='absolute top-12 right-0 mt-2 w-40 bg-white text-black rounded-md shadow-lg' ref={dropdownRef}>

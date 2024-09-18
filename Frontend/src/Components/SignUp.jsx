@@ -1,31 +1,34 @@
-// src/components/SignUp.jsx
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext'; // Import useAuth
+import { useAuth } from '../context/AuthContext';
 
-const SignUp = ({ onSwitchToLogin, closeDialog }) => { // Added onCloseDialog prop
+const SignUp = ({ onSwitchToLogin, closeDialog }) => {
     const [signupValues, setSignupValues] = useState({
         email: '',
         fullname: '',
         password: '',
         confirmPassword: '',
-        phone: ''
+        phone: '',
+        isSP: false // Add isSP to state
     });
     const [errorMessages, setErrorMessages] = useState({});
     const [successMessage, setSuccessMessage] = useState('');
     const navigate = useNavigate();
-    const { updateCurrentUser } = useAuth(); // Use AuthContext
+    const { signup } = useAuth();
 
     const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setSignupValues(prev => ({ ...prev, [name]: value }));
+        const { name, value, type, checked } = e.target;
+        setSignupValues(prev => ({
+            ...prev,
+            [name]: type === 'checkbox' ? checked : value
+        }));
         setErrorMessages(prev => ({ ...prev, [name]: '' }));
     };
 
     const handleSignUp = async () => {
-        const { email, fullname, password, confirmPassword, phone } = signupValues;
+        const { email, fullname, password, confirmPassword, phone, isSP } = signupValues;
 
+        // Basic validation
         if (password !== confirmPassword) {
             setErrorMessages({ confirmPassword: 'Passwords do not match' });
             return;
@@ -38,23 +41,35 @@ const SignUp = ({ onSwitchToLogin, closeDialog }) => { // Added onCloseDialog pr
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    C_username: password,
-                    C_Name: fullname,
-                    C_Email: email,
-                    C_Phone: phone,
+                    U_Email: email,
+                    U_Name: fullname,
+                    U_Password: password,
+                    U_Phone: phone,
+                    is_SP: isSP // Include isSP in the request body
                 }),
             });
 
             const result = await response.json();
 
             if (response.ok) {
+                const user = {
+                    U_Email: email,
+                    U_Name: fullname,
+                    U_Password: password,
+                    U_Phone: phone,
+                    is_SP: isSP ? 1 : 0 // Convert boolean to integer (1 for true, 0 for false)
+                };
+                signup(user); // Pass the user object to the signup function
+
                 setSuccessMessage('Account created successfully');
                 setErrorMessages({});
                 setTimeout(() => {
-                    // Call onCloseDialog to close the dialog
                     closeDialog();
-                    // Navigate to /option page
-                    navigate('/option');
+                    if(isSP === false) {  // Close dialog after success
+                        navigate('/');
+                    } else {
+                        navigate('/becomeSP');
+                    }  // Navigate after successful signup
                 }, 1000);
             } else {
                 setErrorMessages({ general: result.error || 'Error occurred during signup' });
@@ -116,6 +131,16 @@ const SignUp = ({ onSwitchToLogin, closeDialog }) => { // Added onCloseDialog pr
                         placeholder="Phone No."
                         className="p-3 border border-gray-300 text-black rounded text-sm w-full"
                     />
+                    <div className='flex items-center'>
+                        <input
+                            type="checkbox"
+                            name="isSP"
+                            checked={signupValues.isSP}
+                            onChange={handleInputChange}
+                            className="mr-2"
+                        />
+                        <label className='text-gray-700'>Are you a Service Provider?</label>
+                    </div>
                     {errorMessages.general && <p className='text-red-600 text-sm'>{errorMessages.general}</p>}
                     {successMessage && <p className='text-green-600 text-sm'>{successMessage}</p>}
                     <button

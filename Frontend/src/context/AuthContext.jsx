@@ -1,4 +1,3 @@
-// AuthContext.jsx
 import React, { createContext, useState, useContext } from 'react';
 
 const AuthContext = createContext();
@@ -16,8 +15,13 @@ export const AuthProvider = ({ children }) => {
         setCurrentUser(null);
     };
 
+    const signup = (user) => {
+        console.log('Signing up user:', user); // Debug log
+        setCurrentUser(user);
+    };
+
     return (
-        <AuthContext.Provider value={{ currentUser, login, logout }}>
+        <AuthContext.Provider value={{ currentUser,setCurrentUser, login, logout, signup }}>
             {children}
         </AuthContext.Provider>
     );
