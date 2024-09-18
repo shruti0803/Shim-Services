@@ -8,10 +8,11 @@ const DetailsBeauty = () => {
       imgSrc: 'https://media.istockphoto.com/id/1055099140/photo/making-hairstory-everyday-with-gorgeous-hair.jpg?s=612x612&w=0&k=20&c=x-Hxtr85HmZ_U5o7-KNzLCNi63drTeijFnuFcpz5kUU=',
       title: 'Hair Styling',
       description: [
-        'Haircut',
+        'Precision Haircut',
         'Blowdry & Styling',
         'Coloring & Highlights'
-      ]
+      ],
+      price: 40
     },
     {
       id: 2,
@@ -21,7 +22,8 @@ const DetailsBeauty = () => {
         'Traditional Bridal Look',
         'Airbrush Makeup',
         'Hairstyling & Accessories'
-      ]
+      ],
+      price: 50
     },
     {
       id: 3,
@@ -30,8 +32,9 @@ const DetailsBeauty = () => {
       description: [
         'Hydrating Facial',
         'Anti-aging Facial',
-        'Acne Treatment Facial'
-      ]
+        'Acne Treatment'
+      ],
+      price: 35
     },
     {
       id: 4,
@@ -41,7 +44,8 @@ const DetailsBeauty = () => {
         'Classic Manicure',
         'Spa Pedicure',
         'Nail Art & Extensions'
-      ]
+      ],
+      price: 40
     },
     {
       id: 5,
@@ -50,39 +54,42 @@ const DetailsBeauty = () => {
       description: [
         'Full Face Threading',
         'Eyebrow Shaping',
-        'Upper Lip & Chin Threading'
-      ]
+        'Upper Lip & Chin'
+      ],
+      price: 25
     },
     {
       id: 6,
-      imgSrc: 'https://media.istockphoto.com/id/1355309866/photo/gorgeous-brown-haired-woman-with-the-fresh-skin-and-delicate-makeup-is-closed-eyes-with-fill.jpg?s=612x612&w=0&k=20&c=19jbxy3WTDdaeZ2F9sa_UrOObfKdGWmMnqBQtjHl8h0=',
-      title: 'Body Treatment',
+      imgSrc: 'https://media.istockphoto.com/id/486859959/photo/eyelash-extension.jpg?s=612x612&w=0&k=20&c=ztA2zj0Pjtx53bVcwLZWt8bFRtM5vN6gxpOyzyU6R2w=',
+      title: 'Eyelash Extension',
       description: [
-        'Deep Cleansing Treatment',
-        'Microdermabrasion',
-        'Chemical Peels'
-      ]
+        'Lash Extensions',
+        'Deep Cleansing',
+        'Microdermabrasion'
+      ],
+      price: 75
     },
-    
     {
       id: 7,
-      imgSrc: 'https://cdn.pixabay.com/photo/2020/05/24/01/53/barber-5212050_1280.jpg',
-      title: 'Beard Grooming',
+      imgSrc: 'https://media.istockphoto.com/id/1366228042/photo/facial-aesthetics-surgery-treatment.jpg?s=612x612&w=0&k=20&c=7zOyHVSkG1FrdqUqG1jXWWdPquSKXotFbvujX1SwPyw=',
+      title: 'Skin Care Treatment',
       description: [
         'Beard Shaping',
-        'Beard Trimming & Styling',
-        'Beard Oil & Care Treatment'
-      ]
+        'Trimming & Styling',
+        'Beard Oil Treatment'
+      ],
+      price: 45
     },
     {
       id: 8,
-      imgSrc: 'https://media.istockphoto.com/id/1365603326/photo/shot-of-a-handsome-young-man-enjoying-a-facial-at-a-spa.jpg?s=612x612&w=0&k=20&c=ESiGLijRwohSdCDg0bumxTq2scz7qk54LMjKOPYxpCI=',
-      title: 'Men’s Facial Treatment',
+      imgSrc: 'https://media.istockphoto.com/id/504242575/photo/total-bliss.jpg?s=612x612&w=0&k=20&c=LNDbygaPEdFC2OmjS3ibjSjmEMVVEM7YCb8wtXRWWVM=',
+      title: 'Facial Treatment',
       description: [
         'Hydrating Facial for Men',
-        'Anti-aging Facial',
+        'Anti-aging Treatment',
         'Exfoliation & Cleansing'
-      ]
+      ],
+      price: 35
     }
   ];
 
@@ -108,6 +115,7 @@ const DetailsBeauty = () => {
                 <li key={index}>{desc}</li>
               ))}
             </ul>
+            <p className='font-bold text-green-600'>Initial Price: ₹{service.price}</p>
             <div className="mt-2">
               <button className="border-2 border-green-600 text-black px-4 py-2 rounded-md transition-all duration-300 hover:bg-green-600 hover:text-white">
                 Book Now
