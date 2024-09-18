@@ -1,23 +1,38 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios'; // Import axios for making HTTP requests
 
 const Option = ({ onClose }) => {
     const [selectedOption, setSelectedOption] = useState('');
     const navigate = useNavigate(); // Initialize the navigate function
 
-    const handleOptionChange = (event) => {
+    // Assuming you have the user ID from context or a higher component
+    const userId = 'user-id-placeholder'; // Replace with actual user ID
+
+    const handleOptionChange = (event) => {``
         setSelectedOption(event.target.value);
     };
 
-    const handleApply = () => {
-        if (selectedOption === 'customer') {
-            navigate('/'); // Redirect to home page for customers
-        } else if (selectedOption === 'serviceProvider') {
-            navigate('/becomeSP'); // Redirect to the service provider page
-        }
+    const handleApply = async () => {
+        try {
+            if (selectedOption === 'serviceProvider') {
+                // Update is_SP in the backend
+                await axios.put(`http://localhost:4002/customers/${userId}`, {
+                    is_SP: true
+                });
+            }
 
-        // Close the modal after navigation
-        onClose();
+            if (selectedOption === 'customer') {
+                navigate('/'); // Redirect to home page for customers
+            } else if (selectedOption === 'serviceProvider') {
+                navigate('/becomeSP'); // Redirect to the service provider page
+            }
+
+            // Close the modal after navigation
+            onClose();
+        } catch (error) {
+            console.error('Error updating is_SP:', error);
+        }
     };
 
     return (

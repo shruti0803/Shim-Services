@@ -123,6 +123,8 @@ const Details = () => {
               </ul>
               <p className='font-bold text-green-600'>Initial Price: ₹{service.price}</p>
 
+              <p className='font-bold text-green-600'>Initial Price: ₹{service.price}</p>
+
               <div className="mt-2">
                 <button
                   onClick={() => openDialog(service)}  // Trigger the modal

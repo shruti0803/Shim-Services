@@ -1,35 +1,75 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';  
 import { Link } from 'react-router-dom';
 import Select from 'react-select';
+import { useAuth } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 const BecomeServiceProviderForm = () => {
+  const { currentUser,setCurrentUser } = useAuth();
+  const [selectedDays, setSelectedDays] = useState([]);
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
     phone: '',
-    city: '', // Changed from location to city
+    state: '',
+    country:'',
+    city: '',
     address: '',
     serviceCategory: '',
-    subCategories: [],  // Store selected subcategories here
+    subCategories: [], // Added to store selected subcategories
     experience: '',
     certifications: '',
-    languages: '',
-    pricingType: 'hourly',  // Pricing type: hourly or per work
+    languages: [],
+    pricingType: 'hourly',
     hourlyRate: '',
     perWorkRate: '',
     paymentOptions: '',
     governmentID: '',
     termsAccepted: false,
   });
-  
+
+  useEffect(() => {
+    if (currentUser) {
+      setFormData({
+        ...formData,
+        fullName: currentUser.U_Name || '',
+        email: currentUser.U_Email || '',
+        phone: currentUser.U_Phone || '',
+        
+      });
+    }
+  }, [currentUser]);
+
+  const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+
+  const onClose = () => {
+    // Navigate to homepage when Cancel is clicked
+    if(setCurrentUser && currentUser){
+      setCurrentUser({ ...currentUser, is_SP: 0 });
+    }
+    navigate('/');
+  };
+
+  const handleDaySelect = (e) => {
+    const day = e.target.value;
+    if (day && !selectedDays.includes(day)) {
+      setSelectedDays((prevDays) => [...prevDays, day]);
+    }
+  };
+
+  const removeDay = (day) => {
+    setSelectedDays((prevDays) => prevDays.filter((d) => d !== day));
+  };
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     if (name === 'serviceCategory') {
-      // Handle category change to populate subcategories
+      // Reset subcategories based on selected category
       setFormData({
         ...formData,
         [name]: value,
-        subCategories: [], // Clear previous selections
+        subCategories: categoryToSubCategories[value] || [], // Updated here
       });
     } else {
       setFormData({
@@ -38,12 +78,14 @@ const BecomeServiceProviderForm = () => {
       });
     }
   };
+
   const handleSelectChange = (selectedOptions) => {
     setFormData({
       ...formData,
       languages: selectedOptions.map(option => option.value),
     });
   };
+
   const handleSubCategoryChange = (e) => {
     const { value, checked } = e.target;
     setFormData({
@@ -54,87 +96,119 @@ const BecomeServiceProviderForm = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {  // Mark the function as async
     e.preventDefault();
-    // Handle form submission, send data to backend
+    // currentUser.is_SP=1;
     console.log('Form data submitted:', formData);
+    const formDataToSend = {
+      SP_Email: formData.email,
+      SP_PIN: formData.pincode,
+      Monday: selectedDays.includes('Monday') ? 'Available' : 'Not Available',
+      Tuesday: selectedDays.includes('Tuesday') ? 'Available' : 'Not Available',
+      Wednesday: selectedDays.includes('Wednesday') ? 'Available' : 'Not Available',
+      Thursday: selectedDays.includes('Thursday') ? 'Available' : 'Not Available',
+      Friday: selectedDays.includes('Friday') ? 'Available' : 'Not Available',
+      Saturday: selectedDays.includes('Saturday') ? 'Available' : 'Not Available',
+      Sunday: selectedDays.includes('Sunday') ? 'Available' : 'Not Available',
+      LanguageSpoken: formData.languages.join(', '),
+      GovernmentID: formData.governmentID,
+      CityName: formData.city,
+      State: formData.state,
+      Country: 'India' // or use formData.country if you add it to your state
+    };
+    
+    // Proceed with sending formDataToSend to your API
+    
+  
+    try {
+      const response = await fetch('http://localhost:4002/serviceproviders', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formDataToSend),
+      });
+  
+      const result = await response.json();
+  
+      if (response.ok) {
+        console.log('Service provider added successfully:', result);
+        navigate('/');
+        if (setCurrentUser && currentUser) {
+          setCurrentUser({ ...currentUser, is_SP: 1 });
+      }
+        // Optionally, you can redirect or show a success message here
+      } else {
+        console.error('Error adding service provider:', result);
+        // Optionally, show an error message to the user
+      }
+    } catch (error) {
+      console.error('Network error:', error);
+      // Optionally, show a network error message to the user
+    }
+};
+
+
+  const [subCategories, setSubCategories] = useState([]); // State for subcategories
+
+  const categoryToSubCategories = {
+    'Appliance Repair': [
+      'Appliance Installation', 'Appliance Servicing', 'Appliance Gas Refill',
+      'Compressor Repair', 'Filter Replacement', 'Duct Cleaning',
+      'Thermostat Replacement', 'Evaporator Coil Cleaning',
+    ],
+    'Automobile Services': [
+      'Brake Repair', 'Car Detailing', 'Engine Tune-Up', 'Oil Change', 'Tire Rotation'
+    ],
+    'Beauty Services': [
+      'Body Waxing', 'Bridal Makeup', 'Eyebrow Threading', 'Eyelash Extensions', 'Facial Treatment',
+      'Hair Styling', 'Manicure/Pedicure', 'Skin Care Treatment'
+    ],
+    'Carpentry': [
+      'Cabinet Installation', 'Custom Furniture Building', 'Deck Construction', 'Door Repair',
+      'Flooring Installation', 'Furniture Repair', 'Shelving Installation', 'Trim Installation'
+    ],
+    'Electrical Repair': [
+      'Ceiling Fan Installation', 'Electrical Safety Check Inspection', 'Fuse Box Replacement',
+      'Generator Installation', 'Light Fixture Installation', 'Outlet Replacement', 'Wiring Installation'
+    ],
+    'Gardening Services': [
+      'Garden Design', 'Hedge Trimming', 'Lawn Mowing', 'Tree Pruning', 'Weed Control'
+    ],
+    'House Cleaning': [
+      'Bathroom Cleaning', 'Carpet Cleaning', 'Deep Cleaning', 'Kitchen Cleaning', 
+      'Post-Construction Cleaning', 'Regular Cleaning', 'Window Cleaning'
+    ],
+    'Network Services': [
+      'Network Installation', 'Network Security Audit', 'Network Troubleshooting', 'Wireless Network Setup'
+    ],
+    'Painting Services': [
+      'Cabinet Refinishing', 'Exterior Painting', 'Interior Painting', 'Wallpaper Installation'
+    ],
+    'Pest Control Services': [
+      'Ant Control', 'Bed Bug Extermination', 'Insect Control', 'Mosquito Treatment', 
+      'Rodent Control', 'Termite Treatment'
+    ],
+    'Plumbing Services': [
+      'Faucet Repair', 'Leak Detection', 'Pipe Repair', 'Septic Tank Cleaning', 
+      'Toilet Repair', 'Water Heater Installation'
+    ]
   };
 
-  // Predefined subcategories for "Beauty Services"
-  const beautySubCategories = [
-    'Hair Styling',
-    'Bridal Makeup',
-    'Facial Treatment',
-    'Manicure/Pedicure',
-    'Eyebrow Threading',
-    'Body Waxing',
-    'Skin Care Treatment',
-    'Eyelash Extensions',
-  ];
-
-  // Predefined subcategories for "Appliance Repair"
-  const applianceRepairSubCategories = [
-    'Appliance Installation',
-    'Appliance Servicing',
-    'Appliance Gas Refill',
-    'Appliance Compressor Repair',
-    'Appliance Filter Replacement',
-    'Duct Cleaning',
-    'Thermostat Replacement',
-    'Evaporator Coil Cleaning',
-  ];
-
-  const plumberSubCategories = [
-    'Faucet Repair',
-    'Leak Detection',
-    'Pipe Repair', 
-    'Septic Tank Cleaning',
-    'Toilet Repair',
-    'Water Heater Installation',
-  ];
-
-  const electricalSubCategories = [
-    'Ceiling Fan Installation',
-    'Electrical Safety Check Inspection',
-    'Fuse Box Replacement',
-    'Generator Installation',
-    'Light Fixture Installation',
-    'Outlet Replacement',
-    'Wiring Installation',
-  ];
-
-  // Major Indian cities for dropdown
   const cities = [
-    'Mumbai',
-    'Delhi',
-    'Bangalore',
-    'Hyderabad',
-    'Ahmedabad',
-    'Chennai',
-    'Kolkata',
-    'Surat',
-    'Pune',
-    'Jaipur',
-    'Lucknow',
-    'Kanpur',
-    'Nagpur',
-    'Indore',
-    'Thane',
-    'Bhopal',
-    'Visakhapatnam',
-    'Patna',
-    'Vadodara',
-    'Ghaziabad',
-    'Ludhiana',
+    'Mumbai', 'Delhi', 'Bangalore', 'Hyderabad', 'Ahmedabad',
+    'Chennai', 'Kolkata', 'Surat', 'Pune', 'Jaipur', 'Lucknow', 
+    'Kanpur', 'Nagpur', 'Indore', 'Thane', 'Bhopal', 'Visakhapatnam',
   ];
+
   const languageOptions = [
     { value: 'English', label: 'English' },
     { value: 'Hindi', label: 'Hindi' },
-    { value: 'Gujrati', label: 'Gujrati' },
+    { value: 'Gujarati', label: 'Gujarati' },
     { value: 'Marathi', label: 'Marathi' },
     { value: 'Bengali', label: 'Bengali' },
-    // Add more language options as needed
   ];
+
   const customStyles = {
     multiValue: (base) => ({
       ...base,
@@ -154,23 +228,20 @@ const BecomeServiceProviderForm = () => {
         color: 'white',
       },
     }),
-    container: (base) => ({
-      ...base,
-      marginTop: '0.5rem',
-    }),
-    menu: (base) => ({
-      ...base,
-      borderRadius: '8px',
-      boxShadow: '0 0 0 1px rgba(0, 0, 0, 0.1)',
-    }),
   };
-  
+
+  useEffect(() => {
+    // Update subCategories when serviceCategory changes
+    setSubCategories(categoryToSubCategories[formData.serviceCategory] || []);
+  }, [formData.serviceCategory]);
+
   return (
     <div className="max-w-3xl mx-auto p-6 bg-white shadow-md rounded-lg">
-      <h2 className="text-3xl font-serif font-bold mb-6 text-center">Become a Service Provider</h2>
+      <h2 className="text-3xl font-serif font-bold mb-6 text-center">
+        Become a Service Provider
+      </h2>
       <form onSubmit={handleSubmit}>
         <div className="grid grid-cols-1 gap-4">
-          {/* Service Provider Information */}
           <div>
             <label className="block font-medium">Full Name</label>
             <input
@@ -206,37 +277,77 @@ const BecomeServiceProviderForm = () => {
               required
             />
           </div>
+          <div className="flex items-center gap-4">
+  <div className="flex-1">
+    <label className="block font-medium">State</label>
+    <input
+      type="text"
+      name="state"
+      value={formData.state}
+      onChange={handleChange}
+      className="mt-1 block w-full p-2 border border-gray-300 rounded"
+      required
+    />
+  </div>
+  <div className="flex-1">
+    <label className="block font-medium">Country</label>
+    <input
+      type="text"
+      name="country"
+      value={formData.country}
+      onChange={handleChange}
+      className="mt-1 block w-full p-2 border border-gray-300 rounded"
+      required
+    />
+  </div>
+</div>
+
+<div className="flex items-center gap-4">
+  <div className="flex-1">
+    <label className="block font-medium">City</label>
+    <select
+      name="city"
+      value={formData.city}
+      onChange={handleChange}
+      className="mt-1 block w-full p-2 border border-gray-300 rounded"
+      required
+    >
+      <option value="">Select City</option>
+      {cities.map((city) => (
+        <option key={city} value={city}>{city}</option>
+      ))}
+    </select>
+  </div>
+  <div className="flex-1">
+    <label className="block font-medium">Pincode</label>
+    <input
+      type="text"
+      name="pincode"
+      value={formData.pincode}
+      onChange={handleChange}
+      className="mt-1 block w-full p-2 border border-gray-300 rounded"
+      required
+    />
+  </div>
+</div>
+
+
+
+<div>
+  <label className="block font-medium">Address</label>
+  <input
+    type="text"
+    name="address"
+    value={formData.address}
+    onChange={handleChange}
+    className="mt-1 block w-full p-2 border border-gray-300 rounded"
+    required
+  />
+</div>
+
 
           <div>
-            <label className="block font-medium">City</label>
-            <select
-              name="city"
-              value={formData.city}
-              onChange={handleChange}
-              className="mt-1 block w-full p-2 border border-gray-300 rounded"
-              required
-            >
-              <option value="">Select City</option>
-              {cities.map((city) => (
-                <option key={city} value={city}>{city}</option>
-              ))}
-            </select>
-          </div>
-
-          <div>
-            <label className="block font-medium">Address</label>
-            <input
-              type="text"
-              name="address"
-              value={formData.address}
-              onChange={handleChange}
-              className="mt-1 block w-full p-2 border border-gray-300 rounded"
-              required
-            />
-          </div>
-
-          <div>
-            <label className="block font-medium">Service Category</label>
+            <label className="block font-medium">Select Service Category</label>
             <select
               name="serviceCategory"
               value={formData.serviceCategory}
@@ -245,142 +356,171 @@ const BecomeServiceProviderForm = () => {
               required
             >
               <option value="">Select Category</option>
-              <option value="Plumber">Plumber</option>
-              <option value="Electrician">Electrician</option>
-              <option value="Carpenter">Carpenter</option>
-              <option value="Beauty Services">Beauty Services</option>
               <option value="Appliance Repair">Appliance Repair</option>
+              <option value="Automobile Services">Automobile Services</option>
+              <option value="Beauty Services">Beauty Services</option>
+              <option value="Carpentry">Carpentry</option>
+              <option value="Electrical Repair">Electrical Repair</option>
+              <option value="Gardening Services">Gardening Services</option>
+              <option value="House Cleaning">House Cleaning</option>
+              <option value="Network Services">Network Services</option>
+              <option value="Painting Services">Painting Services</option>
+              <option value="Pest Control Services">Pest Control Services</option>
+              <option value="Plumbing Services">Plumbing Services</option>
             </select>
           </div>
 
-          {/* Conditional Subcategories */}
-          {formData.serviceCategory === 'Electrician' && (
-            <div>
-              <label className="block font-medium">Select Services</label>
-              <div className="space-y-2">
-                {electricalSubCategories.map((subCategory) => (
-                  <label key={subCategory} className="flex items-center">
-                    <input
-                      type="checkbox"
-                      value={subCategory}
-                      checked={formData.subCategories.includes(subCategory)}
-                      onChange={handleSubCategoryChange}
-                      className="mr-2"
-                    />
-                    {subCategory}
-                  </label>
+          <div>
+            <label className="block font-medium">Select Subcategories</label>
+            {subCategories.length > 0 ? (
+              <div>
+                {subCategories.map((subCategory) => (
+                  <div key={subCategory}>
+                    <label className="inline-flex items-center">
+                      <input
+                        type="checkbox"
+                        value={subCategory}
+                        checked={formData.subCategories.includes(subCategory)}
+                        onChange={handleSubCategoryChange}
+                        className="form-checkbox"
+                      />
+                      <span className="ml-2">{subCategory}</span>
+                    </label>
+                  </div>
                 ))}
               </div>
-            </div>
-          )}
-          {formData.serviceCategory === 'Beauty Services' && (
-            <div>
-              <label className="block font-medium">Select Services</label>
-              <div className="space-y-2">
-                {beautySubCategories.map((subCategory) => (
-                  <label key={subCategory} className="flex items-center">
-                    <input
-                      type="checkbox"
-                      value={subCategory}
-                      checked={formData.subCategories.includes(subCategory)}
-                      onChange={handleSubCategoryChange}
-                      className="mr-2"
-                    />
-                    {subCategory}
-                  </label>
-                ))}
-              </div>
-            </div>
-          )}
-          {formData.serviceCategory === 'Plumber' && (
-            <div>
-              <label className="block font-medium">Select Services</label>
-              <div className="space-y-2">
-                {plumberSubCategories.map((subCategory) => (
-                  <label key={subCategory} className="flex items-center">
-                    <input
-                      type="checkbox"
-                      value={subCategory}
-                      checked={formData.subCategories.includes(subCategory)}
-                      onChange={handleSubCategoryChange}
-                      className="mr-2"
-                    />
-                    {subCategory}
-                  </label>
-                ))}
-              </div>
-            </div>
-          )}
-          {formData.serviceCategory === 'Appliance Repair' && (
-            <div>
-              <label className="block font-medium">Select Services</label>
-              <div className="space-y-2">
-                {applianceRepairSubCategories.map((subCategory) => (
-                  <label key={subCategory} className="flex items-center">
-                    <input
-                      type="checkbox"
-                      value={subCategory}
-                      checked={formData.subCategories.includes(subCategory)}
-                      onChange={handleSubCategoryChange}
-                      className="mr-2"
-                    />
-                    {subCategory}
-                  </label>
-                ))}
-              </div>
-            </div>
-          )}
+            ) : (
+              <p className="text-gray-500">No subcategories available for this category</p>
+            )}
+          </div>
 
           <div>
-            <label className="block font-medium">Experience (Years)</label>
-            <input
-              type="number"
+            <label className="block font-medium">Experience</label>
+            <textarea
               name="experience"
               value={formData.experience}
               onChange={handleChange}
               className="mt-1 block w-full p-2 border border-gray-300 rounded"
+              rows="3"
               required
             />
           </div>
 
           <div>
-            <label className="block font-medium">Government ID</label>
-            <input
-              type="text"
-              name="governmentID"
-              value={formData.governmentID}
-              onChange={handleChange}
-              className="mt-1 block w-full p-2 border border-gray-300 rounded"
-              required
-            />
-          </div>
-
-          <div>
-            <label className="block font-medium">Certifications (if any)</label>
-            <input
-              type="text"
+            <label className="block font-medium">Certifications</label>
+            <textarea
               name="certifications"
               value={formData.certifications}
               onChange={handleChange}
               className="mt-1 block w-full p-2 border border-gray-300 rounded"
+              rows="3"
             />
           </div>
 
-                   {/* Languages Spoken */}
-                   <div>
-            <label className="block font-medium">Languages Spoken</label>
+          <div>
+            <label className="block font-medium">Languages</label>
             <Select
               isMulti
-              name="languages"
               options={languageOptions}
-              styles={customStyles}
               value={languageOptions.filter(option => formData.languages.includes(option.value))}
               onChange={handleSelectChange}
-              className="mt-1 block w-full"
+              className="mt-1"
+              styles={customStyles}
             />
           </div>
 
-          {/* Government ID */}
+          <label className="block font-medium">Availability</label>
+      {/* Dropdown for selecting days */}
+      <select
+        onChange={handleDaySelect}
+        className="w-full p-2 border border-gray-300 rounded mb-4"
+        defaultValue=""
+      >
+        <option value="" disabled>
+          Select a day
+        </option>
+        {days.map((day) => (
+          <option key={day} value={day}>
+            {day}
+          </option>
+        ))}
+      </select>
+
+      {/* Display selected days as boxes */}
+      <div className="flex flex-wrap gap-2">
+        {selectedDays.map((day, index) => (
+          <div
+            key={index}
+            className="bg-blue-200 text-black px-3 py-1 rounded-md flex items-center space-x-2"
+          >
+            <span>{day}</span>
+            <button
+              onClick={() => removeDay(day)}
+              className="text-red-500 hover:text-red-700"
+            >
+              &times;
+            </button>
+          </div>
+        ))}
+      </div>
+
+
+
+          <div>
+            <label className="block font-medium">Pricing Type</label>
+            <select
+              name="pricingType"
+              value={formData.pricingType}
+              onChange={handleChange}
+              className="mt-1 block w-full p-2 border border-gray-300 rounded"
+              required
+            >
+              <option value="hourly">Hourly Rate</option>
+              <option value="per-work">Per Work</option>
+            </select>
+          </div>
+
+          {formData.pricingType === 'hourly' && (
+            <div>
+              <label className="block font-medium">Hourly Rate</label>
+              <input
+                type="number"
+                name="hourlyRate"
+                value={formData.hourlyRate}
+                onChange={handleChange}
+                className="mt-1 block w-full p-2 border border-gray-300 rounded"
+                min="0"
+                required={formData.pricingType === 'hourly'}
+              />
+            </div>
+          )}
+
+          {formData.pricingType === 'per-work' && (
+            <div>
+              <label className="block font-medium">Per Work Rate</label>
+              <input
+                type="number"
+                name="perWorkRate"
+                value={formData.perWorkRate}
+                onChange={handleChange}
+                className="mt-1 block w-full p-2 border border-gray-300 rounded"
+                min="0"
+                required={formData.pricingType === 'per-work'}
+              />
+            </div>
+          )}
+
+          <div>
+            <label className="block font-medium">Payment Options</label>
+            <input
+              type="text"
+              name="paymentOptions"
+              value={formData.paymentOptions}
+              onChange={handleChange}
+              className="mt-1 block w-full p-2 border border-gray-300 rounded"
+            />
+          </div>
+
           <div>
             <label className="block font-medium">Government ID</label>
             <input
@@ -393,62 +533,33 @@ const BecomeServiceProviderForm = () => {
             />
           </div>
 
-          {/* Availability */}
           <div>
-            <label className="block font-medium">Availability</label>
-            <div className="grid grid-cols-2 gap-2">
-              {['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'].map((day) => (
-                <div key={day}>
-                  <label className="block font-medium">{day}</label>
-                  <select
-                    name={day.toLowerCase()}
-                    value={formData[day.toLowerCase()]}
-                    onChange={handleChange}
-                    className="mt-1 block w-full p-2 border border-gray-300 rounded"
-                    required
-                  >
-                    <option value="Available">Available</option>
-                    <option value="Not Available">Not Available</option>
-                  </select>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Working Hours */}
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block font-medium">Start Hour</label>
-              <input
-                type="time"
-                name="startHour"
-                value={formData.startHour}
-                onChange={handleChange}
-                className="mt-1 block w-full p-2 border border-gray-300 rounded"
-                required
-              />
-            </div>
-            <div>
-              <label className="block font-medium">End Hour</label>
+            <label className="inline-flex items-center">
               <input
                 type="time"
                 name="endHour"
                 value={formData.endHour}
                 onChange={handleChange}
-                className="mt-1 block w-full p-2 border border-gray-300 rounded"
+                className="form-checkbox"
                 required
               />
-            </div>
+              <span className="ml-2">I accept the terms and conditions</span>
+            </label>
           </div>
 
-          {/* Submit Button */}
-          <div className="mt-6">
+          <div className="text-center flex justify-around">
             <button
               type="submit"
-              className="w-full py-3 bg-blue-500 text-white font-bold rounded hover:bg-blue-600"
+              className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
             >
               Submit
             </button>
+            <button
+            onClick={onClose}
+            className="bg-red-600  text-white px-4 py-2 rounded-md hover:bg-red-700"
+          >
+            Cancel
+          </button>
           </div>
         </div>
       </form>

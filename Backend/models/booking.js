@@ -14,14 +14,14 @@ export const getAllBookings = (callback) => {
 
 // Add a new booking
 export const addBooking = (bookingData, callback) => {
-  const { SP_Username, C_username, Book_Status, Service_Name, Service_Category, Book_HouseNo, Book_Area, Book_City, Book_State } = bookingData;
+  const { SP_Email, C_Email, Book_Status, Service_Name, Service_Category, Book_HouseNo, Book_Area, Book_City, Book_State } = bookingData;
 
   // Generate current date and time
   const currentDate = new Date().toISOString().slice(0, 19).replace('T', ' '); // Format: YYYY-MM-DD HH:MM:SS
 
   // Insert query for adding a new booking
   const query = `
-    INSERT INTO booking (SP_Username, C_username, Book_Status, Service_Name, Service_Category, Book_Date, Book_HouseNo, Book_Area, Book_City, Book_State)
+    INSERT INTO booking (SP_Email, C_Email, Book_Status, Service_Name, Service_Category, Book_Date, Book_HouseNo, Book_Area, Book_City, Book_State)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `;
 

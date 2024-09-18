@@ -8,7 +8,7 @@ function Order({ order, onHelp, onCancel }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [orderToCancel, setOrderToCancel] = useState(null);
 
-  const { Book_ID, C_username, SP_Username, Book_Status, Service_Name, Service_Category, Book_Date, Book_HouseNo, Book_Area, Book_City, Book_State } = order;
+  const { Book_ID, SP_Email, U_Email, Book_Status, Service_Name, Service_Category, Book_Date, Book_HouseNo, Book_Area, Book_City, Book_State } = order;
 
   // Define status color based on status value
   let statusColorClass = 'text-gray-500'; // Default color
@@ -44,13 +44,13 @@ function Order({ order, onHelp, onCancel }) {
     <>
       <div className="bg-gray-100 shadow-md rounded-lg p-6 mb-4">
         <h3 className="text-lg font-semibold mb-2">Order ID: {Book_ID}</h3>
-        <p className="text-gray-700"><strong>Customer:</strong> {C_username}</p>
+        <p className="text-gray-700"><strong>Customer:</strong> {U_Email}</p>
         <p className="text-gray-700"><strong>Service:</strong> {Service_Name}</p>
         <p className="text-gray-700"><strong>Category:</strong> {Service_Category}</p>
         <p className="text-gray-700"><strong>Address:</strong> {Book_HouseNo}, {Book_Area}, {Book_City}, {Book_State}</p>
         <p className="text-gray-700"><strong>Appointment Date:</strong> {formattedDate}</p>
-        {SP_Username && (
-          <p className="text-gray-700"><strong>Service Provider:</strong> {SP_Username}</p>
+        {SP_Email && (
+          <p className="text-gray-700"><strong>Service Provider:</strong> {SP_Email}</p>
         )}
         <p className={`font-bold ${statusColorClass}`}>
           Status: {Book_Status}
