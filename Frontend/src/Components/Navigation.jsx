@@ -3,6 +3,7 @@ import BWlogo from '../assets/BWlogo.jpg';
 import { Link, useLocation } from 'react-router-dom';
 import DialogBox from './DialogBox';
 import { useAuth } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 const Navigation = () => {
     const [isNavOpen, setIsNavOpen] = useState(false);
@@ -11,6 +12,7 @@ const Navigation = () => {
     const { currentUser, logout } = useAuth();
     const dropdownRef = useRef(null);
     const location = useLocation();
+    const navigate=useNavigate();
 
     // Toggle between login and signup form
     const toggleForm = () => setIsLoginForm(!isLoginForm);
@@ -21,6 +23,7 @@ const Navigation = () => {
     const handleLogout = () => {
         logout();
         setDropdownOpen(false);
+        navigate('/')
     };
 
     // Close dropdown if clicked outside
