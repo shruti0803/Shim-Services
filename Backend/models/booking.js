@@ -1,6 +1,30 @@
 // models/booking.js
 import connection from '../db/connection.js';
 
+
+
+
+
+
+
+// Get all bookings for a specific service provider
+// models/booking.js
+export const getBookingsByServiceProvider = (email, callback) => {
+  const query = 'SELECT * FROM booking WHERE SP_Email = ?';
+  console.log('Executing query:', query, 'with email:', email); // Debugging print
+
+  connection.query(query, [email], (err, results) => {
+      if (err) {
+          console.error('Error executing query:', err);
+          return callback(err, null);
+      }
+      console.log('Query results:', results); // Debugging print
+      callback(null, results);
+  });
+};
+
+
+
 // Get all bookings
 export const getAllBookings = (callback) => {
   connection.query('SELECT * FROM booking', (err, results) => {

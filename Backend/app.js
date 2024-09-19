@@ -7,6 +7,8 @@ import { getAllBookings, addBooking, deleteBooking } from './models/booking.js';
 import { getAllServices, addService } from './models/service.js'; // Import service functions
 // Import the city functions
 import { getAllCities, addCity } from './models/city.js';
+import {  getBookingsByServiceProvider } from './models/booking.js';
+
 // Load environment variables
 dotenv.config();
 
@@ -202,4 +204,88 @@ app.post('/cities', (req, res) => {
     res.status(201).json({ message: 'City added successfully', result });
   });
 });
+
+//booking new shruti
+
+
+app.get('/bookings/sp/:email', (req, res) => {
+  const { email } = req.params;
+  console.log('Fetching bookings for service provider with email:', email); // Debugging print
+
+  getBookingsByServiceProvider(email, (err, results) => {
+      if (err) {
+          console.error('Error retrieving bookings for service provider:', err);
+          return res.status(500).json({ error: 'Failed to retrieve bookings for service provider' });
+      }
+      console.log('Retrieved bookings:', results); // Debugging print
+      res.json(results);
+  });
+});
+
+
+
+// Fetch bookings by Service Provider
+
+
+// Get all bookings for a specific service provider
+// export const getBookingsByServiceProvider = (spEmail, callback) => {
+//   const query = 'SELECT * FROM booking WHERE SP_Email = ?';
+
+//   connection.query(query, [spEmail], (err, results) => {
+//     if (err) {
+//       console.error('Error executing query:', err);
+//       return callback(err, null);
+//     }
+//     callback(null, results);
+//   });
+// };
+
+// Get all bookings
+// export const getAllBookings = (callback) => {
+//   connection.query('SELECT * FROM booking', (err, results) => {
+//     if (err) {
+//       console.error('Error executing query:', err);
+//       return callback(err, null);
+//     }
+//     callback(null, results);
+//   });
+// };
+
+// // Add a new booking
+// export const addBooking = (bookingData, callback) => {
+//   const { SP_Email, C_Email, Book_Status, Service_Name, Service_Category, Book_HouseNo, Book_Area, Book_City, Book_State } = bookingData;
+
+//   const currentDate = new Date().toISOString().slice(0, 19).replace('T', ' ');
+
+//   const query = `
+//     INSERT INTO booking (SP_Email, C_Email, Book_Status, Service_Name, Service_Category, Book_Date, Book_HouseNo, Book_Area, Book_City, Book_State)
+//     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+//   `;
+
+//   connection.query(
+//     query,
+//     [SP_Email, C_Email, Book_Status, Service_Name, Service_Category, currentDate, Book_HouseNo, Book_Area, Book_City, Book_State],
+//     (err, result) => {
+//       if (err) {
+//         console.error('Error inserting booking:', err);
+//         return callback({ error: err.code, message: err.message }, null);
+//       }
+//       callback(null, result);
+//     }
+//   );
+// };
+
+// // Delete a booking
+// export const deleteBooking = (bookingId, callback) => {
+//   const query = 'DELETE FROM booking WHERE Book_ID = ?';
+
+//   connection.query(query, [bookingId], (err, result) => {
+//     if (err) {
+//       console.error('Error deleting booking:', err);
+//       return callback({ error: err.code, message: err.message }, null);
+//     }
+//     callback(null, result);
+//   });
+// };
+
 
