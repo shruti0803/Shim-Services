@@ -9,7 +9,7 @@ const Details = () => {
     {
       id: 1,
       imgSrc: 'https://media.istockphoto.com/id/1353114711/photo/close-up-image-of-unrecognisable-person-doing-a-maintenance-service-on-a-household-filtration.jpg?s=612x612&w=0&k=20&c=NIMYCik-K0SUHDoI3FVD_9x9qcsBGyXf0kkfzHBbg-g=',
-      title: 'Appliance Compressor',
+      title: 'Appliance  Compressor Repair',
       description: [
         'Thorough servicing of appliance compressors',
         'Filter replacement and comprehensive cleaning'
@@ -123,7 +123,6 @@ const Details = () => {
               </ul>
               <p className='font-bold text-green-600'>Initial Price: ₹{service.price}</p>
 
-              <p className='font-bold text-green-600'>Initial Price: ₹{service.price}</p>
 
               <div className="mt-2">
                 <button
@@ -140,6 +139,7 @@ const Details = () => {
       {isDialogOpen && selectedService && (
         <BookingForm
           isOpen={openDialog}
+          serviceName="Appliance Repair"
           service={selectedService}  // Pass selected service to the modal
           onClose={closeDialog}      // Pass closeDialog to close modal
         />

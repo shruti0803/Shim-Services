@@ -5,8 +5,11 @@ import { getAllServiceProviders, addServiceProvider } from './models/serviceProv
 import { getAllCustomers, addCustomer, updateIsSP } from './models/customer.js'; // Added updateIsSP import
 import { getAllBookings, addBooking, deleteBooking } from './models/booking.js';
 import { getAllServices, addService } from './models/service.js'; // Import service functions
+import { getAllServicesForProvider, addNewServiceForProvider } from './models/sp_services.js';
 // Import the city functions
 import { getAllCities, addCity } from './models/city.js';
+import { addBookingPost } from './models/bookingPost.js';
+
 // Load environment variables
 dotenv.config();
 
@@ -203,3 +206,55 @@ app.post('/cities', (req, res) => {
   });
 });
 
+//sp_services;
+
+app.get('/sp_services/:spEmail', (req, res) => {
+  const { spEmail } = req.params;
+
+  getAllServicesForProvider(spEmail, (err, results) => {
+    if (err) {
+      console.error('Error retrieving services for provider:', err);
+      return res.status(500).json({ error: 'Failed to retrieve services for provider' });
+    }
+    res.json(results);
+  });
+});
+
+app.post('/sp_services', (req, res) => {
+  const newService = req.body;
+
+  // Validate request data
+  if (!newService.SP_Email || !newService.Service_Name || !newService.Service_Category || !newService.Service_Experience) {
+    return res.status(400).json({ error: 'Missing required fields: SP_Email, Service_Name, Service_Category, Service_Experience' });
+  }
+
+  addNewServiceForProvider(newService, (err, result) => {
+    if (err) {
+      console.error('Error adding new service:', err);
+      return res.status(500).json({ error: err.error || 'Failed to add new service' });
+    }
+    res.status(201).json({ message: 'Service added successfully', result });
+  });
+});
+
+app.post('/bookingPost', (req, res) => {
+  const bookingData = req.body;
+
+  // Ensure required fields are present
+  const requiredFields = [ 'U_Email', 'Book_Status', 'Service_Name', 'Book_Date', 'Book_HouseNo', 'Book_Area', 'Book_City', 'Book_City_PIN', 'Book_State'];
+  for (let field of requiredFields) {
+    if (!bookingData[field]) {
+      return res.status(400).json({ message: `Missing required field: ${field}` });
+    }
+  }
+
+  // Add booking to the database
+  addBookingPost(bookingData, (err, result) => {
+    if (err) {
+      console.error('Error adding booking:', err);
+      return res.status(500).json({ message: err.message });
+    }
+
+    res.status(201).json({ message: 'Booking created successfully', bookingId: bookingData.Book_ID });
+  });
+});

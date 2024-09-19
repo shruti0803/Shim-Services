@@ -116,6 +116,15 @@ const BecomeServiceProviderForm = () => {
       State: formData.state,
       Country: 'India' // or use formData.country if you add it to your state
     };
+
+    const serviceDataToSend = {
+      SP_Email: formData.email,
+      Service_Category: formData.subCategories.length > 0 ? formData.subCategories.join(', ') : formData.serviceCategory,
+      Service_Name: formData.serviceCategory,
+      Service_Experience: formData.experience
+    };
+    console.log("sp_date",serviceDataToSend);
+    
     
     // Proceed with sending formDataToSend to your API
     
@@ -132,20 +141,35 @@ const BecomeServiceProviderForm = () => {
       const result = await response.json();
   
       if (response.ok) {
-        console.log('Service provider added successfully:', result);
+      console.log('Service provider added successfully:', result);
+
+      // POST request to the second API (sp_services)
+      const serviceResponse = await fetch('http://localhost:4002/sp_services', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(serviceDataToSend),
+      });
+
+      const serviceResult = await serviceResponse.json();
+
+      if (serviceResponse.ok) {
+        console.log('Service details added successfully:', serviceResult);
         navigate('/');
         if (setCurrentUser && currentUser) {
           setCurrentUser({ ...currentUser, is_SP: 1 });
-      }
-        // Optionally, you can redirect or show a success message here
+        }
       } else {
-        console.error('Error adding service provider:', result);
-        // Optionally, show an error message to the user
+        console.error('Error adding service details:', serviceResult);
       }
-    } catch (error) {
-      console.error('Network error:', error);
-      // Optionally, show a network error message to the user
+
+    } else {
+      console.error('Error adding service provider:', result);
     }
+  } catch (error) {
+    console.error('Network error:', error);
+  }
 };
 
 
@@ -534,18 +558,15 @@ const BecomeServiceProviderForm = () => {
           </div>
 
           <div>
-            <label className="inline-flex items-center">
-              <input
-                type="time"
-                name="endHour"
-                value={formData.endHour}
-                onChange={handleChange}
-                className="form-checkbox"
-                required
-              />
-              <span className="ml-2">I accept the terms and conditions</span>
-            </label>
-          </div>
+  <label className="inline-flex items-center">
+    <input
+      type="checkbox"  // Ensures it's a checkbox
+      className="form-checkbox h-5 w-5 text-blue-600"
+      required  // Makes it required
+    />
+    <span className="ml-2 text-gray-700">I accept the terms and conditions</span>
+  </label>
+</div>
 
           <div className="text-center flex justify-around">
             <button
