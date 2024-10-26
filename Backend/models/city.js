@@ -1,10 +1,9 @@
-// models/city.js
-import connection from '../db/connection.js';// Assuming dbConnection.js handles DB connection
+import connection from '../db/connection.js';
 
 // Function to get all cities
 export const getAllCities = (callback) => {
   const query = 'SELECT * FROM City';
-  db.query(query, (err, results) => {
+  connection.query(query, (err, results) => { // Use connection.query
     if (err) {
       return callback(err, null);
     }
@@ -23,7 +22,7 @@ export const addCity = (city, callback) => {
 
   // Insert the city into the database
   const query = 'INSERT INTO City (City_PIN, City_Name, City_State, City_Country) VALUES (?, ?, ?, ?)';
-  db.query(query, [City_PIN, City_Name, City_State, City_Country], (err, result) => {
+  connection.query(query, [City_PIN, City_Name, City_State, City_Country], (err, result) => { // Use connection.query
     if (err) {
       return callback(err, null);
     }

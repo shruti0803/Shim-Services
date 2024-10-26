@@ -14,6 +14,9 @@ const Navigation = () => {
     const location = useLocation();
     const navigate=useNavigate();
 
+
+    
+
     // Toggle between login and signup form
     const toggleForm = () => setIsLoginForm(!isLoginForm);
     // Close the dialog
