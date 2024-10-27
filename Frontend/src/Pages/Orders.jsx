@@ -21,15 +21,13 @@ function Orders() {
         }
         const data = await response.json();
 
-        console.log("Current User: ",currentUser);
-        console.log("Fetched data",data);
-        
-        
-        // Filter bookings based on the current user's username
-        const filteredOrders = data.filter(order => order.U_email === currentUser.U_email);
+        console.log("Current User: ", currentUser);
+        console.log("Fetched data", data);
 
-        console.log("fetched",filteredOrders);
-        
+        // Filter bookings based on the current user's email (ensure case sensitivity is correct)
+        const filteredOrders = data.filter(order => order.U_Email === currentUser.U_Email);
+
+        console.log("Filtered orders", filteredOrders);
 
         // Map database statuses to display statuses
         const statusMap = {
@@ -87,9 +85,9 @@ function Orders() {
 
       <div className="mb-6">
         <h2 className="text-2xl font-semibold mb-4">Scheduled</h2>
-        {orders.filter(order => order.status === 'Scheduled').length > 0 ? (
+        {orders.filter(order => order.status === 'Schedules'|| 'Scheduled').length > 0 ? (
           orders
-            .filter(order => order.status === 'Scheduled')
+            .filter(order => order.status === 'Schedules'||'Scheduled')
             .map(order => (
               <Order key={order.Book_ID} order={order} onCancel={handleCancel} onHelp={handleGetHelp} />
             ))

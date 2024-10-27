@@ -11,7 +11,7 @@ export const getAllCustomers = (callback) => {
   });
 };
 
-// Add a new customer
+
 // Add a new customer
 export const addCustomer = (customerData, callback) => {
     const { U_Name, U_Email, U_Phone, U_Password, is_SP } = customerData;
