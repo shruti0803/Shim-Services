@@ -6,7 +6,7 @@ import Services from './Components/Services';
 import Appliance from './Components/Appliances';
 import Footer from "./Components/Footer"
 
-
+import Option from "./Components/Option"
 import VideoCarousel from "./Components/VideoCarousel"
 import BecomeSP from "./Pages/BecameSP"
 import Home from "./Pages/Home"
@@ -14,12 +14,16 @@ import Beauty from './Components/Beauty';
 import BecomeServiceProviderForm from './Pages/BecameSP';
 import HouseCleaning from './Components/HouseCleaning';
 import Orders from './Pages/Orders';
+import { AuthProvider } from './context/AuthContext';
+import ProfilePage from './Pages/Profile';
+import Login from './Components/Login';
 
 
 function App() {
   return (
 
     <Router>
+      <AuthProvider>
       <Navigation /> 
       <Routes>
 
@@ -30,8 +34,13 @@ function App() {
         <Route path="/services" element={<Services/>} /> 
         <Route path="/orders" element={<Orders/>} /> 
         <Route path="/becomeSP" element={<BecomeServiceProviderForm/>} /> 
+        <Route path="/option" element={<Option/>}/>
+        <Route path="/profile" element={<ProfilePage/>} /> 
+        <Route path="/login" element={<Login/>} /> 
+        {/* <Route path="/profile" element={<ProfilePage/>} />  */}
       </Routes>
-      <Footer /> 
+      <Footer />
+      </AuthProvider> 
     </Router>
   );
 }

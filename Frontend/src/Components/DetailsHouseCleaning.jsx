@@ -4,23 +4,25 @@ const DetailsHouseCleaning = () => {
   const houseCleaningServices = [
     {
       id: 1,
-      imgSrc: 'https://media.istockphoto.com/id/1219350156/photo/exterminator-hygiene-disinfection.jpg?s=612x612&w=0&k=20&c=zVtcksCoX_yLCSTM9gCsItzXcD-X2xhrdjNEb3k6qBM=',
-      title: 'Home Cleaning',
+      imgSrc: 'https://tse4.mm.bing.net/th?id=OIP.29Xa0yXmjpfzJn1hPoplVAHaE8&pid=Api&P=0&h=180',
+      title: 'Kitchen Cleaning',
       description: [
         'Dusting & Vacuuming',
         'Mopping & Sanitizing',
         'Kitchen & Bathroom Cleaning'
-      ]
+      ],
+      price: 60
     },
     {
       id: 2,
       imgSrc: 'https://media.istockphoto.com/id/1393767111/photo/young-female-cleaner-in-workwear-using-mop-while-cleaning-floor-in-office.jpg?s=612x612&w=0&k=20&c=T8ZAIpzwVSVLmegTR4l2cSDcs9hVktkmS5CDWlf52M4=',
-      title: 'Office Cleaning',
+      title: 'Deep Cleaning',
       description: [
         'Desk & Floor Cleaning',
         'Trash Removal',
         'Disinfecting Workspaces'
-      ]
+      ],
+      price: 100
     },
     {
       id: 3,
@@ -30,17 +32,19 @@ const DetailsHouseCleaning = () => {
         'Stain Removal',
         'Deep Cleaning',
         'Odor Elimination'
-      ]
+      ],
+      price: 70
     },
     {
       id: 4,
       imgSrc: 'https://media.istockphoto.com/id/2164840232/photo/beautiful-smiling-young-woman-cleaning-window-with-window-cleaner.jpg?s=612x612&w=0&k=20&c=6eqocDJF9QImCO3PaEEtxXx64GJ5oeR1mziT0XQIOCU=',
       title: 'Window Cleaning',
       description: [
-        'Interior Window Cleaning',
-        'Exterior Window Washing',
+        'Interior Cleaning',
+        'Exterior Washing',
         'Streak-Free Shine'
-      ]
+      ],
+      price: 55
     },
     {
       id: 5,
@@ -49,18 +53,20 @@ const DetailsHouseCleaning = () => {
       description: [
         'Debris Removal',
         'Dusting & Mopping',
-        'Detailed Finishing Cleanup'
-      ]
+        'Detailed Finishing'
+      ],
+      price: 75
     },
     {
       id: 6,
-      imgSrc: 'https://media.istockphoto.com/id/1188875709/photo/movers-placing-furniture-at-home.jpg?s=612x612&w=0&k=20&c=_W3fewM45MkVAkC-_pa_od725e-kJKKGoprfQX0GwX0=',
-      title: 'Move-In/Move-Out Cleaning',
+      imgSrc: 'https://tse1.mm.bing.net/th?id=OIP.DtFkNLe6S082oS9-TML9lgHaDw&pid=Api&P=0&h=180',
+      title: 'Bathroom Cleaning',
       description: [
         'Full House Cleaning',
         'Trash Removal',
-        'Deep Cleaning of All Rooms'
-      ]
+        'Deep Cleaning All Rooms'
+      ],
+      price: 65
     }
   ];
 

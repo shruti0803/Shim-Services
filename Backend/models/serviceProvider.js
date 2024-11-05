@@ -13,27 +13,43 @@ export const getAllServiceProviders = (callback) => {
 
 // Add a new service provider
 export const addServiceProvider = (serviceProviderData, callback) => {
-  const { SP_Username, SP_Name, SP_Phone, SP_Location, SP_Email } = serviceProviderData;
+  const {
+    SP_Email,
+    SP_PIN,
+    Monday,
+    Tuesday,
+    Wednesday,
+    Thursday,
+    Friday,
+    Saturday,
+    Sunday,
+    LanguageSpoken,
+    GovernmentID,
+    CityName,
+    State,
+    Country
+  } = serviceProviderData;
 
-  // Check if the location exists before inserting
-  connection.query('SELECT * FROM city WHERE City_Name = ?', [SP_Location], (err, results) => {
+  // Check if the CityName exists before inserting
+  connection.query('SELECT * FROM city WHERE City_Name = ?', [CityName], (err, results) => {
     if (err) {
       console.error('Error checking location:', err);
       return callback(err, null);
     }
     if (results.length === 0) {
-      return callback({ error: 'Location does not exist in city table' }, null);
+      return callback({ error: 'City does not exist in the city table' }, null);
     }
 
-    // Insert query for adding new service provider with all columns
+    // Insert query for adding new service provider with all required columns
     const query = `
-      INSERT INTO serviceprovider (SP_Username, SP_Name, SP_Phone, SP_Location, SP_Email)
-      VALUES (?, ?, ?, ?, ?)
+      INSERT INTO serviceprovider 
+      (SP_Email, SP_PIN, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday, LanguageSpoken, GovernmentID, CityName, State, Country)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
 
     connection.query(
-      query, 
-      [SP_Username, SP_Name, SP_Phone, SP_Location, SP_Email],
+      query,
+      [SP_Email, SP_PIN, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday,  LanguageSpoken, GovernmentID, CityName, State, Country],
       (err, result) => {
         if (err) {
           console.error('Error inserting service provider:', err);

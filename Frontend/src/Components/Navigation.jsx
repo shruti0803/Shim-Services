@@ -1,21 +1,53 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import BWlogo from '../assets/BWlogo.jpg';
-import { Link } from 'react-router-dom';
-import Login from './Login';
-import SignUp from './SignUp';
+import { Link, useLocation } from 'react-router-dom';
+import DialogBox from './DialogBox';
+import { useAuth } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 const Navigation = () => {
-    const [isNavOpen, setIsNavOpen] = useState(false); // Controls dialog visibility
-    const [isLoginForm, setIsLoginForm] = useState(true); // Controls form toggle (login/signup)
+    const [isNavOpen, setIsNavOpen] = useState(false);
+    const [isLoginForm, setIsLoginForm] = useState(true);
+    const [dropdownOpen, setDropdownOpen] = useState(false);
+    const { currentUser, logout } = useAuth();
+    const dropdownRef = useRef(null);
+    const location = useLocation();
+    const navigate=useNavigate();
 
-    const toggleForm = () => {
-        setIsLoginForm(!isLoginForm);
+
+    
+
+    // Toggle between login and signup form
+    const toggleForm = () => setIsLoginForm(!isLoginForm);
+    // Close the dialog
+    const closeDialog = () => setIsNavOpen(false);
+
+    // Handle user logout
+    const handleLogout = () => {
+        logout();
+        setDropdownOpen(false);
+        navigate('/')
     };
 
-    const closeDialog = () => {
-        console.log("Nav Close Button Clicked");
-        setIsNavOpen(false); // Close the dialog
-    };
+    // Close dropdown if clicked outside
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+                setDropdownOpen(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
+
+    // Close dropdown on route change
+    useEffect(() => {
+        setDropdownOpen(false);
+    }, [location]);
+
+    // Get user initials
+    const userInitials = currentUser?.U_Name?.charAt(0) || '';
 
     return (
         <div className='bg-black flex items-center h-24 md:h-20 lg:h-18 sticky top-0 z-10 px-3 text-lg text-white'>
@@ -30,10 +62,37 @@ const Navigation = () => {
                     <img src={BWlogo} alt="Logo" className='h-20' />
                 </div>
 
-                {/* Login button */}
-                <button onClick={() => setIsNavOpen(true)} className='bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 ml-4'>
-                    Log In
-                </button>
+                {/* Login button or User icon */}
+                {currentUser ? (
+                    <div className='flex items-center ml-4 relative'>
+                        <div 
+                            className='flex items-center justify-center w-8 h-8 bg-gray-600 text-white rounded-full cursor-pointer' 
+                            onClick={() => setDropdownOpen(!dropdownOpen)}
+                            ref={dropdownRef}
+                        >
+                            {userInitials}
+                        </div>
+                        {dropdownOpen && (
+                            <div className='absolute right-0 mt-2 w-40 bg-white text-black rounded-md shadow-lg' ref={dropdownRef}>
+                                <ul className='list-none p-2'>
+                                    <li className='p-2 hover:bg-gray-200'>
+                                        <Link to='/profile'>My Profile</Link>
+                                    </li>
+                                    <li className='p-2 hover:bg-gray-200'>
+                                        <Link to='/settings'>Settings</Link>
+                                    </li>
+                                    <li className='p-2 hover:bg-gray-200 cursor-pointer' onClick={handleLogout}>
+                                        Logout
+                                    </li>
+                                </ul>
+                            </div>
+                        )}
+                    </div>
+                ) : (
+                    <button onClick={() => setIsNavOpen(true)} className='bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 ml-4'>
+                        Log In
+                    </button>
+                )}
             </div>
 
             {/* Desktop view */}
@@ -46,45 +105,57 @@ const Navigation = () => {
                         <li><Link to='/'>Home</Link></li>
                         <li><Link>About Us</Link></li>
                         <li><Link to='/services'>Services</Link></li>
-                        <li><Link to='/orders'>Orders</Link></li>
-                        <li><Link to="/becomeSP">Become Servicer</Link></li>
+
+                        {/* Show "Orders" and "Become a Servicer" based on user login and is_SP status */}
+                        {currentUser && (
+                            <>
+                                <li><Link to='/orders'>Orders</Link></li>
+                                {!currentUser.is_SP && (
+                                    <li><Link to="/becomeSP">Become a Servicer</Link></li>
+                                )}
+                            </>
+                        )}
                     </ul>
-                    <button onClick={() => setIsNavOpen(true)} className='bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700'>
-                        Log In
-                    </button>
+                    {currentUser ? (
+                        <div className='relative flex items-center'>
+                            <div 
+                                className='flex items-center justify-center w-10 h-10 bg-green-600 text-white rounded-full cursor-pointer' 
+                                onClick={() => setDropdownOpen(!dropdownOpen)}
+                                ref={dropdownRef}
+                            >
+                                {userInitials}
+                            </div>
+                            {dropdownOpen && (
+                                <div className='absolute top-12 right-0 mt-2 w-40 bg-white text-black rounded-md shadow-lg' ref={dropdownRef}>
+                                    <ul className='list-none p-2'>
+                                        <li className='p-2 hover:bg-gray-200'>
+                                            <Link to='/profile'>My Profile</Link>
+                                        </li>
+                                        <li className='p-2 hover:bg-gray-200'>
+                                            <Link to='/settings'>Settings</Link>
+                                        </li>
+                                        <li className='p-2 hover:bg-gray-200 cursor-pointer' onClick={handleLogout}>
+                                            Logout
+                                        </li>
+                                    </ul>
+                                </div>
+                            )}
+                        </div>
+                    ) : (
+                        <button onClick={() => setIsNavOpen(true)} className='bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700'>
+                            Log In
+                        </button>
+                    )}
                 </div>
             </div>
 
             {/* Form Dialog */}
-            {isNavOpen && (
-                <div className='fixed inset-0 bg-gray-900 bg-opacity-70 flex justify-center items-center z-20'>
-                    <div className='relative w-full md:max-w-2xl lg:max-w-4xl h-full max-h-[90vh] md:max-h-[90vh] lg:max-h-[90vh] flex bg-white overflow-hidden rounded-lg'>
-                        {/* Close Button */}
-                        <button
-    className={`absolute top-4 font-extrabold text-gray-500 hover:text-gray-700 text-2xl transition-transform ease-in-out duration-1000 ${isLoginForm ? 'left-4' : 'right-4'}`}
-    onClick={closeDialog} // Close the dialog box
->
-    &times;
-</button>
-
-                        {/* Container for Image and Form */}
-                        <div className='relative flex w-full h-full'>
-                            {/* Image Section */}
-                            <div className={`absolute top-0 left-0 w-1/2 h-full bg-cover bg-center transition-transform ease-in-out duration-700 ${isLoginForm ? 'translate-x-full' : 'translate-x-0'}`} style={{ 
-                                backgroundImage: 'url(https://media.istockphoto.com/id/586932394/photo/home-renovation-and-diy.jpg?s=612x612&w=0&k=20&c=lNlEVW61NptLSTR-hm3It3zAhen5yfODlZofNLEhepg=)' }}></div>
-
-                            {/* Form Section */}
-                            <div className={`absolute top-0 right-0 w-1/2 h-full flex items-center justify-center transition-transform ease-in-out duration-700 ${isLoginForm ? '-translate-x-full' : 'translate-x-0'}`}>
-                                {isLoginForm ? (
-                                    <Login onSwitchToSignUp={toggleForm} />
-                                ) : (
-                                    <SignUp onSwitchToLogin={toggleForm} />
-                                )}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            )}
+            <DialogBox
+                isOpen={isNavOpen}
+                closeDialog={closeDialog}
+                isLoginForm={isLoginForm}
+                toggleForm={toggleForm}
+            />
         </div>
     );
 };

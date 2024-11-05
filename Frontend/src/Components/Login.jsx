@@ -1,28 +1,62 @@
 import React, { useState } from 'react';
+import { useAuth } from '../context/AuthContext';
 
-const Login = ({ onSwitchToSignUp }) => {
+const Login = ({ onSwitchToSignUp, closeDialog }) => {
     const [loginValues, setLoginValues] = useState({ email: '', password: '' });
+    const [errorMessage, setErrorMessage] = useState('');
+    const [successMessage, setSuccessMessage] = useState('');
+
+    const { login } = useAuth();
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setLoginValues(prev => ({ ...prev, [name]: value }));
     };
 
+    const handleLogin = async (e) => {
+        e.preventDefault();
+    
+        try {
+            // Fetch customers
+            const customerResponse = await fetch('http://localhost:4002/customers');
+            const customers = await customerResponse.json();
+    
+            // Find matching customer
+            const customer = customers.find(c => c.U_Email === loginValues.email);
+    
+            if (customer && customer.U_Password === loginValues.password) {
+                login(customer);
+                setSuccessMessage('Login successful!');
+                setErrorMessage('');
+                closeDialog(); // Close the dialog after successful login
+                return;
+            }
+    
+            // If no match found
+            setErrorMessage('Invalid email or password');
+            setSuccessMessage('');
+        } catch (error) {
+            console.error('Error during login:', error);
+            setErrorMessage('Failed to login. Please try again.');
+            setSuccessMessage('');
+        }
+    };
+
     return (
-        <div className='flex items-center justify-center w-full  p-6'>
+        <div className='flex items-center justify-center w-full p-6'>
             <div className='flex flex-col w-full max-w-md p-6 bg-white rounded-lg'>
-                {/* Adjust image styling if needed */}
                 <h2 className='text-2xl font-bold mb-6 text-center text-gray-900'>
                     Welcome Back! to SHIM SERVICES
                 </h2>
-                <form className='flex flex-col gap-4'>
+                <form className='flex flex-col gap-4' onSubmit={handleLogin}>
                     <input 
                         type="email" 
                         name="email"
                         value={loginValues.email}
                         onChange={handleInputChange}
                         placeholder="Email" 
-                        className="p-3 border border-gray-300 rounded text-sm" 
+                        className="p-3 border text-black border-gray-300 rounded text-sm" 
+                        required
                     />
                     <input 
                         type="password" 
@@ -30,9 +64,16 @@ const Login = ({ onSwitchToSignUp }) => {
                         value={loginValues.password}
                         onChange={handleInputChange}
                         placeholder="Password" 
-                        className="p-3 border border-gray-300 rounded text-sm" 
+                        className="p-3 border text-black border-gray-300 rounded text-sm" 
+                        required
                     />
-                    <button className='bg-green-600 text-white py-2 rounded hover:bg-green-700 text-sm'>
+                    {successMessage && (
+                        <p className='text-green-500 text-sm'>{successMessage}</p>
+                    )}
+                    {errorMessage && (
+                        <p className='text-red-500 text-sm'>{errorMessage}</p>
+                    )}
+                    <button type='submit' className='bg-green-600 text-white py-2 rounded hover:bg-green-700 text-sm'>
                         Login
                     </button>
                     <p className='mt-4 text-sm text-center text-gray-700'>
