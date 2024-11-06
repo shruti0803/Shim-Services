@@ -1,15 +1,17 @@
 import express from 'express';
 import cors from 'cors';
-import dotenv from 'dotenv'; // Load environment variables
-import { getAllServiceProviders, addServiceProvider } from './models/serviceProvider.js';
+import dotenv from 'dotenv'; 
+import bodyParser from 'body-parser';// Load environment variables
+import { getAllServiceProviders, addServiceProvider,getServiceNamesByServiceProvider } from './models/serviceProvider.js';
 import { getAllCustomers, addCustomer, updateIsSP } from './models/customer.js'; // Added updateIsSP import
-import { getAllBookings, addBooking, deleteBooking } from './models/booking.js';
+import { getAllBookings, addBooking, deleteBooking,getAvailableBookingsForService } from './models/booking.js';
 import { getAllServices, addService } from './models/service.js'; // Import service functions
 import { getAllServicesForProvider, addNewServiceForProvider } from './models/sp_services.js';
 // Import the city functions
 import { getAllCities, addCity } from './models/city.js';
 import {  getBookingsByServiceProvider } from './models/booking.js';
 import { addBookingPost } from './models/bookingPost.js';
+import { updateBookingStatus } from './models/updateBooking.js';
 // Load environment variables
 dotenv.config();
 
@@ -17,6 +19,7 @@ const app = express();
 
 // Middleware to parse JSON
 app.use(express.json());
+
 
 // Middleware to enable CORS
 app.use(cors({
@@ -253,6 +256,19 @@ app.post('/sp_services', (req, res) => {
   });
 });
 
+// API endpoint to get services of a specific service provider
+app.get('/services/:spEmail', (req, res) => {
+  const { spEmail } = req.params;
+
+  // Fetch services provided by the service provider using the email
+  getServiceNamesByServiceProvider(spEmail, (err, services) => {
+    if (err) {
+      return res.status(500).json({ message: 'Error fetching services', error: err });
+    }
+    return res.status(200).json({ services });
+  });
+});
+
 app.post('/bookingPost', (req, res) => {
   const bookingData = req.body;
 
@@ -272,5 +288,48 @@ app.post('/bookingPost', (req, res) => {
     }
 
     res.status(201).json({ message: 'Booking created successfully', bookingId: bookingData.Book_ID });
+  });
+});
+
+
+//fetching all the orders for sp where the sp_email is null and service_name =their service_name
+
+app.get('/available-bookings/:serviceName', (req, res) => {
+  const { serviceName } = req.params;
+
+  // Fetch bookings for the service provider's service
+  getAvailableBookingsForService(serviceName, (err, bookings) => {
+    if (err) {
+      return res.status(500).json({ message: 'Error fetching available bookings', error: err });
+    }
+    if (bookings.length === 0) {
+      return res.status(404).json({ message: 'No available bookings found for this service' });
+    }
+
+    // Send the bookings as the response
+    return res.status(200).json(bookings);
+  });
+});
+
+
+
+//update booking status from pending to scheduled or completed
+
+app.put('/update-status/:bookingId', (req, res) => {
+  const { bookingId } = req.params; // Get the booking ID from the route parameter
+  const { newStatus } = req.body;
+  // console.log(newStatus);
+   // Get the new status from the request body
+
+  if (!newStatus) {
+    return res.status(400).json({ error: 'New status is required' });
+  }
+
+  // Call the function to update the booking status
+  updateBookingStatus(bookingId, newStatus, (err, result) => {
+    if (err) {
+      return res.status(500).json({ error: err.message });
+    }
+    res.status(200).json({ message: 'Booking status updated successfully', result });
   });
 });

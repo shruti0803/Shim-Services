@@ -85,7 +85,8 @@ function Orders() {
 
       <div className="mb-6">
         <h2 className="text-2xl font-semibold mb-4">Scheduled</h2>
-        {orders.filter(order => order.status === 'Schedules'|| 'Scheduled').length > 0 ? (
+        {orders.filter(order => order.status === 'Scheduled').length > 0 ? (
+
           orders
             .filter(order => order.status === 'Schedules'||'Scheduled')
             .map(order => (

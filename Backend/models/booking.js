@@ -72,3 +72,26 @@ export const deleteBooking = (bookingId, callback) => {
     callback(null, result);
   });
 };
+
+
+//MANISHKA
+
+// Get all bookings where SP_Email is NULL and Service_Name matches the service provided by SP
+export const getAvailableBookingsForService = (serviceName, callback) => {
+  const query = `
+    SELECT * FROM booking 
+    WHERE SP_Email IS NULL 
+    AND Service_Name = ?
+  `;
+
+  console.log('Executing query:', query, 'with service name:', serviceName); // Debugging print
+
+  connection.query(query, [serviceName], (err, results) => {
+    if (err) {
+      console.error('Error executing query:', err);
+      return callback(err, null);
+    }
+    console.log('Query results:', results); // Debugging print
+    callback(null, results);
+  });
+};
