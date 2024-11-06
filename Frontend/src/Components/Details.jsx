@@ -135,7 +135,7 @@ const Details = () => {
       </div>
 
       {isBookingDialogOpen && selectedService && (
-        <BookingForm isOpen={isBookingDialogOpen} service={selectedService} onClose={closeBookingDialog} />
+        <BookingForm isOpen={isBookingDialogOpen} service={selectedService} serviceName="Appliance Repair" onClose={closeBookingDialog} />
       )}
 
       {isLoginDialogOpen && (

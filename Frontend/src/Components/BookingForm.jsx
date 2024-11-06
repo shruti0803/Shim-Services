@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 const BookingForm = ({ isOpen, onClose, serviceName, service }) => {
@@ -15,35 +16,35 @@ const BookingForm = ({ isOpen, onClose, serviceName, service }) => {
     bookState: '',
     customerName: '',
     customerPhone: '',
+     currentDate : new Date().toISOString().slice(0, 19).replace('T', ' '),
+
   });
+  const [confirmationDialog, setConfirmationDialog] = useState(false); // New state for dialog
 
   const { currentUser } = useAuth();
+  const navigate = useNavigate(); // Hook for navigation
 
   useEffect(() => {
     const fetchCities = async () => {
       try {
         const response = await axios.get('http://localhost:4002/cities');
-        // Sort the cities in ascending order by name
         const sortedCities = response.data.sort((a, b) => a.City_Name.localeCompare(b.City_Name));
         setCities(sortedCities);
       } catch (error) {
         console.error('Error fetching cities:', error);
       }
     };
-  
     fetchCities();
   }, []);
-  
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-
     if (name === 'bookCity') {
       const selectedCity = cities.find(city => city.City_Name === value);
       setFormData((prevData) => ({
         ...prevData,
         [name]: value,
-        bookCityPin: selectedCity ? selectedCity.City_PIN : '', // Set city PIN based on selected city
+        bookCityPin: selectedCity ? selectedCity.City_PIN : '',
       }));
     } else {
       setFormData((prevData) => ({
@@ -68,15 +69,21 @@ const BookingForm = ({ isOpen, onClose, serviceName, service }) => {
       Book_State: formData.bookState,
       Customer_Name: formData.customerName,
       Customer_Phone: formData.customerPhone,
+      Book_Date:formData.currentDate
     };
 
     try {
       const response = await axios.post('http://localhost:4002/bookingPost', formDataToSend);
       console.log('Booking successfully created:', response.data);
-      onClose();
+      setConfirmationDialog(true); // Show confirmation dialog
     } catch (error) {
       console.error('Error creating booking:', error.response?.data || error.message);
     }
+  };
+
+  const handleDialogClose = () => {
+    setConfirmationDialog(false);
+    navigate('/'); // Redirect to the homepage
   };
 
   useEffect(() => {
@@ -91,6 +98,7 @@ const BookingForm = ({ isOpen, onClose, serviceName, service }) => {
   }, [isOpen]);
 
   if (!isOpen) return null;
+
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
@@ -222,9 +230,34 @@ const BookingForm = ({ isOpen, onClose, serviceName, service }) => {
             </button>
           </div>
         </form>
+
+        {confirmationDialog && (
+          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+            <div className="bg-white p-4 rounded-lg shadow-lg max-w-xs text-center">
+              <p className="text-gray-700 mb-4">
+                Order will be confirmed once a service provider accepts the booking.
+              </p>
+              <button
+                onClick={handleDialogClose}
+                className="px-4 py-2 bg-green-600 text-white font-bold rounded-md hover:bg-green-700"
+              >
+                OK
+              </button>
+            </div>
+          </div>
+        )}
+   
       </div>
     </div>
   );
 };
 
 export default BookingForm;
+
+
+
+
+
+
+
+// shruti changed in this for missing fields. also in details.

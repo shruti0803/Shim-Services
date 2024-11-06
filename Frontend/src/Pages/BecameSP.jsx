@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import Select from 'react-select';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 const BecomeServiceProviderForm = () => {
   const { currentUser,setCurrentUser } = useAuth();
   const [selectedDays, setSelectedDays] = useState([]);
@@ -98,7 +99,8 @@ const BecomeServiceProviderForm = () => {
 
   const handleSubmit = async (e) => {  // Mark the function as async
     e.preventDefault();
-    // currentUser.is_SP=1;
+    currentUser.is_SP=1;
+
     console.log('Form data submitted:', formData);
     const formDataToSend = {
       SP_Email: formData.email,
@@ -137,11 +139,13 @@ const BecomeServiceProviderForm = () => {
         },
         body: JSON.stringify(formDataToSend),
       });
+
   
       const result = await response.json();
   
       if (response.ok) {
       console.log('Service provider added successfully:', result);
+
 
       // POST request to the second API (sp_services)
       const serviceResponse = await fetch('http://localhost:4002/sp_services', {
@@ -159,6 +163,21 @@ const BecomeServiceProviderForm = () => {
         navigate('/');
         if (setCurrentUser && currentUser) {
           setCurrentUser({ ...currentUser, is_SP: 1 });
+          // /customers/:userId
+          const updateIsSP = async () => {
+            try {
+              const response = await axios.put(`http://localhost:4002/customers/${currentUser.U_Email}`, {
+                is_SP: 1
+              });
+              console.log('Update successful:', response.data);
+            } catch (error) {
+              console.error('Error updating is_SP:', error);
+            }
+          };
+          
+          // Call the function when you need to update
+          updateIsSP();
+          
         }
       } else {
         console.error('Error adding service details:', serviceResult);
@@ -589,4 +608,3 @@ const BecomeServiceProviderForm = () => {
 };
 
 export default BecomeServiceProviderForm;
-

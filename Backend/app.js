@@ -1,29 +1,65 @@
 import express from 'express';
 import cors from 'cors';
-import dotenv from 'dotenv'; // Load environment variables
-import { getAllServiceProviders, addServiceProvider } from './models/serviceProvider.js';
-import { getAllCustomers, addCustomer, updateIsSP } from './models/customer.js'; // Added updateIsSP import
-import { getAllBookings, addBooking, deleteBooking } from './models/booking.js';
-import { getAllServices, addService } from './models/service.js'; // Import service functions
+import dotenv from 'dotenv';
+
+
+import { createServer } from 'http'; // Import to create HTTP server
+import { Server } from 'socket.io'; // Import socket.io
+import {
+  getAllServiceProviders,
+  addServiceProvider
+} from './models/serviceProvider.js';
+import {
+  getAllCustomers,
+  addCustomer,
+  updateIsSP
+} from './models/customer.js';
+import {
+  getAllBookings,
+  addBooking,
+  deleteBooking,
+  getBookingsByServiceProvider
+} from './models/booking.js';
+import { getAllServices, addService } from './models/service.js';
 import { getAllServicesForProvider, addNewServiceForProvider } from './models/sp_services.js';
-// Import the city functions
 import { getAllCities, addCity } from './models/city.js';
-import {  getBookingsByServiceProvider } from './models/booking.js';
 import { addBookingPost } from './models/bookingPost.js';
-// Load environment variables
+
 dotenv.config();
 
+
 const app = express();
-
-// Middleware to parse JSON
-app.use(express.json());
-
-// Middleware to enable CORS
-app.use(cors({
-    origin: process.env.CORS_ORIGIN || 'http://localhost:5173', // Allow requests from this origin
-    methods: 'GET,POST,PUT,DELETE',
+const httpServer = createServer(app); // Create HTTP server
+const io = new Server(httpServer, { // Initialize Socket.io with HTTP server
+  cors: {
+    origin: process.env.CORS_ORIGIN || 'http://localhost:5173',
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true
+  }
+});
+
+app.use(express.json());
+app.use(cors({
+  origin: process.env.CORS_ORIGIN || 'http://localhost:5173',
+  methods: 'GET,POST,PUT,DELETE',
+  credentials: true
 }));
+
+// Socket.io connection event
+io.on('connection', (socket) => {
+  console.log(`User connected: ${socket.id}`);
+
+  // Example event: notify when a new service provider is added
+  socket.on('newServiceProvider', (data) => {
+    console.log('New service provider added:', data);
+    io.emit('updateServiceProviders', data); // Broadcast the update
+  });
+
+  // Additional events can be added here as needed
+  socket.on('disconnect', () => {
+    console.log(`User disconnected: ${socket.id}`);
+  });
+});
 
 // Service Provider Routes
 app.get('/serviceproviders', (req, res) => {
@@ -36,24 +72,20 @@ app.get('/serviceproviders', (req, res) => {
   });
 });
 
-// Service Provider Routes
 app.post('/serviceproviders', (req, res) => {
   const newProvider = req.body;
-
-  // Validate request data
   if (!newProvider.SP_Email || !newProvider.SP_PIN || !newProvider.GovernmentID || !newProvider.CityName) {
     return res.status(400).json({ error: 'Missing required fields: SP_Email, SP_PIN, GovernmentID, CityName' });
   }
-
   addServiceProvider(newProvider, (err, result) => {
     if (err) {
       console.error('Error adding service provider:', err);
       return res.status(500).json({ error: err.error || 'Failed to add service provider' });
     }
     res.status(201).json({ message: 'Service provider added successfully', result });
+    io.emit('newServiceProvider', newProvider); // Notify clients about new provider
   });
 });
-
 
 // Customer Routes
 app.get('/customers', (req, res) => {
@@ -68,12 +100,9 @@ app.get('/customers', (req, res) => {
 
 app.post('/customers', (req, res) => {
   const newCustomer = req.body;
-
-  // Validate request data
   if (!newCustomer.U_Email) {
     return res.status(400).json({ error: 'Missing required field: email' });
   }
-
   addCustomer(newCustomer, (err, result) => {
     if (err) {
       console.error('Error adding customer:', err);
@@ -83,14 +112,20 @@ app.post('/customers', (req, res) => {
   });
 });
 
+// Additional routes and middleware continue as per your existing code...
+
+// Start the server using httpServer with socket.io
+
+
+
 // Update is_SP for Customer
-app.put('/customers/:userId', (req, res) => {
-  const { U_Email } = req.params;
+app.put('/customers/:U_Email', (req, res) => {
+  const { U_Email } = req.params;  // Changed userId to U_Email
   const { is_SP } = req.body;
 
   // Validate request data
   if (!U_Email || typeof is_SP === 'undefined') {
-    return res.status(400).json({ error: 'Missing required fields: userId or is_SP value' });
+    return res.status(400).json({ error: 'Missing required fields: U_Email or is_SP value' });
   }
 
   updateIsSP(U_Email, is_SP, (err, result) => {
@@ -98,8 +133,8 @@ app.put('/customers/:userId', (req, res) => {
       console.error('Error updating customer:', err);
       return res.status(500).json({ error: 'Failed to update customer' });
     }
-    res.status(200).json({ message: 'Customer updated successfully', result });
-  });
+    res.status(200).json({ message: 'Customer updated successfully', result });
+  });
 });
 
 // Booking Routes
@@ -274,3 +309,67 @@ app.post('/bookingPost', (req, res) => {
     res.status(201).json({ message: 'Booking created successfully', bookingId: bookingData.Book_ID });
   });
 });
+
+
+
+
+
+// Fetch orders for a service provider based on email
+app.get('/bookings/sp/:email', async (req, res) => {
+  try {
+    const orders = await Booking.find({ U_Email: req.params.email });
+    res.json(orders);
+  } catch (error) {
+    console.error("Error fetching orders:", error);
+    res.status(500).json({ error: "Error fetching orders" });
+  }
+});
+
+// Accept a booking by Book_ID
+// In your route file
+import { acceptBooking } from './models/booking.js';
+
+app.post('/bookings/accept-order/:bookId', async (req, res) => {
+  const bookId = req.params.bookId;
+
+  // Call the acceptBooking function from the model
+  acceptBooking(bookId, (err, result) => {
+    if (err) {
+      if (err.error === 'Booking not found') {
+        return res.status(404).json({ error: 'Booking not found' });
+      }
+      return res.status(500).json({ error: 'Error accepting booking', message: err.message });
+    }
+
+    res.json({ message: 'Booking accepted', result });
+  });
+});
+
+
+// Cancel a booking by Book_ID
+// In your route file
+import { cancelBooking } from './models/booking.js';
+
+app.post('/bookings/cancel-order/:bookId', async (req, res) => {
+  const bookId = req.params.bookId;
+
+  // Call the cancelBooking function from the model
+  cancelBooking(bookId, (err, result) => {
+    if (err) {
+      if (err.error === 'Booking not found') {
+        return res.status(404).json({ error: 'Booking not found' });
+      }
+      return res.status(500).json({ error: 'Error canceling booking', message: err.message });
+    }
+
+    res.json({ message: 'Booking cancelled', result });
+  });
+});
+
+
+
+
+
+
+
+

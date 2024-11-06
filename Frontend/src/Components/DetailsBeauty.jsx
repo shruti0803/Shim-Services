@@ -13,6 +13,7 @@ const Details = () => {
 
   const services = [
     // Array of service objects as in your example
+    
   ];
 
   const openDialog = (service) => {
