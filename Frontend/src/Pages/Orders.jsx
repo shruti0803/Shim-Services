@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext';
 
 function Orders() {
   const [orders, setOrders] = useState([]);
+  const [bills, setBills] = useState({});
   const { currentUser } = useAuth(); // Get the current user from Auth context
 
   useEffect(() => {
@@ -48,6 +49,10 @@ function Orders() {
         });
 
         setOrders(sortedOrders);
+
+        // Fetch bills for scheduled orders
+        await fetchBills(sortedOrders);
+
       } catch (error) {
         console.error('There was a problem with the fetch operation:', error);
       }
@@ -55,6 +60,33 @@ function Orders() {
 
     fetchData();
   }, [currentUser]); // Re-run the effect when currentUser changes
+
+  const fetchBills = async (orders) => {
+    let billData = {};
+  
+    for (const order of orders) {
+      if (order.status === 'Scheduled') {
+        try {
+          const billResponse = await fetch(`http://localhost:4002/bills/${order.Book_ID}`);
+          
+          if (billResponse.ok) {
+            const bill = await billResponse.json();
+            billData[order.Book_ID] = bill;
+          } else if (billResponse.status === 404) {
+            // No bill found for this order; skip adding anything to billData
+            console.warn(`Bill not found for Book_ID: ${order.Book_ID}`);
+          } else {
+            console.error(`Failed to fetch bill for Book_ID ${order.Book_ID}: Status ${billResponse.status}`);
+          }
+        } catch (error) {
+          console.error(`Error fetching bill for Book_ID ${order.Book_ID}:`, error);
+        }
+      }
+    }
+  
+    setBills(billData);
+  };
+  
 
   const handleCancel = (id) => {
     setOrders(prevOrders => prevOrders.filter(order => order.Book_ID !== id));
@@ -65,10 +97,20 @@ function Orders() {
     alert(`Help has been requested for Order ${id}.`);
   };
 
+  const handlePayNow = (orderId) => {
+    const bill = bills[orderId];
+    if (bill && bill.paymentMethod === 'Online') {
+      // Implement the payment process, such as redirecting to a payment gateway
+      alert(`Redirecting to payment gateway for order ${orderId}`);
+    } else {
+      alert(`No online payment available for order ${orderId}`);
+    }
+  };
+
   return (
     <div className="container mx-auto p-6">
       <h1 className="text-3xl text-center font-bold mb-6">My Orders</h1>
-      
+
       {/* Sections for In Progress, Scheduled, Completed */}
       <div className="mb-6">
         <h2 className="text-2xl font-semibold mb-4">In Progress</h2>
@@ -84,18 +126,35 @@ function Orders() {
       </div>
 
       <div className="mb-6">
-        <h2 className="text-2xl font-semibold mb-4">Scheduled</h2>
-        {orders.filter(order => order.status === 'Scheduled').length > 0 ? (
+  <h2 className="text-2xl font-semibold mb-4">Scheduled</h2>
+  {orders.filter(order => order.status === 'Scheduled').length > 0 ? (
+    orders
+      .filter(order => order.status === 'Scheduled')
+      .map(order => (
+        <div key={order.Book_ID}>
+          <Order order={order} onCancel={handleCancel} onHelp={handleGetHelp} />
 
-          orders
-            .filter(order => order.status === 'Schedules'||'Scheduled')
-            .map(order => (
-              <Order key={order.Book_ID} order={order} onCancel={handleCancel} onHelp={handleGetHelp} />
-            ))
-        ) : (
-          <p>No scheduled orders.</p>
-        )}
-      </div>
+          {/* Log bill details to check their values */}
+          {console.log("Bill for Order ID:", order.Book_ID, bills[order.Book_ID])}
+          {console.log("Bill Mode for Order ID:", order.Book_ID, bills[order.Book_ID]?.Bill_Mode)}
+
+          {/* Access the bill for the current order using order.Book_ID */}
+          {bills[order.Book_ID] && bills[order.Book_ID].Bill_Mode === 'online' && (
+            <button
+              className="bg-blue-500 text-white p-2 rounded mt-4"
+              onClick={() => handlePayNow(order.Book_ID)}
+            >
+              Pay Now
+            </button>
+          )}
+        </div>
+      ))
+  ) : (
+    <p>No scheduled orders.</p>
+  )}
+</div>
+
+
 
       <div className="mb-6">
         <h2 className="text-2xl font-semibold mb-4">Completed</h2>

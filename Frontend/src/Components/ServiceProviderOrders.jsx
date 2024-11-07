@@ -1,49 +1,59 @@
 import React, { useState, useEffect } from "react";
 import axios from 'axios';
+import BillModal from "./BillModal";
 
-const ServiceProviderOrders = ({ userEmail }) => {
-  const [incomingOrders, setIncomingOrders] = useState([]); // For Pending Orders
-  const [acceptedOrders, setAcceptedOrders] = useState([]); // For Accepted Orders
+const ServiceProviderOrders = ({ SPEmail }) => {
+  const [incomingOrders, setIncomingOrders] = useState([]);
+  const [acceptedOrders, setAcceptedOrders] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedOrder, setSelectedOrder] = useState(null);
 
+  // Fetch orders from the server
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        // Fetch service names for the provider
-        const responseServiceName = await axios.get(`http://localhost:4002/services/${userEmail}`);
+        // Fetch service names associated with the service provider
+        const responseServiceName = await axios.get(`http://localhost:4002/services/${SPEmail}`);
         const serviceName = responseServiceName.data.services.map(service => service.Service_Name);
 
-        // Fetch all available bookings related to the service
+        // Fetch incoming orders
         const response = await axios.get(`http://localhost:4002/available-bookings/${serviceName}`);
-        
-        // Separate orders into incoming and accepted
         const incoming = response.data.filter(order => order.Book_Status === 'Pending');
-        const accepted = response.data.filter(order => order.Book_Status === 'Scheduled');
-        
-        // Set the states
         setIncomingOrders(incoming);
-        setAcceptedOrders(accepted);
+
+        // Fetch accepted orders
+        const acceptedResponse = await axios.get(`http://localhost:4002/bookings/sp/${SPEmail}`);
+        const accepted = acceptedResponse.data.filter(order => order.Book_Status === 'Scheduled');
+        
+        // Update accepted orders with bill status
+        const updatedAcceptedOrders = await fetchBillsForOrders(accepted);
+        setAcceptedOrders(updatedAcceptedOrders);
+
       } catch (error) {
         console.error("Error fetching orders:", error);
       }
     };
-
     fetchOrders();
-  }, [userEmail]);
+  }, [SPEmail]);
 
+  // Accept an order and update status
   const handleAccept = async (orderId) => {
     try {
-      // Move accepted order to acceptedOrders and remove from incomingOrders
       const orderToAccept = incomingOrders.find(order => order.Book_ID === orderId);
-  
-      // Call the API to update the booking status
+
       const response = await axios.put(`http://localhost:4002/update-status/${orderId}`, {
-        newStatus: 'Scheduled',  // Update status to 'Scheduled'
+        newStatus: 'Scheduled',
+        SP_Email: SPEmail
       });
-  
+
       if (response.status === 200) {
-        // If successful, update the frontend state
-        setAcceptedOrders((prevState) => [...prevState, orderToAccept]);
-        setIncomingOrders((prevState) => prevState.filter(order => order.Book_ID !== orderId));
+        const updatedOrder = { ...orderToAccept, Book_Status: 'Scheduled', billGenerated: false };
+        setAcceptedOrders(prevState => {
+          // Ensure order isn't already in acceptedOrders to avoid duplication
+          if (prevState.some(order => order.Book_ID === orderId)) return prevState;
+          return [...prevState, updatedOrder];
+        });
+        setIncomingOrders(prevState => prevState.filter(order => order.Book_ID !== orderId));
       } else {
         console.error("Error updating booking status");
       }
@@ -52,20 +62,56 @@ const ServiceProviderOrders = ({ userEmail }) => {
     }
   };
 
+  // Decline an order
   const handleDecline = (orderId) => {
-    // Remove declined order from incomingOrders
     setIncomingOrders((prevState) => prevState.filter(order => order.Book_ID !== orderId));
   };
 
-  const handleGenerateBill = (orderId) => {
-    console.log("Generating bill for order ID:", orderId);
-    // Implement the bill generation logic here
+  // Open the bill generation modal
+  const handleGenerateBill = (order) => {
+    setSelectedOrder(order);
+    setIsModalOpen(true);
+  };
+
+  // Mark an order as bill-generated once the bill is created
+  const handleBillGenerated = (orderId) => {
+    setAcceptedOrders((prevState) =>
+      prevState.map(order =>
+        order.Book_ID === orderId ? { ...order, billGenerated: true } : order
+      )
+    );
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedOrder(null);
+  };
+
+  // Check if a bill exists for an order
+  const checkBillExistence = async (bookId) => {
+    try {
+      const response = await axios.get(`http://localhost:4002/bills/${bookId}`);
+      return response.data ? true : false;
+    } catch (error) {
+      return false;
+    }
+  };
+
+  // Check for bills for each accepted order
+  const fetchBillsForOrders = async (orders) => {
+    const updatedOrders = await Promise.all(
+      orders.map(async (order) => {
+        const billExists = await checkBillExistence(order.Book_ID);
+        return { ...order, billGenerated: billExists };
+      })
+    );
+    return updatedOrders;
   };
 
   return (
     <div className="w-full flex justify-center items-start p-6 bg-white rounded-lg shadow-md">
       <div className="flex w-full space-x-8">
-        {/* Incoming Orders Section */}
+        {/* Incoming Orders Column */}
         <div className="w-1/2">
           <h2 className="text-xl font-semibold mb-4">Incoming Orders</h2>
           <ul className="space-y-4">
@@ -78,8 +124,6 @@ const ServiceProviderOrders = ({ userEmail }) => {
                   <p>Location: {order.Book_Area}, {order.Book_City}</p>
                   <p>Date: {new Date(order.Book_Date).toLocaleString()}</p>
                   <p>Status: {order.Book_Status}</p>
-
-                  {/* Accept and Decline buttons for pending orders */}
                   {order.Book_Status === "Pending" && (
                     <div className="mt-2 flex space-x-4">
                       <button
@@ -104,7 +148,7 @@ const ServiceProviderOrders = ({ userEmail }) => {
           </ul>
         </div>
 
-        {/* Accepted Orders Section */}
+        {/* Accepted Orders Column */}
         <div className="w-1/2">
           <h2 className="text-xl font-semibold mb-4">Accepted Orders</h2>
           <ul className="space-y-4">
@@ -117,15 +161,17 @@ const ServiceProviderOrders = ({ userEmail }) => {
                   <p>Location: {order.Book_Area}, {order.Book_City}</p>
                   <p>Date: {new Date(order.Book_Date).toLocaleString()}</p>
                   <p>Status: {order.Book_Status}</p>
-
-                  {/* Show Generate Bill button for accepted orders */}
                   <div className="mt-4">
-                    <button
-                      className="bg-blue-500 text-white py-1 px-4 rounded-md"
-                      onClick={() => handleGenerateBill(order.Book_ID)}
-                    >
-                      Generate Bill
-                    </button>
+                    {order.billGenerated ? (
+                      <p className="text-green-500">Bill has been generated.</p>
+                    ) : (
+                      <button
+                        className="bg-green-500 text-white py-2 px-4 rounded-md"
+                        onClick={() => handleGenerateBill(order)}
+                      >
+                        Generate Bill
+                      </button>
+                    )}
                   </div>
                 </li>
               ))
@@ -135,6 +181,10 @@ const ServiceProviderOrders = ({ userEmail }) => {
           </ul>
         </div>
       </div>
+
+      {isModalOpen && (
+        <BillModal order={selectedOrder} onClose={closeModal} onBillGenerated={handleBillGenerated} />
+      )}
     </div>
   );
 };
