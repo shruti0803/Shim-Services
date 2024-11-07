@@ -11,10 +11,7 @@ import { getAllCities, addCity } from './models/city.js';
 import {  getBookingsByServiceProvider } from './models/booking.js';
 import { addBookingPost } from './models/bookingPost.js';
 //for jwt
-import jwt from 'jsonwebtoken';
-import bcrypt from 'bcryptjs';
-import mysql from 'mysql2/promise';
-import {generateAccessToken, generateRefreshToken} from './middlewares/auth.js';
+
 // Load environment variables
 dotenv.config();
 

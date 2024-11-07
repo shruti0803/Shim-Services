@@ -15,6 +15,7 @@ const BookingForm = ({ isOpen, onClose, serviceName, service }) => {
     bookState: '',
     customerName: '',
     customerPhone: '',
+    //sp_email, //book_date
   });
 
   const { currentUser } = useAuth();
@@ -68,6 +69,7 @@ const BookingForm = ({ isOpen, onClose, serviceName, service }) => {
       Book_State: formData.bookState,
       Customer_Name: formData.customerName,
       Customer_Phone: formData.customerPhone,
+      // book_date, book_id, sp_email
     };
 
     try {
@@ -224,6 +226,8 @@ const BookingForm = ({ isOpen, onClose, serviceName, service }) => {
         </form>
       </div>
     </div>
+
+    
   );
 };
 

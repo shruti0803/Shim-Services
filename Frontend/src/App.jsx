@@ -17,19 +17,10 @@ import Orders from './Pages/Orders';
 import { AuthProvider } from './context/AuthContext';
 import ProfilePage from './Pages/Profile';
 import Login from './Components/Login';
-import {refreshAccessToken} from './services/authService';
+
 
 
 function App() {
-
-  useEffect(() => {
-    const fetchData = async () => {
-      if (localStorage.getItem('refreshToken')) {  // Check for refreshToken
-        await refreshAccessToken();
-      }
-    };
-    fetchData();
-  }, []);
 
 
   return (

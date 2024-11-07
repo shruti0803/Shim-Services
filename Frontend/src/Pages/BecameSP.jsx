@@ -3,9 +3,15 @@ import { Link } from 'react-router-dom';
 import Select from 'react-select';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import SuccessPopup from '../Components/SuccessPopup';
+
+
 const BecomeServiceProviderForm = () => {
   const { currentUser,setCurrentUser } = useAuth();
   const [selectedDays, setSelectedDays] = useState([]);
+  const [cities, setCities] = useState([]);
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -15,6 +21,7 @@ const BecomeServiceProviderForm = () => {
     state: '',
     country:'',
     city: '',
+    pincode:'',
     address: '',
     serviceCategory: '',
     subCategories: [], // Added to store selected subcategories
@@ -41,6 +48,22 @@ const BecomeServiceProviderForm = () => {
     }
   }, [currentUser]);
 
+  useEffect(() => {
+    const fetchCities = async () => {
+      try {
+        const response = await axios.get('http://localhost:4002/cities');
+        // Sort the cities in ascending order by name
+        const sortedCities = response.data.sort((a, b) => a.City_Name.localeCompare(b.City_Name));
+        setCities(sortedCities);
+      } catch (error) {
+        console.error('Error fetching cities:', error);
+      }
+    };
+  
+    fetchCities();
+  }, []);
+  
+
   const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
   const onClose = () => {
@@ -57,6 +80,31 @@ const BecomeServiceProviderForm = () => {
       setSelectedDays((prevDays) => [...prevDays, day]);
     }
   };
+
+  const handleCityChange = (e) => {
+    const { name, value } = e.target;
+  
+    if (name === 'city') {
+      // Find the selected city from the cities list
+      const selectedCity = cities.find((city) => city.City_Name === value);
+  
+      // Update formData with the selected city's details
+      setFormData((prevData) => ({
+        ...prevData,
+        city: value,
+        pincode: selectedCity ? selectedCity.City_PIN : '', 
+        state: selectedCity ? selectedCity.City_State : '', 
+        country: selectedCity ? selectedCity.City_Country : 'India', 
+      }));
+    } else {
+      setFormData({
+        ...formData,
+        [name]: value,
+      });
+    }
+  };
+  
+  
 
   const removeDay = (day) => {
     setSelectedDays((prevDays) => prevDays.filter((d) => d !== day));
@@ -141,6 +189,7 @@ const BecomeServiceProviderForm = () => {
       const result = await response.json();
   
       if (response.ok) {
+
       console.log('Service provider added successfully:', result);
 
       // POST request to the second API (sp_services)
@@ -156,7 +205,8 @@ const BecomeServiceProviderForm = () => {
 
       if (serviceResponse.ok) {
         console.log('Service details added successfully:', serviceResult);
-        navigate('/');
+        setIsPopupOpen(true);
+        //navigate('/');
         if (setCurrentUser && currentUser) {
           setCurrentUser({ ...currentUser, is_SP: 1 });
         }
@@ -170,6 +220,14 @@ const BecomeServiceProviderForm = () => {
   } catch (error) {
     console.error('Network error:', error);
   }
+};
+
+const onClosePopup = () => {
+  setIsPopupOpen(false);
+  // Use a timeout to ensure popup is closed before navigating
+  setTimeout(() => {
+    navigate('/');
+  }, 500); // Add a small delay before navigating
 };
 
 
@@ -219,11 +277,11 @@ const BecomeServiceProviderForm = () => {
     ]
   };
 
-  const cities = [
-    'Mumbai', 'Delhi', 'Bangalore', 'Hyderabad', 'Ahmedabad',
-    'Chennai', 'Kolkata', 'Surat', 'Pune', 'Jaipur', 'Lucknow', 
-    'Kanpur', 'Nagpur', 'Indore', 'Thane', 'Bhopal', 'Visakhapatnam','Faridabad','Ludhiana','Ghaziabad','Varanasi','Meerut','Agra','Rajkot','Vadodara','Vasai-Vihar','Pimrpi-Chinchwad','Nashik','Chhindwara','Patna','Ranchi'
-  ];
+  // const cities = [
+  //   'Mumbai', 'Delhi', 'Bangalore', 'Hyderabad', 'Ahmedabad',
+  //   'Chennai', 'Kolkata', 'Surat', 'Pune', 'Jaipur', 'Lucknow', 
+  //   'Kanpur', 'Nagpur', 'Indore', 'Thane', 'Bhopal', 'Visakhapatnam','Faridabad','Ludhiana','Ghaziabad','Varanasi','Meerut','Agra','Rajkot','Vadodara','Vasai-Vihar','Pimrpi-Chinchwad','Nashik','Chhindwara','Patna','Ranchi'
+  // ];
 
   const languageOptions = [
     { value: 'English', label: 'English' },
@@ -258,6 +316,8 @@ const BecomeServiceProviderForm = () => {
     // Update subCategories when serviceCategory changes
     setSubCategories(categoryToSubCategories[formData.serviceCategory] || []);
   }, [formData.serviceCategory]);
+
+
 
   return (
     <div className="max-w-3xl mx-auto p-6 bg-white shadow-md rounded-lg">
@@ -301,47 +361,27 @@ const BecomeServiceProviderForm = () => {
               required
             />
           </div>
-          <div className="flex items-center gap-4">
-  <div className="flex-1">
-    <label className="block font-medium">State</label>
-    <input
-      type="text"
-      name="state"
-      value={formData.state}
-      onChange={handleChange}
-      className="mt-1 block w-full p-2 border border-gray-300 rounded"
-      required
-    />
-  </div>
-  <div className="flex-1">
-    <label className="block font-medium">Country</label>
-    <input
-      type="text"
-      name="country"
-      value={formData.country}
-      onChange={handleChange}
-      className="mt-1 block w-full p-2 border border-gray-300 rounded"
-      required
-    />
-  </div>
-</div>
 
-<div className="flex items-center gap-4">
-  <div className="flex-1">
+          <div className="flex items-center gap-4">
+          <div className="flex-1">
     <label className="block font-medium">City</label>
     <select
       name="city"
       value={formData.city}
-      onChange={handleChange}
+      onChange={handleCityChange}
       className="mt-1 block w-full p-2 border border-gray-300 rounded"
       required
     >
       <option value="">Select City</option>
       {cities.map((city) => (
-        <option key={city} value={city}>{city}</option>
+        <option key={city.City_Name} value={city.City_Name}>
+          {city.City_Name}
+        </option>
       ))}
     </select>
   </div>
+
+  {/* Pincode Field */}
   <div className="flex-1">
     <label className="block font-medium">Pincode</label>
     <input
@@ -353,8 +393,32 @@ const BecomeServiceProviderForm = () => {
       required
     />
   </div>
-</div>
 
+</div>
+  <div className="flex items-center gap-4">
+  <div className="flex-1">
+    <label className="block font-medium">State</label>
+    <input
+      type="text"
+      name="state"
+      value={formData.state}
+      onChange={handleCityChange}
+      className="mt-1 block w-full p-2 border border-gray-300 rounded"
+      required
+    />
+  </div>
+  <div className="flex-1">
+    <label className="block font-medium">Country</label>
+    <input
+      type="text"
+      name="country"
+      value={formData.country}
+      onChange={handleCityChange}
+      className="mt-1 block w-full p-2 border border-gray-300 rounded"
+      required
+    />
+  </div>
+</div>
 
 
 <div>
@@ -584,6 +648,11 @@ const BecomeServiceProviderForm = () => {
           </div>
         </div>
       </form>
+      {/* Success Popup */}
+      {isPopupOpen && (
+      <SuccessPopup isOpen={isPopupOpen} onClose={onClosePopup} />
+    )}
+
     </div>
   );
 };
