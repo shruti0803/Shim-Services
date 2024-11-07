@@ -3,6 +3,7 @@ import connection from '../db/connection.js';
 // Add a new booking
 export const addBookingPost = (bookingData, callback) => {
   const {
+    
     U_Email,
     Book_Status,
     Service_Name,
