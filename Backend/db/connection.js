@@ -2,10 +2,10 @@ import mysql from 'mysql2';
 
 // connection to the MySQL database
 const connection = mysql.createConnection({
-  host: 'localhost',        
-  user: 'root',             
-  password: 'Manishka@28',     
-  database: 'ProjectShimServices'  
+  host: 'localhost',        // Replace with your database host
+  user: 'root',             // Replace with your database user
+  password: 'IshaSql@562',     // Replace with your database password
+  database: 'ProjectShimServices'   // Replace with your database name
 });
 
 // Connect to the MySQL database
