@@ -3,6 +3,7 @@ import "@fortawesome/fontawesome-free/css/all.min.css";
 import { useAuth } from "../context/AuthContext"; // Import the useAuth hook
 import axios from 'axios'; // Import axios for API calls
 
+
 const Profile = () => {
   const { currentUser } = useAuth(); // Get currentUser from useAuth
   const isServiceProvider = currentUser?.is_SP === 1; // Check if the user is a service provider

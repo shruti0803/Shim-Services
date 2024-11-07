@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 
+
 const Login = ({ onSwitchToSignUp, closeDialog }) => {
     const [loginValues, setLoginValues] = useState({ email: '', password: '' });
     const [errorMessage, setErrorMessage] = useState('');
@@ -25,6 +26,8 @@ const Login = ({ onSwitchToSignUp, closeDialog }) => {
             const customer = customers.find(c => c.U_Email === loginValues.email);
     
             if (customer && customer.U_Password === loginValues.password) {
+                
+
                 login(customer);
                 setSuccessMessage('Login successful!');
                 setErrorMessage('');

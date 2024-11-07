@@ -1,4 +1,6 @@
 import connection from '../db/connection.js';
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
 
 // Get all customers
 export const getAllCustomers = (callback) => {
@@ -14,7 +16,7 @@ export const getAllCustomers = (callback) => {
 
 // Add a new customer
 export const addCustomer = (customerData, callback) => {
-    const { U_Name, U_Email, U_Phone, U_Password, is_SP } = customerData;
+  const { U_Name, U_Email, U_Phone, U_Password, is_SP } = customerData;
   
     console.log('Checking for existing email or phone:', U_Email, U_Phone);
   
@@ -30,6 +32,8 @@ export const addCustomer = (customerData, callback) => {
       if (results.length > 0) {
         return callback({ error: 'Email or Phone already exists' }, null);
       }
+
+      
   
       // Insert query for adding new customer
       const query = `
