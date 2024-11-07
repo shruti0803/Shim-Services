@@ -60,3 +60,28 @@ export const addServiceProvider = (serviceProviderData, callback) => {
     );
   });
 };
+
+// Fetch the service name(s) of a specific service provider
+export const getServiceNamesByServiceProvider = (SP_Email, callback) => {
+  const query = `
+    SELECT Service_Name 
+    FROM sp_services 
+    WHERE SP_Email = ?
+  `;
+
+  console.log('Executing query:', query, 'with SP_Email:', SP_Email); // Debugging print
+
+  connection.query(query, [SP_Email], (err, results) => {
+    if (err) {
+      console.error('Error executing query:', err);
+      return callback(err, null);
+    }
+
+    if (results.length === 0) {
+      return callback({ message: 'No services found for this service provider' }, null);
+    }
+
+    console.log('Query results:', results); // Debugging print
+    callback(null, results);
+  });
+};

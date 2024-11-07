@@ -9,8 +9,30 @@ import connection from '../db/connection.js';
 
 // Get all bookings for a specific service provider
 // models/booking.js
+// export const getBookingsByServiceProvider = (SPEmail, callback) => {
+//   const query = 'SELECT * FROM booking WHERE SP_Email = ?';
+//   console.log("email",SPEmail);
+  
+//   console.log('Executing query:', query, 'with email:', SPEmail); // Debugging print
+
+//   connection.query(query, [SPEmail], (err, results) => {
+//       if (err) {
+//           console.error('Error executing query:', err);
+//           return callback(err, null);
+//       }
+//       console.log('Query results:', results); // Debugging print
+//       callback(null, results);
+//   });
+// };
+
 export const getBookingsByServiceProvider = (email, callback) => {
-  const query = 'SELECT * FROM booking WHERE SP_Email = ?';
+  const query = `
+  SELECT b.* 
+  FROM booking b
+  JOIN sp_services s ON  b.Service_Name = s.Service_Name
+  WHERE b.SP_Email = ? OR b.Book_Status = "Pending" OR b.Book_Status="Accepted"
+`;
+
   console.log('Executing query:', query, 'with email:', email); // Debugging print
 
   connection.query(query, [email], (err, results) => {
@@ -22,8 +44,63 @@ export const getBookingsByServiceProvider = (email, callback) => {
       callback(null, results);
   });
 };
+export const cancelBooking = (bookId, callback) => {
+  const query = 'UPDATE booking SET Book_Status = ? WHERE Book_ID = ?';
+
+  connection.query(query, ['Pending', bookId], (err, result) => {
+    if (err) {
+      console.error('Error canceling booking:', err);
+      return callback({ error: err.code, message: err.message }, null);
+    }
+
+    if (result.affectedRows === 0) {
+      // No booking found with that Book_ID
+      return callback({ error: 'Booking not found' }, null);
+    }
+
+    callback(null, result);
+  });
+};
+
+// models/booking.js
 
 
+export const acceptBooking = (bookId, spEmail) => {
+  return new Promise((resolve, reject) => {
+    // Parameter validation
+    // if (!bookId || typeof bookId !== 'string') {  // Treating bookId as a string
+    //   return reject({ error: 'Invalid or missing bookId', details: bookId: ${bookId} });
+    // }
+    // if (!spEmail || typeof spEmail !== 'string') {
+    //   return reject({ error: 'Invalid or missing spEmail', details: spEmail: ${spEmail} });
+    // }
+
+    // Query to update Book_Status and SP_Email
+    const updateBookingQuery = `
+      UPDATE booking 
+      SET Book_Status = ?, SP_Email = ? 
+      WHERE Book_ID = ?
+    `;
+
+    // Execute the query
+    connection.query(updateBookingQuery, ['Accepted', spEmail, bookId], (err, result) => {
+      if (err) {
+        console.error('Database query error:', err);
+        return reject({ error: 'Database query error', details: err.message });
+      }
+
+      if (result.affectedRows === 0) {
+        // No booking was updated, likely because the Book_ID doesn't match any record
+        console.warn('No booking found with the given Book_ID:', bookId);
+        return reject({ error: 'Booking not found', details: `Book_ID: ${bookId}` });
+      }
+
+      // Success response
+      console.log(`Booking ${bookId} accepted by ${spEmail}.`);
+      resolve({ message: 'Booking accepted and SP_Email updated successfully' });
+    });
+  });
+};
 
 // Get all bookings
 export const getAllBookings = (callback) => {
@@ -70,5 +147,28 @@ export const deleteBooking = (bookingId, callback) => {
       return callback({ error: err.code, message: err.message }, null);
     }
     callback(null, result);
+  });
+};
+
+
+//MANISHKA
+
+// Get all bookings where SP_Email is NULL and Service_Name matches the service provided by SP
+export const getAvailableBookingsForService = (serviceName, callback) => {
+  const query = `
+    SELECT * FROM booking 
+    WHERE SP_Email IS NULL 
+    AND Service_Name = ?
+  `;
+
+  console.log('Executing query:', query, 'with service name:', serviceName); // Debugging print
+
+  connection.query(query, [serviceName], (err, results) => {
+    if (err) {
+      console.error('Error executing query:', err);
+      return callback(err, null);
+    }
+    console.log('Query results:', results); // Debugging print
+    callback(null, results);
   });
 };

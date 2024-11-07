@@ -1,24 +1,37 @@
 import express from 'express';
 import cors from 'cors';
-import dotenv from 'dotenv'; // Load environment variables
-import { getAllServiceProviders, addServiceProvider } from './models/serviceProvider.js';
+import dotenv from 'dotenv'; 
+import bodyParser from 'body-parser';// Load environment variables
+import { createServer } from 'http'; // Import to create HTTP server
+import { Server } from 'socket.io'; // Import socket.io
+
+import { getAllServiceProviders, addServiceProvider,getServiceNamesByServiceProvider } from './models/serviceProvider.js';
 import { getAllCustomers, addCustomer, updateIsSP } from './models/customer.js'; // Added updateIsSP import
-import { getAllBookings, addBooking, deleteBooking } from './models/booking.js';
+import { getAllBookings, addBooking, acceptBooking,cancelBooking, deleteBooking,getAvailableBookingsForService } from './models/booking.js';
 import { getAllServices, addService } from './models/service.js'; // Import service functions
 import { getAllServicesForProvider, addNewServiceForProvider } from './models/sp_services.js';
 // Import the city functions
 import { getAllCities, addCity } from './models/city.js';
 import {  getBookingsByServiceProvider } from './models/booking.js';
 import { addBookingPost } from './models/bookingPost.js';
-//for jwt
-
+import { updateBookingStatus } from './models/updateBooking.js';
+import { addBill,getAllBills,getBillById } from './models/bill.js';
 // Load environment variables
 dotenv.config();
 
 const app = express();
+const httpServer = createServer(app); // Create HTTP server
+const io = new Server(httpServer, { // Initialize Socket.io with HTTP server
+  cors: {
+    origin: process.env.CORS_ORIGIN || 'http://localhost:5173',
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    credentials: true
+  }
+});
 
 // Middleware to parse JSON
 app.use(express.json());
+
 
 // Middleware to enable CORS
 app.use(cors({
@@ -26,6 +39,22 @@ app.use(cors({
     methods: 'GET,POST,PUT,DELETE',
     credentials: true
 }));
+
+// Socket.io connection event
+io.on('connection', (socket) => {
+  console.log(`User connected: ${socket.id}`);
+
+  // Example event: notify when a new service provider is added
+  socket.on('newServiceProvider', (data) => {
+    console.log('New service provider added:', data);
+    io.emit('updateServiceProviders', data); // Broadcast the update
+  });
+
+  // Additional events can be added here as needed
+  socket.on('disconnect', () => {
+    console.log(`User disconnected: ${socket.id}`);
+  });
+});     
 
 // Service Provider Routes
 app.get('/serviceproviders', (req, res) => {
@@ -86,13 +115,13 @@ app.post('/customers', (req, res) => {
 });
 
 // Update is_SP for Customer
-app.put('/customers/:userId', (req, res) => {
-  const { U_Email } = req.params;
+app.put('/customers/:U_Email', (req, res) => {
+  const { U_Email } = req.params;  // Changed userId to U_Email
   const { is_SP } = req.body;
 
   // Validate request data
   if (!U_Email || typeof is_SP === 'undefined') {
-    return res.status(400).json({ error: 'Missing required fields: userId or is_SP value' });
+    return res.status(400).json({ error: 'Missing required fields: U_Email or is_SP value' });
   }
 
   updateIsSP(U_Email, is_SP, (err, result) => {
@@ -103,6 +132,7 @@ app.put('/customers/:userId', (req, res) => {
     res.status(200).json({ message: 'Customer updated successfully', result });
   });
 });
+
 
 // Booking Routes
 app.get('/bookings', (req, res) => {
@@ -211,16 +241,17 @@ app.post('/cities', (req, res) => {
 //booking new shruti
 
 
-app.get('/bookings/sp/:email', (req, res) => {
-  const { email } = req.params;
-  console.log('Fetching bookings for service provider with email:', email); // Debugging print
+app.get('/bookings/sp/:SPEmail', (req, res) => {
+  const { SPEmail } = req.params;
 
-  getBookingsByServiceProvider(email, (err, results) => {
+  // console.log('Fetching bookings for service provider with email:', SPEmail); // Debugging print
+
+  getBookingsByServiceProvider(SPEmail, (err, results) => {
       if (err) {
           console.error('Error retrieving bookings for service provider:', err);
           return res.status(500).json({ error: 'Failed to retrieve bookings for service provider' });
       }
-      console.log('Retrieved bookings:', results); // Debugging print
+      // console.log('Retrieved bookings:', results); // Debugging print
       res.json(results);
   });
 });
@@ -255,6 +286,21 @@ app.post('/sp_services', (req, res) => {
   });
 });
 
+// API endpoint to get services of a specific service provider
+//Manishka--
+app.get('/services/:spEmail', (req, res) => {
+  const { spEmail } = req.params;
+
+  // Fetch services provided by the service provider using the email
+  getServiceNamesByServiceProvider(spEmail, (err, services) => {
+    if (err) {
+      return res.status(500).json({ message: 'Error fetching services', error: err });
+    }
+    return res.status(200).json({ services });
+  });
+});
+//Manishka end
+
 app.post('/bookingPost', (req, res) => {
   const bookingData = req.body;
 
@@ -266,6 +312,50 @@ app.post('/bookingPost', (req, res) => {
     }
   }
 
+
+  //---Shruti
+
+  app.post('/bookings/accept-order/:bookId', async (req, res) => {
+    const bookId = req.params.bookId;
+    const spEmail = req.body.spEmail; // Ensure spEmail is sent in the request body
+  
+    // if (isNaN(bookId)) {
+    //   return res.status(400).json({ error: 'Invalid bookId' });
+    // }
+  
+    // if (!spEmail || typeof spEmail !== 'string') {
+    //   return res.status(400).json({ error: 'Invalid or missing spEmail' });
+    // }
+  
+    try {
+      const result = await acceptBooking(bookId, spEmail);
+      res.json({ message: 'Booking accepted', result });
+    } catch (error) {
+      if (error.error === 'Booking not found') {
+        return res.status(404).json({ error: 'Booking not found' });
+      }
+      res.status(500).json({ error: 'Error accepting booking', details: error.message });
+    }
+  });
+
+
+  app.post('/bookings/cancel-order/:bookId', async (req, res) => {
+    const bookId = req.params.bookId;
+  
+    // Call the cancelBooking function from the model
+    cancelBooking(bookId, (err, result) => {
+      if (err) {
+        if (err.error === 'Booking not found') {
+          return res.status(404).json({ error: 'Booking not found' });
+        }
+        return res.status(500).json({ error: 'Error canceling booking', message: err.message });
+      }
+  
+      res.json({ message: 'Booking cancelled', result });
+    });
+  });
+
+  //--Shruti end
   // Add booking to the database
   addBookingPost(bookingData, (err, result) => {
     if (err) {
@@ -274,5 +364,107 @@ app.post('/bookingPost', (req, res) => {
     }
 
     res.status(201).json({ message: 'Booking created successfully', bookingId: bookingData.Book_ID });
+  });
+});
+
+
+//fetching all the orders for sp where the sp_email is null and service_name =their service_name
+
+app.get('/available-bookings/:serviceName', (req, res) => {
+  const { serviceName } = req.params;
+
+  // Fetch bookings for the service provider's service
+  getAvailableBookingsForService(serviceName, (err, bookings) => {
+    if (err) {
+      return res.status(500).json({ message: 'Error fetching available bookings', error: err });
+    }
+    if (bookings.length === 0) {
+      return res.status(404).json({ message: 'No available bookings found for this service' });
+    }
+
+    // Send the bookings as the response
+    return res.status(200).json(bookings);
+  });
+});
+
+
+
+//update booking status from pending to scheduled or completed
+
+app.put('/update-status/:bookingId', (req, res) => {
+  const { bookingId } = req.params; // Get the booking ID from the route parameter
+  const { newStatus } = req.body;
+  const {SP_Email}=req.body;
+  // console.log(newStatus);
+   // Get the new status from the request body
+
+  if (!newStatus) {
+    return res.status(400).json({ error: 'New status is required' });
+  }
+
+  // Call the function to update the booking status
+  updateBookingStatus(bookingId, newStatus,SP_Email, (err, result) => {
+    if (err) {
+      return res.status(500).json({ error: err.message });
+    }
+    res.status(200).json({ message: 'Booking status updated successfully', result });
+  });
+});
+
+
+
+//route for bill 
+
+
+
+// Route to get all bills
+app.get('/bills', (req, res) => {
+  getAllBills((err, results) => {
+    if (err) {
+      return res.status(500).json({ message: 'Error fetching bills', error: err });
+    }
+    res.status(200).json(results);
+  });
+});
+
+
+// Route to get a specific bill by Bill_ID
+app.get('/bills/:Book_ID', (req, res) => {
+  const { Book_ID } = req.params;  // Extract Bill_ID from the URL parameter
+
+  getBillById(Book_ID, (err, result) => {
+    if (err) {
+      return res.status(404).json({ message: 'Bill not found', error: err });
+    }
+    res.status(200).json(result);
+  });
+});
+
+// Route to add a new bill
+app.post('/bills', (req, res) => {
+  const { Book_ID, Bill_Date, Bill_Mode, Labor_Entries } = req.body;
+  // console.log("Book id",Book_ID);
+  // console.log("Bill Date",Bill_Date);
+  // console.log("Labor ",Labor_Entries);
+  
+  if (!Book_ID || !Bill_Date || !Labor_Entries) {
+    return res.status(400).json({ message: 'Missing required fields' });
+  }
+
+  // Calculate the total cost
+  const Total_Cost = Labor_Entries.reduce((total, labor) => {
+    return total + labor.total;
+  }, 0);
+
+
+  const billData = {  Book_ID, Bill_Date, Bill_Mode, Labor_Entries, Total_Cost };
+  // console.log(billData);
+  
+
+  addBill(billData, (err, result) => {
+    if (err) {
+      return res.status(500).json({ message: 'Error adding bill', error: err });
+    }
+    res.status(201).json({ message: 'Bill added successfully', data: result });
   });
 });

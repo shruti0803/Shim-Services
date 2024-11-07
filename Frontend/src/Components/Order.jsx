@@ -14,7 +14,7 @@ function Order({ order, onHelp, onCancel }) {
   let statusColorClass = 'text-gray-500'; // Default color
   if (Book_Status === 'Completed') {
     statusColorClass = 'text-black';
-  } else if (Book_Status === 'Confirmed') {
+  } else if (Book_Status === 'Scheduled') {
     statusColorClass = 'text-green-500';
   } else if (Book_Status === 'Pending') {
     statusColorClass = 'text-orange-500';
@@ -57,7 +57,7 @@ function Order({ order, onHelp, onCancel }) {
         </p>
 
         {/* Show cancel button for Pending and Confirmed */}
-        {(Book_Status === 'Pending' || Book_Status === 'Confirmed') && (
+        {(Book_Status === 'Pending' || Book_Status === 'Scheduled') && (
           <button
             onClick={() => handleCancel(Book_ID)}
             className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 mt-4"
@@ -65,6 +65,11 @@ function Order({ order, onHelp, onCancel }) {
             Cancel Order
           </button>
         )}
+        {/* {Book_Status === "Scheduled" && (
+  // <p className="text-gray-700 mt-2">
+  //   <strong>Service Provider Email:</strong> {SP_Email}
+  // </p>
+)} */}
 
         {/* Show review and rating section for Completed orders */}
         {Book_Status === 'Completed' && (
