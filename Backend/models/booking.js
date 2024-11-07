@@ -14,7 +14,7 @@ export const getBookingsByServiceProvider = (email, callback) => {
   SELECT b.* 
   FROM booking b
   JOIN sp_services s ON  b.Service_Name = s.Service_Name
-  WHERE b.SP_Email = ? OR b.Book_Status = "Pending"
+  WHERE b.SP_Email = ? OR b.Book_Status = "Pending" OR b.Book_Status="Accepted"
 `;
 
   console.log('Executing query:', query, 'with email:', email); // Debugging print
@@ -100,7 +100,7 @@ export const updateBookingStatus = (bookingId, status, spEmail, callback) => {
 export const cancelBooking = (bookId, callback) => {
   const query = 'UPDATE booking SET Book_Status = ? WHERE Book_ID = ?';
 
-  connection.query(query, ['Cancelled', bookId], (err, result) => {
+  connection.query(query, ['Pending', bookId], (err, result) => {
     if (err) {
       console.error('Error canceling booking:', err);
       return callback({ error: err.code, message: err.message }, null);
@@ -116,38 +116,47 @@ export const cancelBooking = (bookId, callback) => {
 };
 
 // models/booking.js
-export const acceptBooking = (bookId, spEmail, callback = () => {}) => {
-  // Validate parameters
-  if (!bookId || typeof bookId !== 'number') {
-    return callback({ error: 'Invalid or missing bookId' }, null);
-  }
-  
-  if (!spEmail || typeof spEmail !== 'string') {
-    return callback({ error: 'Invalid or missing spEmail' }, null);
-  }
 
-  // Update both Book_Status and SP_Email in a single query
-  const updateBookingQuery = `
-    UPDATE booking 
-    SET Book_Status = ?, SP_Email = ? 
-    WHERE Book_ID = ?
-  `;
 
-  connection.query(updateBookingQuery, ['Accepted', spEmail, bookId], (err, result) => {
-    if (err) {
-      console.error('Error updating booking:', err);
-      return callback({ error: err.code, message: err.message }, null);
-    }
+export const acceptBooking = (bookId, spEmail) => {
+  return new Promise((resolve, reject) => {
+    // Parameter validation
+    // if (!bookId || typeof bookId !== 'string') {  // Treating bookId as a string
+    //   return reject({ error: 'Invalid or missing bookId', details: `bookId: ${bookId}` });
+    // }
+    // if (!spEmail || typeof spEmail !== 'string') {
+    //   return reject({ error: 'Invalid or missing spEmail', details: `spEmail: ${spEmail}` });
+    // }
 
-    if (result.affectedRows === 0) {
-      // No booking found with that Book_ID
-      return callback({ error: 'Booking not found' }, null);
-    }
+    // Query to update Book_Status and SP_Email
+    const updateBookingQuery = `
+      UPDATE booking 
+      SET Book_Status = ?, SP_Email = ? 
+      WHERE Book_ID = ?
+    `;
 
-    // Update was successful
-    callback(null, { message: 'Booking accepted and SP_Email updated successfully' });
+    // Execute the query
+    connection.query(updateBookingQuery, ['Accepted', spEmail, bookId], (err, result) => {
+      if (err) {
+        console.error('Database query error:', err);
+        return reject({ error: 'Database query error', details: err.message });
+      }
+
+      if (result.affectedRows === 0) {
+        // No booking was updated, likely because the Book_ID doesn't match any record
+        console.warn('No booking found with the given Book_ID:', bookId);
+        return reject({ error: 'Booking not found', details: `Book_ID: ${bookId}` });
+      }
+
+      // Success response
+      console.log(`Booking ${bookId} accepted by ${spEmail}.`);
+      resolve({ message: 'Booking accepted and SP_Email updated successfully' });
+    });
   });
 };
+
+
+
 
 
 

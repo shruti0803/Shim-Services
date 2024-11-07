@@ -327,23 +327,32 @@ app.get('/bookings/sp/:email', async (req, res) => {
 
 // Accept a booking by Book_ID
 // In your route file
+// Import the acceptBooking function from your model
 import { acceptBooking } from './models/booking.js';
 
 app.post('/bookings/accept-order/:bookId', async (req, res) => {
   const bookId = req.params.bookId;
+  const spEmail = req.body.spEmail; // Ensure spEmail is sent in the request body
 
-  // Call the acceptBooking function from the model
-  acceptBooking(bookId, (err, result) => {
-    if (err) {
-      if (err.error === 'Booking not found') {
-        return res.status(404).json({ error: 'Booking not found' });
-      }
-      return res.status(500).json({ error: 'Error accepting booking', message: err.message });
-    }
+  // if (isNaN(bookId)) {
+  //   return res.status(400).json({ error: 'Invalid bookId' });
+  // }
 
+  // if (!spEmail || typeof spEmail !== 'string') {
+  //   return res.status(400).json({ error: 'Invalid or missing spEmail' });
+  // }
+
+  try {
+    const result = await acceptBooking(bookId, spEmail);
     res.json({ message: 'Booking accepted', result });
-  });
+  } catch (error) {
+    if (error.error === 'Booking not found') {
+      return res.status(404).json({ error: 'Booking not found' });
+    }
+    res.status(500).json({ error: 'Error accepting booking', details: error.message });
+  }
 });
+
 
 
 // Cancel a booking by Book_ID
