@@ -13,7 +13,6 @@ export const getAllCustomers = (callback) => {
   });
 };
 
-
 // Add a new customer
 export const addCustomer = (customerData, callback) => {
   const { U_Name, U_Email, U_Phone, U_Password, is_SP } = customerData;
@@ -33,16 +32,21 @@ export const addCustomer = (customerData, callback) => {
         return callback({ error: 'Email or Phone already exists' }, null);
       }
 
-      
-  
-      // Insert query for adding new customer
+    // Hash the password
+    bcrypt.hash(U_Password, 10, (hashErr, hashedPassword) => {
+      if (hashErr) {
+        console.error('Error hashing password:', hashErr);
+        return callback({ error: 'Failed to hash password' }, null);
+      }
+
+      // Insert query for adding new customer with hashed password
       const query = `
         INSERT INTO user (U_Name, U_Email, U_Phone, U_Password, is_SP)
         VALUES (?, ?, ?, ?, ?)
       `;
-  
-      // Insert the customer data
-      connection.query(query, [U_Name, U_Email, U_Phone, U_Password, is_SP], (err, result) => {
+
+      // Insert the customer data with the hashed password
+      connection.query(query, [U_Name, U_Email, U_Phone, hashedPassword, is_SP], (err, result) => {
         if (err) {
           console.error('Error inserting customer:', err);
           return callback({ error: err.code, message: err.message }, null);
@@ -50,28 +54,28 @@ export const addCustomer = (customerData, callback) => {
         callback(null, result);
       });
     });
-  };
-  
+  });
+};
 
 // Update is_SP for Customer
 export const updateIsSP = (U_Email, is_SP, callback) => {
-    const query = `
-      UPDATE user
-      SET is_SP = ?
-      WHERE U_Email = ?
-    `;
-  
-    connection.query(query, [is_SP, U_Email], (err, result) => {
-      if (err) {
-        console.error('Error updating is_SP:', err);
-        return callback({ error: err.code, message: err.message }, null);
-      }
-  
-      // Check if any rows were affected
-      if (result.affectedRows === 0) {
-        return callback({ error: 'User not found or no update needed' }, null);
-      }
-  
-      callback(null, result);
-    });
-  };
+  const query = `
+    UPDATE user
+    SET is_SP = ?
+    WHERE U_Email = ?
+  `;
+
+  connection.query(query, [is_SP, U_Email], (err, result) => {
+    if (err) {
+      console.error('Error updating is_SP:', err);
+      return callback({ error: err.code, message: err.message }, null);
+    }
+
+    // Check if any rows were affected
+    if (result.affectedRows === 0) {
+      return callback({ error: 'User not found or no update needed' }, null);
+    }
+
+    callback(null, result);
+  });
+};
