@@ -59,3 +59,17 @@ export const getBillById = (Book_ID, callback) => {
     callback(null, results[0]);
   });
 };
+
+//updating razorpay_payment_id in db
+export const updateRazorpayPaymentId = (billId, razorpay_payment_id, callback) => {
+  const query = 'UPDATE bill SET Payment_ID = ? WHERE bill_id = ?';
+
+  connection.query(query, [razorpay_payment_id, billId], (err, result) => {
+    if (err) {
+      console.error('Error updating Razorpay payment ID:', err);
+      return callback({ error: err.code, message: err.message }, null);
+    }
+    callback(null, result);
+  });
+};
+

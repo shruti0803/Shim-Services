@@ -17,6 +17,7 @@ import Orders from './Pages/Orders';
 import { AuthProvider } from './context/AuthContext';
 import ProfilePage from './Pages/Profile';
 import Login from './Components/Login';
+import Payment from './Components/Payment';
 
 
 function App() {
@@ -37,6 +38,7 @@ function App() {
         <Route path="/option" element={<Option/>}/>
         <Route path="/profile" element={<ProfilePage/>} /> 
         <Route path="/login" element={<Login/>} /> 
+        <Route path="/payment" element={<Payment/>} /> 
         {/* <Route path="/profile" element={<ProfilePage/>} />  */}
       </Routes>
       <Footer />
