@@ -7,6 +7,7 @@ const ServiceProviderOrders = ({ SPEmail }) => {
   const [acceptedOrders, setAcceptedOrders] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
+  const [isCannotGenerateBillModalOpen, setIsCannotGenerateBillModalOpen] = useState(false);
 
   // Fetch orders from the server
   useEffect(() => {
@@ -82,21 +83,15 @@ const ServiceProviderOrders = ({ SPEmail }) => {
   const handleDecline = (orderId) => {
     setIncomingOrders((prevState) => prevState.filter(order => order.Book_ID !== orderId));
   };
-// shruti is doing this for date 
-  // Open the bill generation modal
-//   const handleGenerateBill = (order) => {
-//     setSelectedOrder(order);
-//     setIsModalOpen(true);
-//   };
 
-// Open the bill generation modal
-const handleGenerateBill = (order) => {
+  // Open the bill generation modal
+  const handleGenerateBill = (order) => {
     const bookingDate = new Date(order.Book_Date);
     const currentDate = new Date();
   
     // Check if the current date is on or after the booking date
     if (currentDate < bookingDate) {
-      alert("Cannot generate bill before the booking date.");
+      setIsCannotGenerateBillModalOpen(true); // Show the modal if the bill can't be generated
       return; // Don't proceed with bill generation
     }
   
@@ -104,7 +99,6 @@ const handleGenerateBill = (order) => {
     setIsModalOpen(true);
   };
   
-
   // Mark an order as bill-generated once the bill is created
   const handleBillGenerated = (orderId) => {
     setAcceptedOrders((prevState) =>
@@ -117,6 +111,10 @@ const handleGenerateBill = (order) => {
   const closeModal = () => {
     setIsModalOpen(false);
     setSelectedOrder(null);
+  };
+
+  const closeCannotGenerateBillModal = () => {
+    setIsCannotGenerateBillModalOpen(false);
   };
 
   // Check if a bill exists for an order
@@ -213,6 +211,28 @@ const handleGenerateBill = (order) => {
           </ul>
         </div>
       </div>
+
+      {/* Modal when bill cannot be generated */}
+      {isCannotGenerateBillModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm text-center">
+          <div className="text-3xl text-red-500 my-4">
+              <i className="fas fa-exclamation-circle"></i> {/* Icon */}
+            </div>
+            <h2 className="text-lg font-semibold text-gray-800">Cannot Generate Bill</h2>
+            <p className="text-gray-600 my-4">
+              You cannot generate a bill before the booking date. Please wait until the booking date or later.
+            </p>
+           
+            <button
+              onClick={closeCannotGenerateBillModal}
+              className="mt-4 px-4 py-2 bg-green-600 text-white font-bold rounded-md hover:bg-green-700"
+            >
+              OK
+            </button>
+          </div>
+        </div>
+      )}
 
       {isModalOpen && (
         <BillModal order={selectedOrder} onClose={closeModal} onBillGenerated={handleBillGenerated} />
