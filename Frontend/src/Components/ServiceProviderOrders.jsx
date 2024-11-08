@@ -7,6 +7,7 @@ const ServiceProviderOrders = ({ SPEmail }) => {
   const [acceptedOrders, setAcceptedOrders] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
+  const [isCannotGenerateBillModalOpen, setIsCannotGenerateBillModalOpen] = useState(false);
 
   // Fetch orders from the server
   useEffect(() => {
@@ -15,24 +16,40 @@ const ServiceProviderOrders = ({ SPEmail }) => {
         // Fetch service names associated with the service provider
         const responseServiceName = await axios.get(`http://localhost:4002/services/${SPEmail}`);
         const serviceName = responseServiceName.data.services.map(service => service.Service_Name);
-
+    
         // Fetch incoming orders
-        const response = await axios.get(`http://localhost:4002/available-bookings/${serviceName}`);
-        const incoming = response.data.filter(order => order.Book_Status === 'Pending');
-        setIncomingOrders(incoming);
-
+        try {
+          const response = await axios.get(`http://localhost:4002/available-bookings/${serviceName}`);
+          const incoming = response.data.filter(order => order.Book_Status === 'Pending');
+          setIncomingOrders(incoming);
+        } catch (error) {
+          if (error.response && error.response.status === 404) {
+            setIncomingOrders([]); // Set to empty if 404
+          } else {
+            console.error("Error fetching incoming orders:", error);
+          }
+        }
+    
         // Fetch accepted orders
-        const acceptedResponse = await axios.get(`http://localhost:4002/bookings/sp/${SPEmail}`);
-        const accepted = acceptedResponse.data.filter(order => order.Book_Status === 'Scheduled');
-        
-        // Update accepted orders with bill status
-        const updatedAcceptedOrders = await fetchBillsForOrders(accepted);
-        setAcceptedOrders(updatedAcceptedOrders);
-
+        try {
+          const acceptedResponse = await axios.get(`http://localhost:4002/bookings/sp/${SPEmail}`);
+          const accepted = acceptedResponse.data.filter(order => order.Book_Status === 'Scheduled');
+    
+          // Update accepted orders with bill status
+          const updatedAcceptedOrders = await fetchBillsForOrders(accepted);
+          setAcceptedOrders(updatedAcceptedOrders);
+        } catch (error) {
+          if (error.response && error.response.status === 404) {
+            setAcceptedOrders([]); // Set to empty if 404
+          } else {
+            console.error("Error fetching accepted orders:", error);
+          }
+        }
       } catch (error) {
-        console.error("Error fetching orders:", error);
+        console.error("Error fetching services or processing orders:", error);
       }
     };
+    
     fetchOrders();
   }, [SPEmail]);
 
@@ -69,10 +86,19 @@ const ServiceProviderOrders = ({ SPEmail }) => {
 
   // Open the bill generation modal
   const handleGenerateBill = (order) => {
+    const bookingDate = new Date(order.Book_Date);
+    const currentDate = new Date();
+  
+    // Check if the current date is on or after the booking date
+    if (currentDate < bookingDate) {
+      setIsCannotGenerateBillModalOpen(true); // Show the modal if the bill can't be generated
+      return; // Don't proceed with bill generation
+    }
+  
     setSelectedOrder(order);
     setIsModalOpen(true);
   };
-
+  
   // Mark an order as bill-generated once the bill is created
   const handleBillGenerated = (orderId) => {
     setAcceptedOrders((prevState) =>
@@ -85,6 +111,10 @@ const ServiceProviderOrders = ({ SPEmail }) => {
   const closeModal = () => {
     setIsModalOpen(false);
     setSelectedOrder(null);
+  };
+
+  const closeCannotGenerateBillModal = () => {
+    setIsCannotGenerateBillModalOpen(false);
   };
 
   // Check if a bill exists for an order
@@ -181,6 +211,28 @@ const ServiceProviderOrders = ({ SPEmail }) => {
           </ul>
         </div>
       </div>
+
+      {/* Modal when bill cannot be generated */}
+      {isCannotGenerateBillModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm text-center">
+          <div className="text-3xl text-red-500 my-4">
+              <i className="fas fa-exclamation-circle"></i> {/* Icon */}
+            </div>
+            <h2 className="text-lg font-semibold text-gray-800">Cannot Generate Bill</h2>
+            <p className="text-gray-600 my-4">
+              You cannot generate a bill before the booking date. Please wait until the booking date or later.
+            </p>
+           
+            <button
+              onClick={closeCannotGenerateBillModal}
+              className="mt-4 px-4 py-2 bg-green-600 text-white font-bold rounded-md hover:bg-green-700"
+            >
+              OK
+            </button>
+          </div>
+        </div>
+      )}
 
       {isModalOpen && (
         <BillModal order={selectedOrder} onClose={closeModal} onBillGenerated={handleBillGenerated} />

@@ -27,7 +27,7 @@ import connection from '../db/connection.js';
 
 export const getBookingsByServiceProvider = (email, callback) => {
   const query = `
-  SELECT b.* 
+  SELECT DISTINCT b.* 
   FROM booking b
   JOIN sp_services s ON  b.Service_Name = s.Service_Name
   WHERE b.SP_Email = ? OR b.Book_Status = "Pending" OR b.Book_Status="Accepted"
@@ -83,6 +83,7 @@ export const acceptBooking = (bookId, spEmail) => {
     `;
 
     // Execute the query
+    
     connection.query(updateBookingQuery, ['Accepted', spEmail, bookId], (err, result) => {
       if (err) {
         console.error('Database query error:', err);
