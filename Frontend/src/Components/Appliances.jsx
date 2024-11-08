@@ -5,6 +5,7 @@ import Carousel from 'react-bootstrap/Carousel';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Reviews } from './Reviews';
 import  { useAuth } from '../context/AuthContext'; // Import your auth context
+import BookingForm from './BookingForm';
 
 const Card = ({ imageSrc, title }) => (
   <div className="m-4 p-1 text-center w-30 h-32 text-gray-900 transition-shadow duration-300 overflow-visible hover:shadow-lg">
@@ -106,6 +107,7 @@ const Appliance = () => {
           <Details />
         </div>
       </div>
+      
     </>
   );
 };

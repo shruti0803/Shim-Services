@@ -66,12 +66,28 @@ const ServiceProviderOrders = ({ SPEmail }) => {
   const handleDecline = (orderId) => {
     setIncomingOrders((prevState) => prevState.filter(order => order.Book_ID !== orderId));
   };
-
+// shruti is doing this for date 
   // Open the bill generation modal
-  const handleGenerateBill = (order) => {
+//   const handleGenerateBill = (order) => {
+//     setSelectedOrder(order);
+//     setIsModalOpen(true);
+//   };
+
+// Open the bill generation modal
+const handleGenerateBill = (order) => {
+    const bookingDate = new Date(order.Book_Date);
+    const currentDate = new Date();
+  
+    // Check if the current date is on or after the booking date
+    if (currentDate < bookingDate) {
+      alert("Cannot generate bill before the booking date.");
+      return; // Don't proceed with bill generation
+    }
+  
     setSelectedOrder(order);
     setIsModalOpen(true);
   };
+  
 
   // Mark an order as bill-generated once the bill is created
   const handleBillGenerated = (orderId) => {
