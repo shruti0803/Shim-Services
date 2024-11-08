@@ -33,14 +33,14 @@ export const getBookingsByServiceProvider = (email, callback) => {
   WHERE b.SP_Email = ? OR b.Book_Status = "Pending" OR b.Book_Status="Accepted"
 `;
 
-  console.log('Executing query:', query, 'with email:', email); // Debugging print
+  // console.log('Executing query:', query, 'with email:', email); // Debugging print
 
   connection.query(query, [email], (err, results) => {
       if (err) {
           console.error('Error executing query:', err);
           return callback(err, null);
       }
-      console.log('Query results:', results); // Debugging print
+      // console.log('Query results:', results); // Debugging print
       callback(null, results);
   });
 };
@@ -97,7 +97,7 @@ export const acceptBooking = (bookId, spEmail) => {
       }
 
       // Success response
-      console.log(`Booking ${bookId} accepted by ${spEmail}.`);
+      // console.log(`Booking ${bookId} accepted by ${spEmail}.`);
       resolve({ message: 'Booking accepted and SP_Email updated successfully' });
     });
   });
@@ -162,14 +162,14 @@ export const getAvailableBookingsForService = (serviceName, callback) => {
     AND Service_Name = ?
   `;
 
-  console.log('Executing query:', query, 'with service name:', serviceName); // Debugging print
+  // console.log('Executing query:', query, 'with service name:', serviceName); // Debugging print
 
   connection.query(query, [serviceName], (err, results) => {
     if (err) {
       console.error('Error executing query:', err);
       return callback(err, null);
     }
-    console.log('Query results:', results); // Debugging print
+    // console.log('Query results:', results); // Debugging print
     callback(null, results);
   });
 };

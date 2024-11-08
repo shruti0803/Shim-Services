@@ -18,7 +18,7 @@ export const getAllCustomers = (callback) => {
 export const addCustomer = (customerData, callback) => {
   const { U_Name, U_Email, U_Phone, U_Password, is_SP } = customerData;
   
-    console.log('Checking for existing email or phone:', U_Email, U_Phone);
+    // console.log('Checking for existing email or phone:', U_Email, U_Phone);
   
     // Check if email or phone already exists
     connection.query('SELECT * FROM user WHERE U_Email = ? OR U_Phone = ?', [U_Email, U_Phone], (err, results) => {
@@ -27,7 +27,7 @@ export const addCustomer = (customerData, callback) => {
         return callback(err, null);
       }
   
-      console.log('Query results for existing email or phone:', results);
+      // console.log('Query results for existing email or phone:', results);
   
       if (results.length > 0) {
         return callback({ error: 'Email or Phone already exists' }, null);

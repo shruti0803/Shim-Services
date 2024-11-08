@@ -414,8 +414,8 @@ app.put('/update-status/:bookingId', (req, res) => {
 app.put('/bookStatusAfterPayment/:bookId', (req, res) => {
   const { bookId } = req.params;
   const { newStatus } = req.body;
-  console.log("Book id",bookId);
-  console.log("Status",newStatus);
+  // console.log("Book id",bookId);
+  // console.log("Status",newStatus);
   
   
   // Ensure newStatus and bookingId are provided
@@ -516,6 +516,7 @@ app.get('/sp_city_mobile/:spEmail', (req, res) => {
 
 //--------- Payment Integration ----------//
 import Razorpay from "razorpay";
+import { addSalary, fetchTotalCostForSP } from './models/salary.js';
 
 //RAZORPAYX_API_KEY="rzp_test_iDWZYaECE3rES2"
 // RAZORPAYX_API_SECRET="5bx32uiT2GpnGJOurYwR2uSk"
@@ -582,3 +583,50 @@ app.put('/bills/:billId', (req, res) => {
     }
   });
 });
+
+// apis for salary 
+// API to fetch total cost for a service provider
+// Ensure this is in your server file
+app.get('/fetchTotalCostForSP', (req, res) => {
+  const { SP_Email, Bill_Mode } = req.query; // Access query parameters, not body
+  
+  // Log the received query parameters for debugging
+  // console.log('Received request to fetch total cost with:', { SP_Email, Bill_Mode });
+
+  // Fetch the total cost from the database
+  fetchTotalCostForSP({ SP_Email, Bill_Mode }, (err, result) => {
+    if (err) {
+      // Log the error if there is an issue fetching from the database
+      console.error('Error fetching total cost:', err);
+      return res.status(500).json({ error: err.message });
+    }
+    
+    // Log the fetched result for debugging
+    // console.log('Fetched total cost:', result);
+    
+    // Send the total cost in the response
+    res.json({ TotalCost: result || 0 });
+  });
+});
+// API to add salary for a service provider
+app.post('/addSalary', (req, res) => {
+  const { SP_Email, Salary } = req.body;
+
+  // Log the received data for debugging
+  // console.log('Received request to add salary with:', { SP_Email, Salary });
+
+  addSalary({ SP_Email, Salary }, (err, result) => {
+    if (err) {
+      // Log the error if there is an issue adding the salary
+      console.error('Error adding salary:', err);
+      return res.status(500).json({ error: err.message });
+    }
+    
+    // Log the result of adding the salary for debugging
+    // console.log('Salary added successfully:', result);
+    
+    // Send a success message with the result
+    res.json({ message: 'Salary added successfully', result });
+  });
+});
+3
