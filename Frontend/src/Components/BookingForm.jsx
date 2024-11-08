@@ -17,6 +17,8 @@ const BookingForm = ({ isOpen, onClose, serviceName, service }) => {
     bookState: '',
     customerName: '',
     customerPhone: '',
+    bookDate: ''
+    
   });
   const [confirmationDialog, setConfirmationDialog] = useState(false);
 
@@ -43,6 +45,8 @@ const BookingForm = ({ isOpen, onClose, serviceName, service }) => {
       setFormData((prevData) => ({
         ...prevData,
         [name]: value,
+        bookCityPin: selectedCity ? selectedCity.City_PIN : '', // Set city PIN based on selected city
+        bookState: selectedCity ? selectedCity.City_State: '',
         bookCityPin: selectedCity ? selectedCity.City_PIN : '',
         bookState: selectedCity ? selectedCity.City_State : '', // Automatically set state based on city
       }));
@@ -74,6 +78,7 @@ const BookingForm = ({ isOpen, onClose, serviceName, service }) => {
       Book_Date: bookingDate,
       Customer_Name: formData.customerName,
       Customer_Phone: formData.customerPhone,
+      Book_Date: formData.bookDate 
     };
 
     try {
@@ -123,6 +128,19 @@ const BookingForm = ({ isOpen, onClose, serviceName, service }) => {
                 <li key={index}>{desc}</li>
               ))}
             </ul>
+          </div>
+
+          <div>
+            <label className="block text-sm font-bold mb-1 text-gray-700">Booking Date</label>
+            <input
+              type="date"
+              name="bookDate"
+              value={formData.bookDate}
+              onChange={handleChange}
+              placeholder="Enter date for your booking"
+              className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+              required
+            />
           </div>
 
           <div>
@@ -273,6 +291,8 @@ const BookingForm = ({ isOpen, onClose, serviceName, service }) => {
         )}
       </div>
     </div>
+
+    
   );
 };
 
