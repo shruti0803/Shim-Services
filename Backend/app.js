@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv'; 
 import bodyParser from 'body-parser';// Load environment variables
+// import router from "./router.js"; 
 import { createServer } from 'http'; // Import to create HTTP server
 import { Server } from 'socket.io'; // Import socket.io
 
@@ -12,10 +13,11 @@ import { getAllServices, addService } from './models/service.js'; // Import serv
 import { getAllServicesForProvider, addNewServiceForProvider } from './models/sp_services.js';
 import { getAllCities, addCity } from './models/city.js';
 import { addBookingPost } from './models/bookingPost.js';
-import { updateBookingStatus } from './models/updateBooking.js';
-import { addBill,getAllBills,getBillById } from './models/bill.js';
+import { updateBookingStatus, updateBookingStatusAfterPayment} from './models/updateBooking.js';
+import { addBill,getAllBills,getBillById,updateRazorpayPaymentId } from './models/bill.js';
 // Load environment variables
 dotenv.config();
+// console.log(process.env.R);
 
 
 const app = express();
@@ -54,7 +56,7 @@ io.on('connection', (socket) => {
     console.log(`User disconnected: ${socket.id}`);
   });
 });     
-
+// app.use('/api', router); //prefix the routes with '/api'
 // Service Provider Routes
 app.get('/serviceproviders', (req, res) => {
   getAllServiceProviders((err, results) => {
@@ -387,7 +389,7 @@ app.get('/available-bookings/:serviceName', (req, res) => {
 
 
 
-//update booking status from pending to scheduled or completed
+//update booking status from pending to scheduled by Service Provider
 
 app.put('/update-status/:bookingId', (req, res) => {
   const { bookingId } = req.params; // Get the booking ID from the route parameter
@@ -404,6 +406,27 @@ app.put('/update-status/:bookingId', (req, res) => {
   updateBookingStatus(bookingId, newStatus,SP_Email, (err, result) => {
     if (err) {
       return res.status(500).json({ error: err.message });
+    }
+    res.status(200).json({ message: 'Booking status updated successfully', result });
+  });
+});
+
+app.put('/bookStatusAfterPayment/:bookId', (req, res) => {
+  const { bookId } = req.params;
+  const { newStatus } = req.body;
+  console.log("Book id",bookId);
+  console.log("Status",newStatus);
+  
+  
+  // Ensure newStatus and bookingId are provided
+  if (!newStatus || !bookId) {
+    return res.status(400).json({ error: 'Booking ID and new status are required.' });
+  }
+
+  // Call the function to update the booking status
+  updateBookingStatusAfterPayment(bookId, newStatus, (err, result) => {
+    if (err) {
+      return res.status(500).json({ error: err.message, details: err });
     }
     res.status(200).json({ message: 'Booking status updated successfully', result });
   });
@@ -428,8 +451,11 @@ app.get('/bills', (req, res) => {
 
 // Route to get a specific bill by Bill_ID
 app.get('/bills/:Book_ID', (req, res) => {
+  
+  
   const { Book_ID } = req.params;  // Extract Bill_ID from the URL parameter
-
+  // console.log(Book_ID);
+  
   getBillById(Book_ID, (err, result) => {
     if (err) {
       return res.status(404).json({ message: 'Bill not found', error: err });
@@ -484,5 +510,75 @@ app.get('/sp_city_mobile/:spEmail', (req, res) => {
 
     // Return the fetched data as JSON response
     res.json(data);
+  });
+});
+
+
+//--------- Payment Integration ----------//
+import Razorpay from "razorpay";
+
+//RAZORPAYX_API_KEY="rzp_test_iDWZYaECE3rES2"
+// RAZORPAYX_API_SECRET="5bx32uiT2GpnGJOurYwR2uSk"
+
+const razorpay = new Razorpay({
+  key_id: "rzp_test_iDWZYaECE3rES2",
+  key_secret: "5bx32uiT2GpnGJOurYwR2uSk",
+});
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+// app.use(cors());
+
+app.get('/', (req, res) => {
+  res.send('Hello World!');
+});
+
+app.post('/orders', async (req, res) => {
+  const options = {
+    amount: req.body.amount,
+    currency: req.body.currency,
+    receipt: "receipt",
+    payment_capture: 1,
+  };
+
+  try {
+    const response = await razorpay.orders.create(options);
+    res.json({ order_id: response.id, currency: response.currency, amount: response.amount });
+  } catch (err) {
+    res.status(500).send('Internal server error');
+  }
+});
+
+app.get('/payment/:paymentId', async (req, res) => {
+  const { paymentId } = req.params;
+
+  try {
+    const payment = await razorpay.payments.fetch(paymentId);
+    if (!payment) {
+      return res.status(404).json("Payment not found");
+    }
+    res.json({
+      status: payment.status,
+      method: payment.method,
+      amount: payment.amount,
+      currency: payment.currency,
+    });
+  } catch (error) {
+    res.status(500).json("Failed to fetch payment");
+  }
+});
+
+//updating razorpay_id in db
+app.put('/bills/:billId', (req, res) => {
+  const { billId } = req.params;
+  const { razorpay_payment_id } = req.body;
+
+
+  updateRazorpayPaymentId(billId, razorpay_payment_id, (err, result) => {
+    if (err) {
+      res.status(500).json({ error: err.error, message: err.message });
+    } else {
+      res.status(200).json({ message: 'Bill updated with Razorpay payment ID successfully.' });
+    }
   });
 });

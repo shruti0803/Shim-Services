@@ -1,17 +1,24 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import CancelModal from './CancelModal'; // Import the CancelModal component
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCircleInfo } from '@fortawesome/free-solid-svg-icons';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate for routing
+import CancelModal from './CancelModal';
 
-function Order({ order, onHelp, onCancel }) {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+function Order({ order, onHelp, onCancel, payNow }) {
+  console.log("order", order);
+  console.log("paynow", payNow);
+
+  const navigate = useNavigate(); // Initialize navigate hook for routing
+
+  const [isCancelModalOpen, setIsCancelModalOpen] = useState(false); // State for Cancel Modal
   const [orderToCancel, setOrderToCancel] = useState(null);
 
-  const { Book_ID, SP_Email, U_Email, Book_Status, Service_Name, Service_Category, Book_Date, Book_HouseNo, Book_Area, Book_City, Book_State } = order;
+  const { 
+    Book_ID, SP_Email, U_Email, Book_Status, Service_Name, 
+    Service_Category, Book_Date, Book_HouseNo, Book_Area, Book_City, 
+    Book_State 
+  } = order;
 
-  // Define status color based on status value
-  let statusColorClass = 'text-gray-500'; // Default color
+  let statusColorClass = 'text-gray-500';
   if (Book_Status === 'Completed') {
     statusColorClass = 'text-black';
   } else if (Book_Status === 'Scheduled') {
@@ -20,24 +27,25 @@ function Order({ order, onHelp, onCancel }) {
     statusColorClass = 'text-orange-500';
   }
 
-  // Format the date to only show the date part
   const formattedDate = new Date(Book_Date).toLocaleDateString();
 
-  // Function to handle the cancel request
   const handleCancel = (orderId) => {
     setOrderToCancel(orderId);
-    setIsModalOpen(true);
+    setIsCancelModalOpen(true); // Open cancel modal
   };
 
   const confirmCancel = async () => {
     try {
       await axios.delete(`http://localhost:4002/bookings/${orderToCancel}`);
-      setIsModalOpen(false);
-      onCancel(orderToCancel); // Call the onCancel function passed as prop to remove the order from the list
+      setIsCancelModalOpen(false); // Close cancel modal after confirming
+      onCancel(orderToCancel);
     } catch (error) {
       console.error('Error canceling order:', error);
-      // Optionally, handle the error (e.g., by showing an error message or logging it)
     }
+  };
+
+  const handlePayNow = (orderId) => {
+    navigate('/payment', { state: { bookId: Book_ID } });  // Pass bookId in state
   };
 
   return (
@@ -56,7 +64,6 @@ function Order({ order, onHelp, onCancel }) {
           Status: {Book_Status}
         </p>
 
-        {/* Show cancel button for Pending and Confirmed */}
         {(Book_Status === 'Pending' || Book_Status === 'Scheduled') && (
           <button
             onClick={() => handleCancel(Book_ID)}
@@ -65,33 +72,21 @@ function Order({ order, onHelp, onCancel }) {
             Cancel Order
           </button>
         )}
-        {/* {Book_Status === "Scheduled" && (
-  // <p className="text-gray-700 mt-2">
-  //   <strong>Service Provider Email:</strong> {SP_Email}
-  // </p>
-)} */}
 
-        {/* Show review and rating section for Completed orders */}
-        {Book_Status === 'Completed' && (
-          <div className="mt-4">
-            <p className="text-gray-700"><strong>Rating:</strong> {order.rating ? `${order.rating} / 5` : 'Not Rated'}</p>
-            <p className="text-gray-700"><strong>Review:</strong> {order.review || 'No Review Provided'}</p>
-
-            {/* Show 'Get Help' icon if getHelp is true */}
-            {order.getHelp && (
-              <div className="flex items-center mt-2 text-blue-500 cursor-pointer" onClick={() => onHelp(Book_ID)}>
-                <FontAwesomeIcon icon={faCircleInfo} className="mr-2" />
-                <span>Get Help</span>
-              </div>
-            )}
-          </div>
+        {payNow && (
+          <button
+            className="bg-blue-500 text-white m-4 p-2 rounded mt-4"
+            onClick={() => handlePayNow(Book_ID)}  // Navigate to the payment page with bookId in state
+          >
+            Pay Now
+          </button>
         )}
       </div>
 
-      {/* Modal for cancellation confirmation */}
+      {/* Cancel Modal */}
       <CancelModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+        isOpen={isCancelModalOpen}
+        onClose={() => setIsCancelModalOpen(false)}  // Close cancel modal
         onConfirm={confirmCancel}
         message="Are you sure you want to cancel this order?"
       />
