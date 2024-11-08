@@ -46,7 +46,7 @@ const BookingForm = ({ isOpen, onClose, serviceName, service }) => {
         ...prevData,
         [name]: value,
         bookCityPin: selectedCity ? selectedCity.City_PIN : '', // Set city PIN based on selected city
-        bookState: selectedCity ? selectedCity.City_State: ''
+        bookState: selectedCity ? selectedCity.City_State: '',
         bookCityPin: selectedCity ? selectedCity.City_PIN : '',
         bookState: selectedCity ? selectedCity.City_State : '', // Automatically set state based on city
       }));
@@ -251,7 +251,6 @@ const BookingForm = ({ isOpen, onClose, serviceName, service }) => {
               onChange={handleChange}
               placeholder="Enter your state"
               className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-              disabled
               disabled
               required
             />
