@@ -6,20 +6,19 @@ import bodyParser from 'body-parser';// Load environment variables
 import { createServer } from 'http'; // Import to create HTTP server
 import { Server } from 'socket.io'; // Import socket.io
 
-import { getAllServiceProviders, addServiceProvider,getServiceNamesByServiceProvider } from './models/serviceProvider.js';
+import { getAllServiceProviders, addServiceProvider,getServiceNamesByServiceProvider, getCityAndMobileByEmail } from './models/serviceProvider.js';
 import { getAllCustomers, addCustomer, updateIsSP } from './models/customer.js'; // Added updateIsSP import
-import { getAllBookings, addBooking, acceptBooking,cancelBooking, deleteBooking,getAvailableBookingsForService } from './models/booking.js';
+import { getAllBookings,getBookingsByServiceProvider, addBooking, acceptBooking,cancelBooking, deleteBooking,getAvailableBookingsForService } from './models/booking.js';
 import { getAllServices, addService } from './models/service.js'; // Import service functions
 import { getAllServicesForProvider, addNewServiceForProvider } from './models/sp_services.js';
-// Import the city functions
 import { getAllCities, addCity } from './models/city.js';
-import {  getBookingsByServiceProvider } from './models/booking.js';
 import { addBookingPost } from './models/bookingPost.js';
 import { updateBookingStatus, updateBookingStatusAfterPayment} from './models/updateBooking.js';
 import { addBill,getAllBills,getBillById,updateRazorpayPaymentId } from './models/bill.js';
 // Load environment variables
 dotenv.config();
 // console.log(process.env.R);
+
 
 const app = express();
 const httpServer = createServer(app); // Create HTTP server
@@ -37,9 +36,9 @@ app.use(express.json());
 
 // Middleware to enable CORS
 app.use(cors({
-    origin: process.env.CORS_ORIGIN || 'http://localhost:5173', // Allow requests from this origin
-    methods: 'GET,POST,PUT,DELETE',
-    credentials: true
+  origin: process.env.CORS_ORIGIN || 'http://localhost:5173',
+  methods: 'GET,POST,PUT,DELETE',
+  credentials: true
 }));
 
 // Socket.io connection event
@@ -69,24 +68,20 @@ app.get('/serviceproviders', (req, res) => {
   });
 });
 
-// Service Provider Routes
 app.post('/serviceproviders', (req, res) => {
   const newProvider = req.body;
-
-  // Validate request data
   if (!newProvider.SP_Email || !newProvider.SP_PIN || !newProvider.GovernmentID || !newProvider.CityName) {
     return res.status(400).json({ error: 'Missing required fields: SP_Email, SP_PIN, GovernmentID, CityName' });
   }
-
   addServiceProvider(newProvider, (err, result) => {
     if (err) {
       console.error('Error adding service provider:', err);
       return res.status(500).json({ error: err.error || 'Failed to add service provider' });
     }
     res.status(201).json({ message: 'Service provider added successfully', result });
+    io.emit('newServiceProvider', newProvider); // Notify clients about new provider
   });
 });
-
 
 // Customer Routes
 app.get('/customers', (req, res) => {
@@ -101,12 +96,9 @@ app.get('/customers', (req, res) => {
 
 app.post('/customers', (req, res) => {
   const newCustomer = req.body;
-
-  // Validate request data
   if (!newCustomer.U_Email) {
     return res.status(400).json({ error: 'Missing required field: email' });
   }
-
   addCustomer(newCustomer, (err, result) => {
     if (err) {
       console.error('Error adding customer:', err);
@@ -115,6 +107,12 @@ app.post('/customers', (req, res) => {
     res.status(201).json({ message: 'Customer added', result });
   });
 });
+
+// Additional routes and middleware continue as per your existing code...
+
+// Start the server using httpServer with socket.io
+
+
 
 // Update is_SP for Customer
 app.put('/customers/:U_Email', (req, res) => {
@@ -131,8 +129,8 @@ app.put('/customers/:U_Email', (req, res) => {
       console.error('Error updating customer:', err);
       return res.status(500).json({ error: 'Failed to update customer' });
     }
-    res.status(200).json({ message: 'Customer updated successfully', result });
-  });
+    res.status(200).json({ message: 'Customer updated successfully', result });
+  });
 });
 
 
@@ -492,6 +490,26 @@ app.post('/bills', (req, res) => {
       return res.status(500).json({ message: 'Error adding bill', error: err });
     }
     res.status(201).json({ message: 'Bill added successfully', data: result });
+  });
+});
+
+
+app.get('/sp_city_mobile/:spEmail', (req, res) => {
+  const { spEmail } = req.params; // Get the email from the URL parameter
+
+  // Call the function to fetch city and mobile number
+  getCityAndMobileByEmail(spEmail, (err, data) => {
+    if (err) {
+      console.error('Error retrieving city and mobile:', err);
+      return res.status(500).json({ error: err.message || 'Failed to retrieve data' });
+    }
+
+    if (!data) {
+      return res.status(404).json({ message: 'No data found for this service provider' });
+    }
+
+    // Return the fetched data as JSON response
+    res.json(data);
   });
 });
 

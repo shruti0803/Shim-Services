@@ -83,6 +83,7 @@ export const acceptBooking = (bookId, spEmail) => {
     `;
 
     // Execute the query
+    
     connection.query(updateBookingQuery, ['Accepted', spEmail, bookId], (err, result) => {
       if (err) {
         console.error('Database query error:', err);
