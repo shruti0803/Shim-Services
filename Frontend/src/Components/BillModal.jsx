@@ -211,7 +211,7 @@ const BillModal = ({ order, onClose, onBillGenerated }) => {
             <h3 className="text-xl font-bold text-gray-700 mb-4">Bill Generated Successfully</h3>
             <div className="text-gray-600">
               <p><strong>Bill ID:</strong> {billData.Bill_ID}</p>
-              <p><strong>Bill ID:</strong> {billData.Book_ID}</p>
+              <p><strong>Book ID:</strong> {billData.Book_ID}</p>
               <p><strong>Date:</strong> {billData.Bill_Date}</p>
               <p><strong>Payment Method:</strong> {paymentMethod}</p>
               {/* <p><strong>Labor Description:</strong> {laborEntries}</p> */}
