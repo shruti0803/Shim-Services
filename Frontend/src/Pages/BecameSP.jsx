@@ -4,7 +4,6 @@ import Select from 'react-select';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import axios from 'axios';
 import SuccessPopup from '../Components/SuccessPopup';
 
 
@@ -27,12 +26,7 @@ const BecomeServiceProviderForm = () => {
     serviceCategory: '',
     subCategories: [], // Added to store selected subcategories
     experience: '',
-    certifications: '',
     languages: [],
-    pricingType: 'hourly',
-    hourlyRate: '',
-    perWorkRate: '',
-    paymentOptions: '',
     governmentID: '',
     termsAccepted: false,
   });
@@ -104,8 +98,6 @@ const BecomeServiceProviderForm = () => {
       });
     }
   };
-  
-  
 
   const removeDay = (day) => {
     setSelectedDays((prevDays) => prevDays.filter((d) => d !== day));
@@ -144,6 +136,8 @@ const BecomeServiceProviderForm = () => {
         : formData.subCategories.filter((item) => item !== value),
     });
   };
+
+
 
   const handleSubmit = async (e) => {  // Mark the function as async
     e.preventDefault();
@@ -337,7 +331,6 @@ const onClosePopup = () => {
   }, [formData.serviceCategory]);
 
 
-
   return (
     <div className="max-w-3xl mx-auto p-6 bg-white shadow-md rounded-lg">
       <h2 className="text-3xl font-serif font-bold mb-6 text-center">
@@ -502,7 +495,7 @@ const onClosePopup = () => {
           </div>
 
           <div>
-            <label className="block font-medium">Experience</label>
+            <label className="block font-medium">Experience(in years)</label>
             <textarea
               name="experience"
               value={formData.experience}
@@ -513,16 +506,6 @@ const onClosePopup = () => {
             />
           </div>
 
-          <div>
-            <label className="block font-medium">Certifications</label>
-            <textarea
-              name="certifications"
-              value={formData.certifications}
-              onChange={handleChange}
-              className="mt-1 block w-full p-2 border border-gray-300 rounded"
-              rows="3"
-            />
-          </div>
 
           <div>
             <label className="block font-medium">Languages</label>
@@ -570,63 +553,6 @@ const onClosePopup = () => {
           </div>
         ))}
       </div>
-
-
-
-          <div>
-            <label className="block font-medium">Pricing Type</label>
-            <select
-              name="pricingType"
-              value={formData.pricingType}
-              onChange={handleChange}
-              className="mt-1 block w-full p-2 border border-gray-300 rounded"
-              required
-            >
-              <option value="hourly">Hourly Rate</option>
-              <option value="per-work">Per Work</option>
-            </select>
-          </div>
-
-          {formData.pricingType === 'hourly' && (
-            <div>
-              <label className="block font-medium">Hourly Rate</label>
-              <input
-                type="number"
-                name="hourlyRate"
-                value={formData.hourlyRate}
-                onChange={handleChange}
-                className="mt-1 block w-full p-2 border border-gray-300 rounded"
-                min="0"
-                required={formData.pricingType === 'hourly'}
-              />
-            </div>
-          )}
-
-          {formData.pricingType === 'per-work' && (
-            <div>
-              <label className="block font-medium">Per Work Rate</label>
-              <input
-                type="number"
-                name="perWorkRate"
-                value={formData.perWorkRate}
-                onChange={handleChange}
-                className="mt-1 block w-full p-2 border border-gray-300 rounded"
-                min="0"
-                required={formData.pricingType === 'per-work'}
-              />
-            </div>
-          )}
-
-          <div>
-            <label className="block font-medium">Payment Options</label>
-            <input
-              type="text"
-              name="paymentOptions"
-              value={formData.paymentOptions}
-              onChange={handleChange}
-              className="mt-1 block w-full p-2 border border-gray-300 rounded"
-            />
-          </div>
 
           <div>
             <label className="block font-medium">Government ID</label>
