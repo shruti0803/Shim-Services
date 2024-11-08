@@ -13,36 +13,41 @@ export const getAllBills = (callback) => {
 
 
 // Add a new bill
-export const addBill = (billData, callback) => {
-  const { Bill_ID, Book_ID, Bill_Date, Bill_Mode, Labor_Entries, Total_Cost } = billData;
+export const addBill = (billData, callback) => { 
+  const { Book_ID, Bill_Date, Bill_Mode, Labor_Entries, Total_Cost } = billData;
 
-  // Check if Bill_ID already exists
-  connection.query('SELECT * FROM bill WHERE Bill_ID = ?', [Bill_ID], (err, results) => {
+  // Insert query for adding a new bill
+  const query = `
+    INSERT INTO bill (Book_ID, Bill_Date, Bill_Mode, Labor_Entries, Total_Cost)
+    VALUES (?, ?, ?, ?, ?)
+  `;
+
+  // Insert the bill data with labor entries and total cost
+  connection.query(query, [Book_ID, Bill_Date, Bill_Mode, JSON.stringify(Labor_Entries), Total_Cost], (err, result) => {
     if (err) {
-      console.error('Error checking Bill_ID:', err);
-      return callback(err, null);
+      console.error('Error inserting bill:', err);
+      return callback({ error: err.code, message: err.message }, null);
     }
 
-    if (results.length > 0) {
-      return callback({ error: 'Bill_ID already exists' }, null);
-    }
+    // Now query the Bill_ID of the last inserted bill (this is assuming Bill_ID is auto-incremented)
+    const lastInsertQuery = `SELECT Bill_ID FROM bill WHERE Book_ID = ? ORDER BY Bill_ID DESC LIMIT 1`;
 
-    // Insert query for adding a new bill
-    const query = `
-      INSERT INTO bill (Book_ID, Bill_Date, Bill_Mode, Labor_Entries, Total_Cost)
-      VALUES (?, ?, ?, ?, ?)
-    `;
-
-    // Insert the bill data with labor entries and total cost
-    connection.query(query, [Book_ID, Bill_Date, Bill_Mode, JSON.stringify(Labor_Entries), Total_Cost], (err, result) => {
+    connection.query(lastInsertQuery, [Book_ID], (err, rows) => {
       if (err) {
-        console.error('Error inserting bill:', err);
+        console.error('Error fetching Bill_ID:', err);
         return callback({ error: err.code, message: err.message }, null);
       }
-      callback(null, result);
+
+      if (rows.length > 0) {
+        const newBillId = rows[0].Bill_ID; // Get the last inserted Bill_ID
+        callback(null, { Bill_ID: newBillId });
+      } else {
+        callback({ error: 'Unable to retrieve Bill_ID' }, null);
+      }
     });
   });
 };
+
 
 // Get a specific bill by Book_ID
 export const getBillById = (Book_ID, callback) => {

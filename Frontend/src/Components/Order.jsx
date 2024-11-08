@@ -64,7 +64,7 @@ function Order({ order, onHelp, onCancel, payNow }) {
           Status: {Book_Status}
         </p>
 
-        {(Book_Status === 'Pending' || Book_Status === 'Scheduled') && (
+        {(Book_Status === 'Pending' || Book_Status === 'Scheduled' && !payNow) && (
           <button
             onClick={() => handleCancel(Book_ID)}
             className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 mt-4"

@@ -16,24 +16,40 @@ const ServiceProviderOrders = ({ SPEmail }) => {
         // Fetch service names associated with the service provider
         const responseServiceName = await axios.get(`http://localhost:4002/services/${SPEmail}`);
         const serviceName = responseServiceName.data.services.map(service => service.Service_Name);
-
+    
         // Fetch incoming orders
-        const response = await axios.get(`http://localhost:4002/available-bookings/${serviceName}`);
-        const incoming = response.data.filter(order => order.Book_Status === 'Pending');
-        setIncomingOrders(incoming);
-
+        try {
+          const response = await axios.get(`http://localhost:4002/available-bookings/${serviceName}`);
+          const incoming = response.data.filter(order => order.Book_Status === 'Pending');
+          setIncomingOrders(incoming);
+        } catch (error) {
+          if (error.response && error.response.status === 404) {
+            setIncomingOrders([]); // Set to empty if 404
+          } else {
+            console.error("Error fetching incoming orders:", error);
+          }
+        }
+    
         // Fetch accepted orders
-        const acceptedResponse = await axios.get(`http://localhost:4002/bookings/sp/${SPEmail}`);
-        const accepted = acceptedResponse.data.filter(order => order.Book_Status === 'Scheduled');
-        
-        // Update accepted orders with bill status
-        const updatedAcceptedOrders = await fetchBillsForOrders(accepted);
-        setAcceptedOrders(updatedAcceptedOrders);
-
+        try {
+          const acceptedResponse = await axios.get(`http://localhost:4002/bookings/sp/${SPEmail}`);
+          const accepted = acceptedResponse.data.filter(order => order.Book_Status === 'Scheduled');
+    
+          // Update accepted orders with bill status
+          const updatedAcceptedOrders = await fetchBillsForOrders(accepted);
+          setAcceptedOrders(updatedAcceptedOrders);
+        } catch (error) {
+          if (error.response && error.response.status === 404) {
+            setAcceptedOrders([]); // Set to empty if 404
+          } else {
+            console.error("Error fetching accepted orders:", error);
+          }
+        }
       } catch (error) {
-        console.error("Error fetching orders:", error);
+        console.error("Error fetching services or processing orders:", error);
       }
     };
+    
     fetchOrders();
   }, [SPEmail]);
 
