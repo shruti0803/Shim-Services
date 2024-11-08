@@ -9,9 +9,11 @@ import SuccessPopup from '../Components/SuccessPopup';
 
 const BecomeServiceProviderForm = () => {
   const { currentUser,setCurrentUser } = useAuth();
-  const [selectedDays, setSelectedDays] = useState([]);
+  const [selectedDays, setSelectedDays] = useState(['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']);
   const [cities, setCities] = useState([]);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [errorMessages, setErrorMessages] = useState({});
+  //const [successMessage, setSuccessMessage] = useState('');
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -30,6 +32,36 @@ const BecomeServiceProviderForm = () => {
     governmentID: '',
     termsAccepted: false,
   });
+
+  const validateFields = () => {
+    const {email,  phone, experience } = formData;
+    let errors = {};
+
+    // Email validation
+    if (!email) {
+      errors.email = 'Email is required';
+    } else if (!/@gmail\.com$/.test(email)) {
+      errors.email = 'Email must be in the form @gmail.com';
+    }
+
+    //Phone number
+    // if (!phone) {
+    //   errors.phone = 'Phone number is required';
+    // } else if (!/^\d{10}$/.test(phone)) {
+    //   errors.phone = 'Phone number must be 10 digits';
+    // }
+
+    //experience
+    if (experience === undefined || experience === '') {
+      errors.experience = 'Experience is required';
+    } else if (isNaN(experience) || experience < 0 || experience > 50) {
+      errors.experience = 'Experience must be a number between 0 and 50';
+    }
+
+    setErrorMessages(errors);
+    return Object.keys(errors).length === 0;
+  };
+  
 
   useEffect(() => {
     if (currentUser) {
@@ -61,6 +93,14 @@ const BecomeServiceProviderForm = () => {
 
   const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
+  const handleDaySelect = (day) => {
+    setSelectedDays((prevDays) =>
+      prevDays.includes(day)
+        ? prevDays.filter((d) => d !== day)  // Unselect the day if it's already selected
+        : [...prevDays, day]                // Otherwise, add it to the selection
+    );
+  };
+
   const onClose = () => {
     // Navigate to homepage when Cancel is clicked
     if(setCurrentUser && currentUser){
@@ -69,12 +109,12 @@ const BecomeServiceProviderForm = () => {
     navigate('/');
   };
 
-  const handleDaySelect = (e) => {
-    const day = e.target.value;
-    if (day && !selectedDays.includes(day)) {
-      setSelectedDays((prevDays) => [...prevDays, day]);
-    }
-  };
+  // const handleDaySelect = (e) => {
+  //   const day = e.target.value;
+  //   if (day && !selectedDays.includes(day)) {
+  //     setSelectedDays((prevDays) => [...prevDays, day]);
+  //   }
+  // };
 
   const handleCityChange = (e) => {
     const { name, value } = e.target;
@@ -99,9 +139,9 @@ const BecomeServiceProviderForm = () => {
     }
   };
 
-  const removeDay = (day) => {
-    setSelectedDays((prevDays) => prevDays.filter((d) => d !== day));
-  };
+  // const removeDay = (day) => {
+  //   setSelectedDays((prevDays) => prevDays.filter((d) => d !== day));
+  // };
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -118,6 +158,7 @@ const BecomeServiceProviderForm = () => {
         [name]: type === 'checkbox' ? checked : value,
       });
     }
+  
   };
 
   const handleSelectChange = (selectedOptions) => {
@@ -140,7 +181,10 @@ const BecomeServiceProviderForm = () => {
 
 
   const handleSubmit = async (e) => {  // Mark the function as async
+    
     e.preventDefault();
+
+    if(!validateFields())return;
     currentUser.is_SP=1;
 
     console.log('Form data submitted:', formData);
@@ -339,7 +383,7 @@ const onClosePopup = () => {
       <form onSubmit={handleSubmit}>
         <div className="grid grid-cols-1 gap-4">
           <div>
-            <label className="block font-medium">Full Name</label>
+            <label className="block font-medium">Full Name<span className="text-red-500 text-sm">*</span></label>
             <input
               type="text"
               name="fullName"
@@ -347,11 +391,13 @@ const onClosePopup = () => {
               onChange={handleChange}
               className="mt-1 block w-full p-2 border border-gray-300 rounded"
               required
+              disabled
             />
+            {errorMessages.fullName && <p className="text-red-500">{errorMessages.fullName}</p>}
           </div>
 
           <div>
-            <label className="block font-medium">Email</label>
+            <label className="block font-medium">Email<span className="text-red-500 text-sm">*</span></label>
             <input
               type="email"
               name="email"
@@ -359,11 +405,13 @@ const onClosePopup = () => {
               onChange={handleChange}
               className="mt-1 block w-full p-2 border border-gray-300 rounded"
               required
+              disabled
             />
+            {errorMessages.email && <p className="text-red-500">{errorMessages.email}</p>}
           </div>
 
           <div>
-            <label className="block font-medium">Phone Number</label>
+            <label className="block font-medium">Phone Number<span className="text-red-500 text-sm">*</span></label>
             <input
               type="tel"
               name="phone"
@@ -371,18 +419,21 @@ const onClosePopup = () => {
               onChange={handleChange}
               className="mt-1 block w-full p-2 border border-gray-300 rounded"
               required
+              disabled
             />
+            {errorMessages.phone && <p className="text-red-500">{errorMessages.phone}</p>}
           </div>
 
           <div className="flex items-center gap-4">
           <div className="flex-1">
-    <label className="block font-medium">City</label>
+    <label className="block font-medium">City<span className="text-red-500 text-sm">*</span></label>
     <select
       name="city"
       value={formData.city}
       onChange={handleCityChange}
       className="mt-1 block w-full p-2 border border-gray-300 rounded"
       required
+      
     >
       <option value="">Select City</option>
       {cities.map((city) => (
@@ -395,7 +446,7 @@ const onClosePopup = () => {
 
   {/* Pincode Field */}
   <div className="flex-1">
-    <label className="block font-medium">Pincode</label>
+    <label className="block font-medium">Pincode<span className="text-red-500 text-sm">*</span></label>
     <input
       type="text"
       name="pincode"
@@ -409,7 +460,7 @@ const onClosePopup = () => {
 </div>
   <div className="flex items-center gap-4">
   <div className="flex-1">
-    <label className="block font-medium">State</label>
+    <label className="block font-medium">State<span className="text-red-500 text-sm">*</span></label>
     <input
       type="text"
       name="state"
@@ -420,7 +471,7 @@ const onClosePopup = () => {
     />
   </div>
   <div className="flex-1">
-    <label className="block font-medium">Country</label>
+    <label className="block font-medium">Country<span className="text-red-500 text-sm">*</span></label>
     <input
       type="text"
       name="country"
@@ -434,7 +485,7 @@ const onClosePopup = () => {
 
 
 <div>
-  <label className="block font-medium">Address</label>
+  <label className="block font-medium">Address<span className="text-red-500 text-sm">*</span></label>
   <input
     type="text"
     name="address"
@@ -447,7 +498,7 @@ const onClosePopup = () => {
 
 
           <div>
-            <label className="block font-medium">Select Service Category</label>
+            <label className="block font-medium">Select Service Category<span className="text-red-500 text-sm">*</span></label>
             <select
               name="serviceCategory"
               value={formData.serviceCategory}
@@ -471,7 +522,7 @@ const onClosePopup = () => {
           </div>
 
           <div>
-            <label className="block font-medium">Select Subcategories</label>
+            <label className="block font-medium">Select Subcategories<span className="text-red-500 text-sm">*</span></label>
             {subCategories.length > 0 ? (
               <div>
                 {subCategories.map((subCategory) => (
@@ -483,6 +534,7 @@ const onClosePopup = () => {
                         checked={formData.subCategories.includes(subCategory)}
                         onChange={handleSubCategoryChange}
                         className="form-checkbox"
+                        required
                       />
                       <span className="ml-2">{subCategory}</span>
                     </label>
@@ -495,7 +547,7 @@ const onClosePopup = () => {
           </div>
 
           <div>
-            <label className="block font-medium">Experience(in years)</label>
+            <label className="block font-medium">Experience(in years)<span className="text-red-500 text-sm">*</span></label>
             <textarea
               name="experience"
               value={formData.experience}
@@ -504,11 +556,12 @@ const onClosePopup = () => {
               rows="3"
               required
             />
+            {errorMessages.experience && <p className="text-red-500">{errorMessages.experience}</p>}
           </div>
 
 
           <div>
-            <label className="block font-medium">Languages</label>
+            <label className="block font-medium">Languages<span className="text-red-500 text-sm">*</span></label>
             <Select
               isMulti
               options={languageOptions}
@@ -516,46 +569,32 @@ const onClosePopup = () => {
               onChange={handleSelectChange}
               className="mt-1"
               styles={customStyles}
+              required
             />
           </div>
 
-          <label className="block font-medium">Availability</label>
-      {/* Dropdown for selecting days */}
-      <select
-        onChange={handleDaySelect}
-        className="w-full p-2 border border-gray-300 rounded mb-4"
-        defaultValue=""
-      >
-        <option value="" disabled>
-          Select a day
-        </option>
-        {days.map((day) => (
-          <option key={day} value={day}>
-            {day}
-          </option>
-        ))}
-      </select>
-
-      {/* Display selected days as boxes */}
-      <div className="flex flex-wrap gap-2">
-        {selectedDays.map((day, index) => (
-          <div
-            key={index}
-            className="bg-blue-200 text-black px-3 py-1 rounded-md flex items-center space-x-2"
-          >
-            <span>{day}</span>
-            <button
-              onClick={() => removeDay(day)}
-              className="text-red-500 hover:text-red-700"
-            >
-              &times;
-            </button>
+          {/* added availability */}
+          <div>
+            <label className="block font-medium mb-2">Availability<span className="text-red-500 text-sm">*</span></label>
+            <div className="grid grid-cols-2 gap-2">
+              {days.map((day) => (
+                <div key={day} className="flex items-center">
+                  <input
+                    type="checkbox"
+                    value={day}
+                    checked={selectedDays.includes(day)}
+                    onChange={() => handleDaySelect(day)}
+                    className="mr-2"
+                    required
+                  />
+                  <label>{day}</label>
+                </div>
+              ))}
+            </div>
           </div>
-        ))}
-      </div>
 
           <div>
-            <label className="block font-medium">Government ID</label>
+            <label className="block font-medium">Government ID<span className="text-red-500 text-sm">*</span></label>
             <input
               type="text"
               name="governmentID"
@@ -573,7 +612,7 @@ const onClosePopup = () => {
       className="form-checkbox h-5 w-5 text-blue-600"
       required  // Makes it required
     />
-    <span className="ml-2 text-gray-700">I accept the terms and conditions</span>
+    <span className="ml-2 text-gray-700">I accept the terms and conditions<span className="text-red-500 text-sm">*</span></span>
   </label>
 </div>
 
