@@ -5,6 +5,14 @@ import axios from 'axios';
 
 const BookingForm = ({ isOpen, onClose, serviceName, service }) => {
   const [cities, setCities] = useState([]);
+  console.log("Service:",serviceName);
+  const currentDate = new Date();
+
+// Function to add leading zero if necessary
+const padZero = (num) => num.toString().padStart(2, '0');
+
+// Format the date as 'YYYY-MM-DD HH:mm:ss'
+const formattedDate = `${currentDate.getFullYear()}-${padZero(currentDate.getMonth() + 1)}-${padZero(currentDate.getDate())} ${padZero(currentDate.getHours())}:${padZero(currentDate.getMinutes())}:${padZero(currentDate.getSeconds())}`;
   const [formData, setFormData] = useState({
     bookStatus: 'Pending',
     serviceName: serviceName,
@@ -60,17 +68,21 @@ const BookingForm = ({ isOpen, onClose, serviceName, service }) => {
     const formDataToSend = {
       U_Email: currentUser?.U_Email || '',
       Book_Status: formData.bookStatus,
-      Service_Name: formData.serviceName,
-      Service_Category: formData.serviceCategory,
+      Service_Name: serviceName,
+      Service_Category:service ? service.title : '' ,
       Book_HouseNo: formData.bookHouseNo,
       Book_Area: formData.bookArea,
       Book_City: formData.bookCity,
       Book_City_PIN: formData.bookCityPin,
       Book_State: formData.bookState,
+      Book_Date:formattedDate,
       Customer_Name: formData.customerName,
       Customer_Phone: formData.customerPhone,
       Book_Date:formData.currentDate
     };
+
+    console.log(formDataToSend);
+    
 
     try {
       const response = await axios.post('http://localhost:4002/bookingPost', formDataToSend);

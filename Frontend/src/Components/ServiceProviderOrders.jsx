@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from 'axios';
-// import BillModal from "./BillModal";
+import BillModal from "./BillModal";
 
 const ServiceProviderOrders = ({ SPEmail }) => {
   const [incomingOrders, setIncomingOrders] = useState([]);
@@ -15,35 +15,26 @@ const ServiceProviderOrders = ({ SPEmail }) => {
         // Fetch service names associated with the service provider
         const responseServiceName = await axios.get(`http://localhost:4002/services/${SPEmail}`);
         const serviceName = responseServiceName.data.services.map(service => service.Service_Name);
-  
+
         // Fetch incoming orders
-        try {
-          const response = await axios.get(`http://localhost:4002/available-bookings/${serviceName}`);
-          const incoming = response.data.filter(order => order.Book_Status === 'Pending');
-          setIncomingOrders(incoming);
-        } catch (error) {
-          if (error.response && error.response.status === 404) {
-            console.warn("No available incoming orders.");
-            setIncomingOrders([]); // No incoming orders
-          } else {
-            console.error("Error fetching incoming orders:", error);
-          }
-        }
-  
+        const response = await axios.get(`http://localhost:4002/available-bookings/${serviceName}`);
+        const incoming = response.data.filter(order => order.Book_Status === 'Pending');
+        setIncomingOrders(incoming);
+
         // Fetch accepted orders
         const acceptedResponse = await axios.get(`http://localhost:4002/bookings/sp/${SPEmail}`);
         const accepted = acceptedResponse.data.filter(order => order.Book_Status === 'Scheduled');
-        setAcceptedOrders(accepted);
-        fetchBillsForOrders(accepted); // Check if bills exist for accepted orders
-  
+        
+        // Update accepted orders with bill status
+        const updatedAcceptedOrders = await fetchBillsForOrders(accepted);
+        setAcceptedOrders(updatedAcceptedOrders);
+
       } catch (error) {
         console.error("Error fetching orders:", error);
       }
     };
-  
     fetchOrders();
   }, [SPEmail]);
-  
 
   // Accept an order and update status
   const handleAccept = async (orderId) => {
@@ -56,12 +47,13 @@ const ServiceProviderOrders = ({ SPEmail }) => {
       });
 
       if (response.status === 200) {
-        setAcceptedOrders((prevState) => {
-          const updatedOrders = [...prevState, orderToAccept];
-          fetchBillsForOrders(updatedOrders); // Check if bills exist for newly accepted orders
-          return updatedOrders;
+        const updatedOrder = { ...orderToAccept, Book_Status: 'Scheduled', billGenerated: false };
+        setAcceptedOrders(prevState => {
+          // Ensure order isn't already in acceptedOrders to avoid duplication
+          if (prevState.some(order => order.Book_ID === orderId)) return prevState;
+          return [...prevState, updatedOrder];
         });
-        setIncomingOrders((prevState) => prevState.filter(order => order.Book_ID !== orderId));
+        setIncomingOrders(prevState => prevState.filter(order => order.Book_ID !== orderId));
       } else {
         console.error("Error updating booking status");
       }
@@ -74,12 +66,28 @@ const ServiceProviderOrders = ({ SPEmail }) => {
   const handleDecline = (orderId) => {
     setIncomingOrders((prevState) => prevState.filter(order => order.Book_ID !== orderId));
   };
-
+// shruti is doing this for date 
   // Open the bill generation modal
-  const handleGenerateBill = (order) => {
+//   const handleGenerateBill = (order) => {
+//     setSelectedOrder(order);
+//     setIsModalOpen(true);
+//   };
+
+// Open the bill generation modal
+const handleGenerateBill = (order) => {
+    const bookingDate = new Date(order.Book_Date);
+    const currentDate = new Date();
+  
+    // Check if the current date is on or after the booking date
+    if (currentDate < bookingDate) {
+      alert("Cannot generate bill before the booking date.");
+      return; // Don't proceed with bill generation
+    }
+  
     setSelectedOrder(order);
     setIsModalOpen(true);
   };
+  
 
   // Mark an order as bill-generated once the bill is created
   const handleBillGenerated = (orderId) => {
@@ -113,7 +121,7 @@ const ServiceProviderOrders = ({ SPEmail }) => {
         return { ...order, billGenerated: billExists };
       })
     );
-    setAcceptedOrders(updatedOrders);
+    return updatedOrders;
   };
 
   return (
@@ -190,9 +198,9 @@ const ServiceProviderOrders = ({ SPEmail }) => {
         </div>
       </div>
 
-      {/* {isModalOpen && (
+      {isModalOpen && (
         <BillModal order={selectedOrder} onClose={closeModal} onBillGenerated={handleBillGenerated} />
-      )} */}
+      )}
     </div>
   );
 };

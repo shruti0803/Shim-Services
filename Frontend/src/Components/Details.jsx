@@ -24,7 +24,7 @@ const Details = () => {
     {
       id: 2,
       imgSrc: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcThf6ou9ZEt19JPPZtaTeI2bcjfaHRMczbFEbVEjPem8Qwkos-0Pe9RFjRePotO5_uCvJk&usqp=CAU',
-      title: 'Appliance Filter Replacement',
+      title: 'Appliance  Filter Replacement',
       description: [
         'Advanced filter replacement technology',
         'Deep cleaning of air filters'
@@ -135,7 +135,7 @@ const Details = () => {
       </div>
 
       {isBookingDialogOpen && selectedService && (
-        <BookingForm isOpen={isBookingDialogOpen} service={selectedService} serviceName="Appliance Repair" onClose={closeBookingDialog} />
+        <BookingForm isOpen={isBookingDialogOpen} serviceName={"Appliance Repair"} service={selectedService} onClose={closeBookingDialog} />
       )}
 
       {isLoginDialogOpen && (

@@ -12,10 +12,95 @@ const Details = () => {
   const navigate = useNavigate();
 
   const services = [
-    // Array of service objects as in your example
-    
+    {
+      id: 1,
+      imgSrc: 'https://media.istockphoto.com/id/1055099140/photo/making-hairstory-everyday-with-gorgeous-hair.jpg?s=612x612&w=0&k=20&c=x-Hxtr85HmZ_U5o7-KNzLCNi63drTeijFnuFcpz5kUU=',
+      title: 'Hair Styling',
+      description: [
+        'Precision Haircut',
+        'Blowdry & Styling',
+        'Coloring & Highlights'
+      ],
+      price: 40
+    },
+    {
+      id: 2,
+      imgSrc: 'https://cdn.pixabay.com/photo/2024/04/02/06/47/woman-8670155_1280.png',
+      title: 'Bridal Makeup',
+      description: [
+        'Traditional Bridal Look',
+        'Airbrush Makeup',
+        'Hairstyling & Accessories'
+      ],
+      price: 50
+    },
+    {
+      id: 3,
+      imgSrc: 'https://media.istockphoto.com/id/1303337467/photo/beautiful-young-asian-woman-holding-hands-smile-feeling-so-happy-and-cheerful-with-healthy.jpg?s=612x612&w=0&k=20&c=3wuVMmBCzda1HXNqwfex5FuCl6dJ7Cu2xHojIVHFL5g=',
+      title: 'Facial Treatment',
+      description: [
+        'Hydrating Facial',
+        'Anti-aging Facial',
+        'Acne Treatment'
+      ],
+      price: 35
+    },
+    {
+      id: 4,
+      imgSrc: 'https://media.istockphoto.com/id/171328031/photo/beautiful-female-hands-with-manicure.jpg?s=612x612&w=0&k=20&c=CcNWRsYli6xO4vCmds7lQXIHVjsXsWffD7MDIxVH7U8=',
+      title: 'Manicure/Pedicure',
+      description: [
+        'Classic Manicure',
+        'Spa Pedicure',
+        'Nail Art & Extensions'
+      ],
+      price: 40
+    },
+    {
+      id: 5,
+      imgSrc: 'https://cdn.pixabay.com/photo/2019/10/11/12/33/make-up-4541782_1280.jpg',
+      title: 'Eyebrow Threading',
+      description: [
+        'Full Face Threading',
+        'Eyebrow Shaping',
+        'Upper Lip & Chin'
+      ],
+      price: 25
+    },
+    {
+      id: 6,
+      imgSrc: 'https://media.istockphoto.com/id/486859959/photo/eyelash-extension.jpg?s=612x612&w=0&k=20&c=ztA2zj0Pjtx53bVcwLZWt8bFRtM5vN6gxpOyzyU6R2w=',
+      title: 'Eyelash Extension',
+      description: [
+        'Lash Extensions',
+        'Deep Cleansing',
+        'Microdermabrasion'
+      ],
+      price: 75
+    },
+    {
+      id: 7,
+      imgSrc: 'https://media.istockphoto.com/id/1366228042/photo/facial-aesthetics-surgery-treatment.jpg?s=612x612&w=0&k=20&c=7zOyHVSkG1FrdqUqG1jXWWdPquSKXotFbvujX1SwPyw=',
+      title: 'Skin Care Treatment',
+      description: [
+        'Beard Shaping',
+        'Trimming & Styling',
+        'Beard Oil Treatment'
+      ],
+      price: 45
+    },
+    {
+      id: 8,
+      imgSrc: 'https://media.istockphoto.com/id/504242575/photo/total-bliss.jpg?s=612x612&w=0&k=20&c=LNDbygaPEdFC2OmjS3ibjSjmEMVVEM7YCb8wtXRWWVM=',
+      title: 'Facial Treatment',
+      description: [
+        'Hydrating Facial for Men',
+        'Anti-aging Treatment',
+        'Exfoliation & Cleansing'
+      ],
+      price: 35
+    }
   ];
-
   const openDialog = (service) => {
     setSelectedService(service);
     if (isAuth) {
