@@ -21,7 +21,7 @@ const ServiceProviderOrders = ({ SPEmail }) => {
       }
     } catch (error) {
       console.error("Error fetching payment mode:", error);
-      return "dont know";
+      return "Default";
     }
   };
   

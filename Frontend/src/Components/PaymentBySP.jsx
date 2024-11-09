@@ -74,78 +74,45 @@ function PaymentBySP({ amount, onClose, onPaymentSuccess }) {
     paymentObject.open();
   };
 
-  const paymentFetch = (e) => {
-    e.preventDefault();
-    const paymentId = e.target.paymentId.value;
-
-    axios.get(`http://localhost:4002/payment/${paymentId}`)
-      .then((response) => {
-        console.log("Payment data fetched:", response.data);
-        setResponseState(response.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching payment:", error);
-      });
-  };
-
   return (
     <div
-      style={{
-        position: "fixed",
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        backgroundColor: "rgba(0, 0, 0, 0.6)",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        zIndex: 1000,
-      }}
+      className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50"
       onClick={onClose}
     >
       <div
-        style={{
-          backgroundColor: "#fff",
-          padding: "20px",
-          borderRadius: "8px",
-          width: "90%",
-          maxWidth: "500px",
-          position: "relative",
-          boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.25)",
-        }}
+        className="bg-white p-6 rounded-lg shadow-lg w-11/12 max-w-md relative"
         onClick={(e) => e.stopPropagation()} // Prevent modal close on inner click
       >
+        {/* Close Button */}
         <button
-          style={{
-            position: "absolute",
-            top: "10px",
-            right: "10px",
-            background: "transparent",
-            border: "none",
-            fontSize: "1.2rem",
-            cursor: "pointer",
-          }}
+          className="absolute top-3 right-3 text-gray-500 hover:text-red-500 transition duration-200 text-xl"
           onClick={onClose}
         >
-          X
+          <i className="fas fa-times"></i>
         </button>
-        <h1>Payment Details</h1>
-        <button className='bg-blue-600 text-white p-2 rounded-md' onClick={() => createRazorpayOrder(amount)}>Pay {amount} INR</button>
-        {/* {responseId && <p>Payment ID: {responseId}</p>}
-        <h2>Payment Verification Form</h2>
-        <form onSubmit={paymentFetch}>
-          <input type="text" name="paymentId" placeholder="Enter Payment ID" />
-          <button type="submit">Fetch Payment</button>
-          {responseState.length !== 0 && (
-            <ul>
-              <li>Amount: {responseState.amount / 100} INR</li>
-              <li>Currency: {responseState.currency}</li>
-              <li>Status: {responseState.status}</li>
-              <li>Method: {responseState.method}</li>
-            </ul>
-          )} */}
-        {/* </form> */}
+
+        {/* Modal Heading */}
+        <h1 className="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+          <i className="fas fa-credit-card text-blue-600 mr-2"></i>
+          Payment Details
+        </h1>
+
+        {/* Payment Button */}
+        <button
+          className="bg-blue-600 text-white py-3 px-6 rounded-md w-full flex items-center justify-center space-x-2 hover:bg-green-600 transition duration-200"
+          onClick={() => createRazorpayOrder(amount)}
+        >
+          <i className="fas fa-money-check-alt"></i>
+          <span>Pay {amount} INR</span>
+        </button>
+
+        {/* Optional Payment Details */}
+        {responseId && (
+          <p className="mt-4 text-gray-600">
+            <i className="fas fa-receipt mr-2 text-blue-600"></i>
+            <strong>Payment ID:</strong> {responseId}
+          </p>
+        )}
       </div>
     </div>
   );

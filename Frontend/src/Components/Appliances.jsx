@@ -91,16 +91,40 @@ const Appliance = () => {
       <div className="flex flex-col-reverse md:flex-row p-2.5 m-6">
         <div className="flex flex-col text-xl md:w-1/2">
           <hr />
-          <h2 className='font-bold text-center mt-4'>What we offer</h2>
-          <p>ShimServices provides reliable repair services for home appliances:</p>
-          <ul className="list-disc list-inside mt-4">
-            <li><strong>AC Repair & Service</strong></li>
-            <li><strong>Refrigerator Repair</strong></li>
-            <li><strong>Washing Machine Repair</strong></li>
-            <li><strong>Microwave Repair</strong></li>
-            <li><strong>Television Repair</strong></li>
-            <li><strong>Geyser Repair</strong></li>
-          </ul>
+          <h2 className="text-3xl font-semibold text-center text-gray-800 mt-4 mb-2">
+  What We Offer
+</h2>
+<p className="text-lg text-center text-gray-600">
+  ShimServices provides reliable and expert repair services for all your home appliances, ensuring convenience and peace of mind.
+</p>
+
+          <ul className="list-none space-y-3 mt-4 text-gray-700">
+  <li className="flex items-center">
+    <i className="fas fa-wrench text-blue-600 mr-2"></i> 
+    <span className="font-medium text-lg">AC Repair & Service</span>
+  </li>
+  <li className="flex items-center">
+    <i className="fas fa-snowflake text-indigo-600 mr-2"></i> 
+    <span className="font-medium text-lg">Refrigerator Repair</span>
+  </li>
+  <li className="flex items-center">
+    <i className="fas fa-tint text-blue-600 mr-2"></i> 
+    <span className="font-medium text-lg">Washing Machine Repair</span>
+  </li>
+  <li className="flex items-center">
+    <i className="fas fa-bolt text-yellow-500 mr-2"></i> 
+    <span className="font-medium text-lg">Microwave Repair</span>
+  </li>
+  <li className="flex items-center">
+    <i className="fas fa-tv text-purple-600 mr-2"></i> 
+    <span className="font-medium text-lg">Television Repair</span>
+  </li>
+  <li className="flex items-center">
+    <i className="fas fa-water text-teal-600 mr-2"></i> 
+    <span className="font-medium text-lg">Geyser Repair</span>
+  </li>
+</ul>
+
           <Reviews />
         </div>
         <div className="flex-6">

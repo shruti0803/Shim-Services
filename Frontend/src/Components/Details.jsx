@@ -54,7 +54,7 @@ const Details = () => {
     {
       id: 5,
       imgSrc: 'https://media.istockphoto.com/id/1347513910/photo/microwave-control.jpg?s=612x612&w=0&k=20&c=kTHeSYMCHxPSHTqoy2U_RjqnA01tvaQvqymofctrITI=',
-      title: 'Appliance Servicing',
+      title: 'Appliance  Servicing',
       description: [
         'Comprehensive servicing for appliances',
         'Includes repairs and safety checks'
