@@ -516,7 +516,7 @@ app.get('/sp_city_mobile/:spEmail', (req, res) => {
 
 //--------- Payment Integration ----------//
 import Razorpay from "razorpay";
-import { addSalary, fetchTotalCostForSP } from './models/salary.js';
+import { addSalary, fetchTotalCostForSP, fetchTotalCostForSPByMonth } from './models/salary.js';
 
 //RAZORPAYX_API_KEY="rzp_test_iDWZYaECE3rES2"
 // RAZORPAYX_API_SECRET="5bx32uiT2GpnGJOurYwR2uSk"
@@ -609,24 +609,46 @@ app.get('/fetchTotalCostForSP', (req, res) => {
   });
 });
 // API to add salary for a service provider
-app.post('/addSalary', (req, res) => {
-  const { SP_Email, Salary } = req.body;
+app.post('/salary', (req, res) => {
+  const { SP_Email, Salary, month, year, amount_to_pay } = req.body;
 
-  // Log the received data for debugging
-  // console.log('Received request to add salary with:', { SP_Email, Salary });
+  // Validate required fields
+  if (!SP_Email || !Salary || !month || !year) {
+    return res.status(400).json({ error: 'Missing required fields' });
+  }
 
-  addSalary({ SP_Email, Salary }, (err, result) => {
+  // Prepare the details object
+  const details = { SP_Email, Salary, month, year, amount_to_pay };
+
+  // Call the addSalary function
+  addSalary(details, (err, result) => {
     if (err) {
-      // Log the error if there is an issue adding the salary
-      console.error('Error adding salary:', err);
-      return res.status(500).json({ error: err.message });
+      console.error('Error adding/updating salary:', err);
+      return res.status(500).json({ error: 'Database error occurred' });
     }
     
-    // Log the result of adding the salary for debugging
-    // console.log('Salary added successfully:', result);
-    
-    // Send a success message with the result
-    res.json({ message: 'Salary added successfully', result });
+    res.status(200).json({ message: 'Salary added or updated successfully', result });
   });
 });
-3
+
+app.get('/fetchTotalCostForSPMonthly', (req, res) => {
+  const { SP_Email, Bill_Mode, Month, Year } = req.query;
+  // console.log(req.query);
+  
+  // Validate query parameters
+  if (!SP_Email || !Bill_Mode || !Month || !Year) {
+    return res.status(400).json({ error: 'Missing required query parameters' });
+  }
+
+  // Call the function to fetch total cost
+  
+  fetchTotalCostForSPByMonth({ SP_Email, Bill_Mode, Month, Year }, (err, totalCost) => {
+    if (err) {
+      console.error('Error fetching monthly total cost:', err);
+      return res.status(500).json({ error: 'An error occurred while fetching data' });
+    }
+
+    // Send the total cost in the response
+    res.json({ TotalCost: totalCost });
+  });
+});

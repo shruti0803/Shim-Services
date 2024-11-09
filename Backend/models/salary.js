@@ -1,31 +1,35 @@
 import connection from "../db/connection.js";
 export const addSalary = (details, callback) => {
-  const { SP_Email, Salary } = details;  // Use 'details' instead of 'totalMoney'
+  const { SP_Email, Salary, month, year, amount_to_pay } = details;
 
   // Check if the required fields are provided
-  if (!SP_Email || !Salary) {
-    console.log('Missing required fields:', { SP_Email, Salary }); // Debugging missing fields
+  if (!SP_Email || !Salary || !month || !year) {
+    console.log('Missing required fields:', { SP_Email, Salary, month, year });
     return callback({ error: 'Missing required fields' }, null);
   }
 
-  console.log('Adding salary for:', { SP_Email, Salary }); // Log the incoming data for debugging
+  console.log('Adding/updating salary for:', { SP_Email, Salary, month, year, amount_to_pay });
 
-  const Date_credited = new Date().toISOString().slice(0, 19).replace('T', ' '); // Date format
+  // Insert or update the salary and amount_to_pay if a record with the same SP_Email, month, and year already exists
+  const query = `
+    INSERT INTO sp_salary (SP_Email, month, year, Salary, amount_to_pay)
+    VALUES (?, ?, ?, ?, ?)
+    ON DUPLICATE KEY UPDATE
+      Salary = VALUES(Salary),
+      amount_to_pay = VALUES(amount_to_pay)
+  `;
 
-  console.log('Date Credited:', Date_credited); // Log the date for debugging
-
-  // Insert the salary into the database
-  const query = 'INSERT INTO sp_salary (SP_Email, Date_credited, Salary) VALUES (?, ?, ?)';
-  connection.query(query, [SP_Email, Date_credited, Salary], (err, result) => {
+  connection.query(query, [SP_Email, month, year, Salary, amount_to_pay], (err, result) => {
     if (err) {
-      console.error('Database error while adding salary:', err); // Log any errors for debugging
+      console.error('Database error while adding/updating salary:', err);
       return callback(err, null);
     }
 
-    console.log('Salary added successfully:', result); // Log the result of the insertion
-    callback(null, result);  // Return the result of the insertion
+    console.log('Salary added or updated successfully:', result);
+    callback(null, result);
   });
 };
+
 export const fetchTotalCostForSP = (details, callback) => {
   const { SP_Email, Bill_Mode } = details;
 
@@ -62,6 +66,50 @@ export const fetchTotalCostForSP = (details, callback) => {
 
     // Return the result (ensure to access TotalCost properly)
     console.log('Returning total cost:', result[0].TotalCost); // Log the final total cost
+    callback(null, result[0].TotalCost);  // result[0] should contain the TotalCost
+  });
+};
+
+
+
+export const fetchTotalCostForSPByMonth = (details, callback) => {
+  const { SP_Email, Bill_Mode, Month, Year } = details;
+
+  // Check if the required fields are provided
+  if (!SP_Email || !Bill_Mode || !Month || !Year) {
+    console.log('Missing required fields:', { SP_Email, Bill_Mode, Month, Year }); // Debugging missing fields
+    return callback({ error: 'Missing required fields' }, null);
+  }
+
+  // console.log('Fetching total cost for:', { SP_Email, Bill_Mode, Month, Year }); // Log the incoming data for debugging
+
+  // Construct the query to fetch total cost for the specified month and year
+  const query = `
+    SELECT SUM(B.Total_Cost) AS TotalCost 
+    FROM Bill B 
+    JOIN Booking K ON K.Book_ID = B.Book_ID
+    WHERE K.SP_Email = ? 
+      AND K.Book_Status = "Completed" 
+      AND B.Bill_Mode = ?
+      AND MONTH(B.Bill_Date) = ?
+      AND YEAR(B.Bill_Date) = ?`;
+
+  connection.query(query, [SP_Email, Bill_Mode, Month, Year], (err, result) => {
+    if (err) {
+      console.error('Database error:', err); // Log the error for debugging
+      return callback({ error: 'Database error occurred' }, null);  // Provide a generic error message
+    }
+
+    // console.log('Query result:', result); // Log the query result for debugging
+
+    // Check if any result was returned
+    if (result.length === 0 || result[0].TotalCost === null) {
+      console.log('No records found for the given criteria');
+      return callback(null, { TotalCost: 0 });  // If no results, return a TotalCost of 0
+    }
+
+    // Return the result (ensure to access TotalCost properly)
+    console.log('Returning total cost for month:', result[0].TotalCost); // Log the final total cost
     callback(null, result[0].TotalCost);  // result[0] should contain the TotalCost
   });
 };

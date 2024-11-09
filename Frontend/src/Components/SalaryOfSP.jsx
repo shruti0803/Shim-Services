@@ -1,109 +1,107 @@
-import React, { useState, useEffect, useRef } from 'react'; 
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import PaymentBySP from './PaymentBySP'; // Import the new component
 
 const SalaryOfSP = ({ SP_Email }) => {
-  const [cashTotalCost, setCashTotalCost] = useState(null);
-  const [onlineTotalCost, setOnlineTotalCost] = useState(null);
+  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear()); // Default to current year
+  const [cashMonthlyTotals, setCashMonthlyTotals] = useState([]);
+  const [onlineMonthlyTotals, setOnlineMonthlyTotals] = useState([]);
   const [error, setError] = useState('');
-  const [cashPaid, setCashPaid] = useState(false); // Track if cash has been paid
-  const [showPaymentComponent, setShowPaymentComponent] = useState(false); 
-  // State to toggle PaymentBySP visibility
 
-  // const [showPayment, setShowPayment] = useState(false);
-  const prevCashTotalCostRef = useRef();
-  const prevOnlineTotalCostRef = useRef();
-
+  // Fetch monthly totals for both cash and online payments
   useEffect(() => {
-    const fetchTotalCosts = async () => {
+    const fetchMonthlyTotals = async (billMode, setMonthlyTotals) => {
       try {
-        const cashResponse = await axios.get('http://localhost:4002/fetchTotalCostForSP', {
-          params: {
-            SP_Email: SP_Email,
-            Bill_Mode: 'cash'
-          }
-        });
+        const monthlyTotals = [];
 
-        const onlineResponse = await axios.get('http://localhost:4002/fetchTotalCostForSP', {
-          params: {
-            SP_Email: SP_Email,
-            Bill_Mode: 'online'
-          }
-        });
+        // Loop through all months (01 to 12)
+        for (let month = 1; month <= 12; month++) {
+          // Format month to two digits (e.g., '01', '02', ..., '12')
+          const formattedMonth = month < 10 ? `0${month}` : `${month}`;
 
-        console.log("Cash Salary Response", cashResponse);
-        console.log("Online Salary Response", onlineResponse);
+          const response = await axios.get('http://localhost:4002/fetchTotalCostForSPMonthly', {
+            params: {
+              SP_Email,
+              Bill_Mode: billMode,
+              Month: formattedMonth, // Pass the formatted month (e.g., '01', '02')
+              Year: selectedYear,
+            },
+          });
 
-        const cashFetchedTotalCost = cashResponse.data.TotalCost;
-        const onlineFetchedTotalCost = onlineResponse.data.TotalCost;
+          // Ensure TotalCost is a valid number
+          const totalCost = isNaN(response.data.TotalCost) ? 0 : response.data.TotalCost;
 
-        setCashTotalCost(cashFetchedTotalCost);
-        setOnlineTotalCost(onlineFetchedTotalCost);
+          // Add the result for the current month to the monthly totals array
+          monthlyTotals.push(totalCost);
+        }
 
-        prevCashTotalCostRef.current = cashFetchedTotalCost;
-        prevOnlineTotalCostRef.current = onlineFetchedTotalCost;
-
+        // Set the state with all 12 monthly totals
+        setMonthlyTotals(monthlyTotals);
       } catch (error) {
-        console.error("Error fetching total costs:", error);
-        setError("Error fetching total costs");
+        console.error(`Error fetching ${billMode} monthly totals:`, error);
+        setError(`Error fetching ${billMode} monthly totals`);
       }
     };
 
-    fetchTotalCosts();
-  }, [SP_Email]);
+    // Fetch totals for both cash and online
+    fetchMonthlyTotals('cash', setCashMonthlyTotals);
+    fetchMonthlyTotals('online', setOnlineMonthlyTotals);
+  }, [SP_Email, selectedYear]);
 
-  // Success handler for PaymentBySP component
-  const handlePaymentSuccess = () => {
-    setCashPaid(true);
-    setError('Cash payment has been processed successfully');
-    setShowPaymentComponent(false); // Hide PaymentBySP after successful payment
-  };
-
-  // Error handler for PaymentBySP component
-  const handlePaymentError = () => {
-    setError('Error processing cash payment');
-    setShowPaymentComponent(false); // Hide PaymentBySP if payment fails
-  };
-
-  const handlePayNow = () => {
-    setShowPaymentComponent(true); // Show PaymentBySP component when Pay Now is clicked
+  // Handle year selection change
+  const handleYearChange = (event) => {
+    setSelectedYear(Number(event.target.value)); // Convert the string value to a number
   };
 
   return (
     <div className="mt-6 p-4 bg-gray-100 rounded-md shadow-md">
+      {/* Year selection dropdown */}
+      <div className="mb-4">
+        <label className="mr-2 text-lg">Select Year:</label>
+        <select 
+          value={selectedYear} 
+          onChange={handleYearChange} 
+          className="p-2 border rounded-md"
+        >
+          {/* List of years (you can customize this list) */}
+          {[2023, 2024, 2025, 2026].map(year => (
+            <option key={year} value={year}>
+              {year}
+            </option>
+          ))}
+        </select>
+      </div>
+
       <h3 className="text-lg font-semibold flex items-center space-x-2">
         <i className="fas fa-money-bill text-green-500"></i>
-        <span>Salary Information</span>
+        <span>Monthly Salary Information for {selectedYear}</span>
       </h3>
 
-      <p className="font-semibold mt-2">SP Salary (Online): ₹{onlineTotalCost !== null ? onlineTotalCost : 'Loading...'}</p>
-      <p className="font-semibold mt-2">Amount you have to pay (Cash): ₹{cashTotalCost !== null ? cashTotalCost : 'Loading...'}</p>
-
-      {cashPaid && <p className="text-green-500 mt-2">Cash payment has been processed successfully.</p>}
-
-      {/* Show the PaymentBySP component when Pay Now is clicked */}
-      {/* Render PaymentBySP when the button is clicked */}
-      {showPaymentComponent && (
-            <PaymentBySP
-              
-              amount={cashTotalCost}
-              
-            />
-          )}
-      {/* Display Pay Now button for cash payment */}
-      {!cashPaid && cashTotalCost !== null && !showPaymentComponent && (
-        <>
-          <button
-            onClick={handlePayNow}
-            className="mt-4 bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600"
-          >
-            Pay Now
-          </button>
-
-          
-        </>
-      )}
       {error && <p className="text-red-500 mt-2">{error}</p>}
+
+      <table className="mt-4 w-full border">
+        <thead>
+          <tr>
+            <th className="border px-4 py-2">Month</th>
+            <th className="border px-4 py-2">Cash Total</th>
+            <th className="border px-4 py-2">Online Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          {Array.from({ length: 12 }).map((_, monthIndex) => (
+            <tr key={monthIndex}>
+              <td className="border px-4 py-2">
+                {new Date(0, monthIndex).toLocaleString('en', { month: 'long' })}
+              </td>
+              <td className="border px-4 py-2">
+                ₹{cashMonthlyTotals[monthIndex] || 0}
+              </td>
+              <td className="border px-4 py-2">
+                ₹{onlineMonthlyTotals[monthIndex] || 0}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 };

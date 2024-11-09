@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React, { useState } from 'react';
 
-function PaymentBySP({ amount }) {
+function PaymentBySP({ amount, setAmountToZero }) {
   const [responseId, setResponseId] = useState("");
   const [responseState, setResponseState] = useState([]);
 
@@ -35,7 +35,7 @@ function PaymentBySP({ amount }) {
   };
 
   const handleRazorPayScreen = async (amount) => {
-    const res = await loadScript("https:/checkout.razorpay.com/v1/checkout.js");
+    const res = await loadScript("https://checkout.razorpay.com/v1/checkout.js");
 
     if (!res) {
       alert('Failed to load Razorpay SDK');
@@ -50,6 +50,7 @@ function PaymentBySP({ amount }) {
       description: "Payment to ShimServices",
       handler: function(response) {
         setResponseId(response.razorpay_payment_id);
+        setAmountToZero();  // Set the amount to 0 on successful payment
       },
       prefill: {
         name: "Shim Services",
