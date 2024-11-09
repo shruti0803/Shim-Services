@@ -9,51 +9,53 @@ const ServiceProviderOrders = ({ SPEmail }) => {
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [isCannotGenerateBillModalOpen, setIsCannotGenerateBillModalOpen] = useState(false);
 
-  // Fetch orders from the server
+
+
+//completion 
+const handleCompletionStatusChangeonCheckbox = async (orderId) => {
+  // Toggle completion status locally
+  setAcceptedOrders((prevState) =>
+    prevState.map(order =>
+      order.Book_ID === orderId ? { ...order, isCompleted: !order.isCompleted } : order
+    )
+  );
+
+  try {
+    // Send the updated completion status to the backend
+    const updatedOrder = acceptedOrders.find(order => order.Book_ID === orderId);
+    await axios.put(`http://localhost:4002/booking/completion/${orderId}`, {
+      isCompleted: !updatedOrder.isCompleted,
+    });
+  } catch (error) {
+    console.error("Error updating completion status:", error);
+  }
+};
+
+ 
+  
   useEffect(() => {
+    // Fetch orders from the server
     const fetchOrders = async () => {
       try {
-        // Fetch service names associated with the service provider
         const responseServiceName = await axios.get(`http://localhost:4002/services/${SPEmail}`);
         const serviceName = responseServiceName.data.services.map(service => service.Service_Name);
-    
-        // Fetch incoming orders
-        try {
-          const response = await axios.get(`http://localhost:4002/available-bookings/${serviceName}`);
-          const incoming = response.data.filter(order => order.Book_Status === 'Pending');
-          setIncomingOrders(incoming);
-        } catch (error) {
-          if (error.response && error.response.status === 404) {
-            setIncomingOrders([]); // Set to empty if 404
-          } else {
-            console.error("Error fetching incoming orders:", error);
-          }
-        }
-    
-        // Fetch accepted orders
-        try {
-          const acceptedResponse = await axios.get(`http://localhost:4002/bookings/sp/${SPEmail}`);
-          const accepted = acceptedResponse.data.filter(order => order.Book_Status === 'Scheduled');
-    
-          // Update accepted orders with bill status
-          const updatedAcceptedOrders = await fetchBillsForOrders(accepted);
-          setAcceptedOrders(updatedAcceptedOrders);
-        } catch (error) {
-          if (error.response && error.response.status === 404) {
-            setAcceptedOrders([]); // Set to empty if 404
-          } else {
-            console.error("Error fetching accepted orders:", error);
-          }
-        }
+
+        const response = await axios.get(`http://localhost:4002/available-bookings/${serviceName}`);
+        const incoming = response.data.filter(order => order.Book_Status === 'Pending');
+        setIncomingOrders(incoming);
+
+        const acceptedResponse = await axios.get(`http://localhost:4002/bookings/sp/${SPEmail}`);
+        const accepted = acceptedResponse.data.filter(order => order.Book_Status === 'Scheduled');
+        const updatedAcceptedOrders = await fetchBillsForOrders(accepted);
+        setAcceptedOrders(updatedAcceptedOrders);
       } catch (error) {
-        console.error("Error fetching services or processing orders:", error);
+        console.error("Error fetching services or orders:", error);
       }
     };
     
     fetchOrders();
   }, [SPEmail]);
 
-  // Accept an order and update status
   const handleAccept = async (orderId) => {
     try {
       const orderToAccept = incomingOrders.find(order => order.Book_ID === orderId);
@@ -64,48 +66,53 @@ const ServiceProviderOrders = ({ SPEmail }) => {
       });
 
       if (response.status === 200) {
-        const updatedOrder = { ...orderToAccept, Book_Status: 'Scheduled', billGenerated: false };
+        const updatedOrder = { ...orderToAccept, Book_Status: 'Scheduled', billGenerated: false, isCompleted: false };
         setAcceptedOrders(prevState => {
-          // Ensure order isn't already in acceptedOrders to avoid duplication
           if (prevState.some(order => order.Book_ID === orderId)) return prevState;
           return [...prevState, updatedOrder];
         });
         setIncomingOrders(prevState => prevState.filter(order => order.Book_ID !== orderId));
-      } else {
-        console.error("Error updating booking status");
       }
     } catch (error) {
       console.error("Error accepting order:", error);
     }
   };
 
-  // Decline an order
   const handleDecline = (orderId) => {
     setIncomingOrders((prevState) => prevState.filter(order => order.Book_ID !== orderId));
   };
 
-  // Open the bill generation modal
   const handleGenerateBill = (order) => {
     const bookingDate = new Date(order.Book_Date);
     const currentDate = new Date();
   
-    // Check if the current date is on or after the booking date
     if (currentDate < bookingDate) {
-      setIsCannotGenerateBillModalOpen(true); // Show the modal if the bill can't be generated
-      return; // Don't proceed with bill generation
+      setIsCannotGenerateBillModalOpen(true);
+      return;
     }
   
     setSelectedOrder(order);
     setIsModalOpen(true);
   };
-  
-  // Mark an order as bill-generated once the bill is created
+
   const handleBillGenerated = (orderId) => {
     setAcceptedOrders((prevState) =>
       prevState.map(order =>
         order.Book_ID === orderId ? { ...order, billGenerated: true } : order
       )
     );
+  };
+
+  const handleCompletionStatusChange = (orderId) => {
+    setAcceptedOrders((prevState) =>
+      prevState.map(order =>
+        order.Book_ID === orderId ? { ...order, isCompleted: !order.isCompleted } : order
+      )
+    );
+    // Optional: Send completion status to the server for persistence
+    axios.put(`http://localhost:4002/complete-order/${orderId}`, {
+      isCompleted: !acceptedOrders.find(order => order.Book_ID === orderId).isCompleted,
+    }).catch(error => console.error("Error updating completion status:", error));
   };
 
   const closeModal = () => {
@@ -117,7 +124,6 @@ const ServiceProviderOrders = ({ SPEmail }) => {
     setIsCannotGenerateBillModalOpen(false);
   };
 
-  // Check if a bill exists for an order
   const checkBillExistence = async (bookId) => {
     try {
       const response = await axios.get(`http://localhost:4002/bills/${bookId}`);
@@ -127,12 +133,11 @@ const ServiceProviderOrders = ({ SPEmail }) => {
     }
   };
 
-  // Check for bills for each accepted order
   const fetchBillsForOrders = async (orders) => {
     const updatedOrders = await Promise.all(
       orders.map(async (order) => {
         const billExists = await checkBillExistence(order.Book_ID);
-        return { ...order, billGenerated: billExists };
+        return { ...order, billGenerated: billExists, isCompleted: false };
       })
     );
     return updatedOrders;
@@ -141,7 +146,6 @@ const ServiceProviderOrders = ({ SPEmail }) => {
   return (
     <div className="w-full flex justify-center items-start p-6 bg-white rounded-lg shadow-md">
       <div className="flex w-full space-x-8">
-        {/* Incoming Orders Column */}
         <div className="w-1/2">
           <h2 className="text-xl font-semibold mb-4">Incoming Orders</h2>
           <ul className="space-y-4">
@@ -152,22 +156,12 @@ const ServiceProviderOrders = ({ SPEmail }) => {
                   <p>Customer: {order.U_Email}</p>
                   <p>Service: {order.Service_Name}</p>
                   <p>Location: {order.Book_Area}, {order.Book_City}</p>
-                  <p>Date: {new Date(order.Book_Date).toLocaleString()}</p>
+                  <p>Date: {new Date(order.Appointment_Date).toLocaleString()}</p>
                   <p>Status: {order.Book_Status}</p>
                   {order.Book_Status === "Pending" && (
                     <div className="mt-2 flex space-x-4">
-                      <button
-                        className="bg-green-500 text-white py-1 px-4 rounded-md"
-                        onClick={() => handleAccept(order.Book_ID)}
-                      >
-                        Accept
-                      </button>
-                      <button
-                        className="bg-red-500 text-white py-1 px-4 rounded-md"
-                        onClick={() => handleDecline(order.Book_ID)}
-                      >
-                        Decline
-                      </button>
+                      <button className="bg-green-500 text-white py-1 px-4 rounded-md" onClick={() => handleAccept(order.Book_ID)}>Accept</button>
+                      <button className="bg-red-500 text-white py-1 px-4 rounded-md" onClick={() => handleDecline(order.Book_ID)}>Decline</button>
                     </div>
                   )}
                 </li>
@@ -178,7 +172,6 @@ const ServiceProviderOrders = ({ SPEmail }) => {
           </ul>
         </div>
 
-        {/* Accepted Orders Column */}
         <div className="w-1/2">
           <h2 className="text-xl font-semibold mb-4">Accepted Orders</h2>
           <ul className="space-y-4">
@@ -189,18 +182,23 @@ const ServiceProviderOrders = ({ SPEmail }) => {
                   <p>Customer: {order.U_Email}</p>
                   <p>Service: {order.Service_Name}</p>
                   <p>Location: {order.Book_Area}, {order.Book_City}</p>
-                  <p>Date: {new Date(order.Book_Date).toLocaleString()}</p>
+                  <p>Date: {new Date(order.Appointment_Date).toLocaleString()}</p>
                   <p>Status: {order.Book_Status}</p>
                   <div className="mt-4">
                     {order.billGenerated ? (
-                      <p className="text-green-500">Bill has been generated.</p>
+                      <div>
+                        <p className="text-green-500">Bill has been generated.</p>
+                        <label className="flex items-center mt-2">
+                        <input 
+          type="checkbox" 
+          checked={order.isCompleted} 
+          onChange={() => handleCompletionStatusChangeonCheckbox(order.Book_ID)} 
+        />
+                          <span className="ml-2 text-gray-700">Mark as Completed</span>
+                        </label>
+                      </div>
                     ) : (
-                      <button
-                        className="bg-green-500 text-white py-2 px-4 rounded-md"
-                        onClick={() => handleGenerateBill(order)}
-                      >
-                        Generate Bill
-                      </button>
+                      <button className="bg-green-500 text-white py-2 px-4 rounded-md" onClick={() => handleGenerateBill(order)}>Generate Bill</button>
                     )}
                   </div>
                 </li>
@@ -212,31 +210,17 @@ const ServiceProviderOrders = ({ SPEmail }) => {
         </div>
       </div>
 
-      {/* Modal when bill cannot be generated */}
       {isCannotGenerateBillModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm text-center">
-          <div className="text-3xl text-red-500 my-4">
-              <i className="fas fa-exclamation-circle"></i> {/* Icon */}
-            </div>
             <h2 className="text-lg font-semibold text-gray-800">Cannot Generate Bill</h2>
-            <p className="text-gray-600 my-4">
-              You cannot generate a bill before the booking date. Please wait until the booking date or later.
-            </p>
-           
-            <button
-              onClick={closeCannotGenerateBillModal}
-              className="mt-4 px-4 py-2 bg-green-600 text-white font-bold rounded-md hover:bg-green-700"
-            >
-              OK
-            </button>
+            <p className="text-gray-600 my-4">You cannot generate a bill before the booking date.</p>
+            <button onClick={closeCannotGenerateBillModal} className="mt-4 px-4 py-2 bg-green-600 text-white font-bold rounded-md hover:bg-green-700">OK</button>
           </div>
         </div>
       )}
 
-      {isModalOpen && (
-        <BillModal order={selectedOrder} onClose={closeModal} onBillGenerated={handleBillGenerated} />
-      )}
+      {isModalOpen && <BillModal order={selectedOrder} onClose={closeModal} onBillGenerated={handleBillGenerated} />}
     </div>
   );
 };

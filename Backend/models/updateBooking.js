@@ -28,3 +28,21 @@ export const updateBookingStatusAfterPayment = (bookingId, newStatus, callback) 
   });
 };
 
+//for checkbox
+export const updateBookingStatusAfterCheckbox = (bookingId, callback) => {
+  const query = `
+    UPDATE booking 
+    SET Book_Status = 'Completed'
+    WHERE Book_ID = ?;
+  `;
+
+  connection.query(query, [bookingId], (err, result) => {
+    if (err) {
+      console.error('Error updating booking status:', err);
+      return callback({ error: err.code, message: err.message }, null);
+    }
+    callback(null, result);
+  });
+};
+
+

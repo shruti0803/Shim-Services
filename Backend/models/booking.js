@@ -123,7 +123,7 @@ export const addBooking = (bookingData, callback) => {
 
   // Insert query for adding a new booking
   const query = `
-    INSERT INTO booking (SP_Email, C_Email, Book_Status, Service_Name, Service_Category, Book_Date, Book_HouseNo, Book_Area, Book_City, Book_State)
+    INSERT INTO booking (SP_Email, C_Email, Book_Status, Service_Name, Service_Category, Appointment_Date, Book_HouseNo, Book_Area, Book_City, Book_State)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `;
 
