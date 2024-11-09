@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React, { useState } from 'react';
 
-function PaymentBySP({ amount, setAmountToZero }) {
+function PaymentBySP({ amount, onClose, onPaymentSuccess }) {
   const [responseId, setResponseId] = useState("");
   const [responseState, setResponseState] = useState([]);
 
@@ -43,14 +43,15 @@ function PaymentBySP({ amount, setAmountToZero }) {
     }
 
     const options = {
-      key: "rzp_test_iDWZYaECE3rES2",  // Replace with your Razorpay key
+      key: "rzp_test_iDWZYaECE3rES2",
       amount: amount,
       currency: "INR",
       name: "ShimServices",
       description: "Payment to ShimServices",
       handler: function(response) {
         setResponseId(response.razorpay_payment_id);
-        setAmountToZero();  // Set the amount to 0 on successful payment
+        onClose(); // Close the modal on successful payment
+        onPaymentSuccess(response.razorpay_payment_id); // Call parent callback with payment ID
       },
       prefill: {
         name: "Shim Services",
@@ -88,22 +89,64 @@ function PaymentBySP({ amount, setAmountToZero }) {
   };
 
   return (
-    <div>
-      <button onClick={() => createRazorpayOrder(amount)}>Pay {amount} INR</button>
-      {responseId && <p>Payment ID: {responseId}</p>}
-      <h1>Payment Verification Form</h1>
-      <form onSubmit={paymentFetch}>
-        <input type="text" name="paymentId" />
-        <button type="submit">Fetch Payment</button>
-        {responseState.length !== 0 && (
-          <ul>
-            <li>{responseState.amount / 100}</li>
-            <li>{responseState.currency}</li>
-            <li>{responseState.status}</li>
-            <li>{responseState.method}</li>
-          </ul>
-        )}
-      </form>
+    <div
+      style={{
+        position: "fixed",
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundColor: "rgba(0, 0, 0, 0.6)",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        zIndex: 1000,
+      }}
+      onClick={onClose}
+    >
+      <div
+        style={{
+          backgroundColor: "#fff",
+          padding: "20px",
+          borderRadius: "8px",
+          width: "90%",
+          maxWidth: "500px",
+          position: "relative",
+          boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.25)",
+        }}
+        onClick={(e) => e.stopPropagation()} // Prevent modal close on inner click
+      >
+        <button
+          style={{
+            position: "absolute",
+            top: "10px",
+            right: "10px",
+            background: "transparent",
+            border: "none",
+            fontSize: "1.2rem",
+            cursor: "pointer",
+          }}
+          onClick={onClose}
+        >
+          X
+        </button>
+        <h1>Payment Details</h1>
+        <button className='bg-blue-600 text-white p-2 rounded-md' onClick={() => createRazorpayOrder(amount)}>Pay {amount} INR</button>
+        {/* {responseId && <p>Payment ID: {responseId}</p>}
+        <h2>Payment Verification Form</h2>
+        <form onSubmit={paymentFetch}>
+          <input type="text" name="paymentId" placeholder="Enter Payment ID" />
+          <button type="submit">Fetch Payment</button>
+          {responseState.length !== 0 && (
+            <ul>
+              <li>Amount: {responseState.amount / 100} INR</li>
+              <li>Currency: {responseState.currency}</li>
+              <li>Status: {responseState.status}</li>
+              <li>Method: {responseState.method}</li>
+            </ul>
+          )} */}
+        {/* </form> */}
+      </div>
     </div>
   );
 }

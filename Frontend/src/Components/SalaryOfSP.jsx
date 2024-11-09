@@ -1,107 +1,247 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import PaymentBySP from './PaymentBySP'; // Import your PaymentBySP component
 
 const SalaryOfSP = ({ SP_Email }) => {
-  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear()); // Default to current year
-  const [cashMonthlyTotals, setCashMonthlyTotals] = useState([]);
-  const [onlineMonthlyTotals, setOnlineMonthlyTotals] = useState([]);
+  const currentDate = new Date();
+  const currentMonth = currentDate.getMonth();
+  const currentYear = currentDate.getFullYear();
+
+  const [selectedYear, setSelectedYear] = useState(null);
+  const [amountToPayMonthly, setAmountToPayMonthly] = useState([]);
+  const [salaryMonthly, setSalaryMonthly] = useState([]);
+  const [currentMonthSalary, setCurrentMonthSalary] = useState(0);
+  const [currentMonthAmountToPay, setCurrentMonthAmountToPay] = useState(0);
   const [error, setError] = useState('');
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [amountToPay, setAmountToPay] = useState(0);
 
-  // Fetch monthly totals for both cash and online payments
-  useEffect(() => {
-    const fetchMonthlyTotals = async (billMode, setMonthlyTotals) => {
-      try {
-        const monthlyTotals = [];
+  // Fetch current month and year salary information
+  const fetchCurrentMonthData = async () => {
+    try {
+      const month = (currentMonth + 1).toString().padStart(2, '0');
 
-        // Loop through all months (01 to 12)
-        for (let month = 1; month <= 12; month++) {
-          // Format month to two digits (e.g., '01', '02', ..., '12')
-          const formattedMonth = month < 10 ? `0${month}` : `${month}`;
+      const salaryResponse = await axios.get('http://localhost:4002/fetchSalaryForSPMonthly', {
+        params: {
+          SP_Email,
+          month,
+          year: currentYear,
+        },
+      });
+      setCurrentMonthSalary(salaryResponse.data.Salary || 0);
 
-          const response = await axios.get('http://localhost:4002/fetchTotalCostForSPMonthly', {
-            params: {
-              SP_Email,
-              Bill_Mode: billMode,
-              Month: formattedMonth, // Pass the formatted month (e.g., '01', '02')
-              Year: selectedYear,
-            },
-          });
+      const amountResponse = await axios.get('http://localhost:4002/fetchAmountToPayForSPMonthly', {
+        params: {
+          SP_Email,
+          month,
+          year: currentYear,
+        },
+      });
+      setCurrentMonthAmountToPay(amountResponse.data.amount_to_pay || 0);
+    } catch (error) {
+      console.error('Error fetching current month data:', error);
+      setError('Error fetching current month data');
+    }
+  };
 
-          // Ensure TotalCost is a valid number
-          const totalCost = isNaN(response.data.TotalCost) ? 0 : response.data.TotalCost;
+  const fetchSalaryForSP = async () => {
+    if (!selectedYear) return;
+    try {
+      const onlineTotals = [];
 
-          // Add the result for the current month to the monthly totals array
-          monthlyTotals.push(totalCost);
-        }
+      for (let month = 1; month <= 12; month++) {
+        const formattedMonth = month.toString().padStart(2, '0');
 
-        // Set the state with all 12 monthly totals
-        setMonthlyTotals(monthlyTotals);
-      } catch (error) {
-        console.error(`Error fetching ${billMode} monthly totals:`, error);
-        setError(`Error fetching ${billMode} monthly totals`);
+        const response = await axios.get('http://localhost:4002/fetchSalaryForSPMonthly', {
+          params: {
+            SP_Email,
+            month: formattedMonth,
+            year: selectedYear,
+          },
+        });
+
+        const salary = isNaN(response.data.Salary) ? 0 : response.data.Salary;
+        onlineTotals.push(salary);
       }
-    };
 
-    // Fetch totals for both cash and online
-    fetchMonthlyTotals('cash', setCashMonthlyTotals);
-    fetchMonthlyTotals('online', setOnlineMonthlyTotals);
+      setSalaryMonthly(onlineTotals);
+    } catch (error) {
+      console.error('Error fetching salary monthly totals:', error);
+      setError('Error fetching salary monthly totals');
+    }
+  };
+
+  const fetchAmountToPayForSP = async () => {
+    if (!selectedYear) return;
+    try {
+      const cashTotals = [];
+
+      for (let month = 1; month <= 12; month++) {
+        const formattedMonth = month.toString().padStart(2, '0');
+
+        const response = await axios.get('http://localhost:4002/fetchAmountToPayForSPMonthly', {
+          params: {
+            SP_Email,
+            month: formattedMonth,
+            year: selectedYear,
+          },
+        });
+
+        const totalAmountToPay = isNaN(response.data.amount_to_pay) ? 0 : response.data.amount_to_pay;
+        cashTotals.push(totalAmountToPay);
+      }
+
+      setAmountToPayMonthly(cashTotals);
+    } catch (error) {
+      console.error('Error fetching cash total monthly totals:', error);
+      setError('Error fetching cash total monthly totals');
+    }
+  };
+
+  useEffect(() => {
+    fetchCurrentMonthData();
+  }, [SP_Email]);
+
+  useEffect(() => {
+    if (selectedYear) {
+      fetchSalaryForSP();
+      fetchAmountToPayForSP();
+    }
   }, [SP_Email, selectedYear]);
 
-  // Handle year selection change
   const handleYearChange = (event) => {
-    setSelectedYear(Number(event.target.value)); // Convert the string value to a number
+    setSelectedYear(event.target.value ? Number(event.target.value) : null);
+  };
+
+  const handlePayNowClick = (amount) => {
+    if (amount > 0) {
+      setAmountToPay(amount);
+      setShowPaymentModal(true);
+    }
+  };
+  const handlePaymentSuccess = (paymentId) => {
+    console.log("Payment successful with ID:", paymentId);
+  
+    // Prepare the details to send to the API (including SP email, month, year, and updated amount)
+    const details = {
+      SP_Email: SP_Email,  // You need to dynamically pass this value
+      month: currentMonth+1,                        // Dynamically set the month
+      year: currentYear,                              // Dynamically set the year
+      amountToPay: 0                        // This should be the amount to update
+    };
+  
+    // Call the /updateAmountToPay API
+    axios.post('http://localhost:4002/updateAmountToPay', details)
+      .then((response) => {
+        console.log('Amount updated successfully:', response.data);
+        // Additional actions can be added here after updating the amount
+        // For example, resetting the amount or updating the UI
+        // setAmount(0); // Reset amount if needed
+      })
+      .catch((error) => {
+        console.error('Error updating amount:', error.response ? error.response.data : error.message);
+        // Handle error appropriately
+      });
   };
 
   return (
     <div className="mt-6 p-4 bg-gray-100 rounded-md shadow-md">
-      {/* Year selection dropdown */}
-      <div className="mb-4">
-        <label className="mr-2 text-lg">Select Year:</label>
-        <select 
-          value={selectedYear} 
-          onChange={handleYearChange} 
-          className="p-2 border rounded-md"
-        >
-          {/* List of years (you can customize this list) */}
-          {[2023, 2024, 2025, 2026].map(year => (
-            <option key={year} value={year}>
-              {year}
-            </option>
-          ))}
-        </select>
-      </div>
-
+      {/* Fixed section: Current Month and Year Information */}
       <h3 className="text-lg font-semibold flex items-center space-x-2">
         <i className="fas fa-money-bill text-green-500"></i>
-        <span>Monthly Salary Information for {selectedYear}</span>
+        <span>Salary Information for {new Date(currentYear, currentMonth).toLocaleString('en', { month: 'long' })} {currentYear}</span>
       </h3>
+      <div className="mt-4">
+        <span className="font-medium">Amount to Pay (Current Month):</span> ₹{currentMonthAmountToPay || 0}
+      </div>
+      <div className="mt-2">
+        <span className="font-medium">Salary (Online Total for Current Month):</span> ₹{currentMonthSalary || 0}
+      </div>
 
-      {error && <p className="text-red-500 mt-2">{error}</p>}
+      {/* Show Pay Now button only if amount to pay for current month is greater than zero */}
+      {currentMonthAmountToPay > 0 && (
+        <button
+          className="mt-4 bg-blue-500 text-white px-4 py-2 rounded"
+          onClick={() => handlePayNowClick(currentMonthAmountToPay)}
+        >
+          Pay Now
+        </button>
+      )}
 
-      <table className="mt-4 w-full border">
-        <thead>
-          <tr>
-            <th className="border px-4 py-2">Month</th>
-            <th className="border px-4 py-2">Cash Total</th>
-            <th className="border px-4 py-2">Online Total</th>
-          </tr>
-        </thead>
-        <tbody>
-          {Array.from({ length: 12 }).map((_, monthIndex) => (
-            <tr key={monthIndex}>
-              <td className="border px-4 py-2">
-                {new Date(0, monthIndex).toLocaleString('en', { month: 'long' })}
-              </td>
-              <td className="border px-4 py-2">
-                ₹{cashMonthlyTotals[monthIndex] || 0}
-              </td>
-              <td className="border px-4 py-2">
-                ₹{onlineMonthlyTotals[monthIndex] || 0}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      {/* Year Selection Dropdown */}
+      
+<div className="mt-6">
+  <label className="mr-2 text-lg">Select Year:</label>
+  <select
+    value={selectedYear || ''}
+    onChange={handleYearChange}
+    className="p-2 border rounded-md"
+  >
+    <option value="">--Select Year--</option>
+    {/* Dynamically generate years from 2023 to current year */}
+    {Array.from({ length: currentYear - 2022 }, (_, index) => 2023 + index).map(year => (
+      <option key={year} value={year}>
+        {year}
+      </option>
+    ))}
+  </select>
+</div>
+
+
+      {selectedYear && (
+        <>
+          <h3 className="mt-6 text-lg font-semibold flex items-center space-x-2">
+            <i className="fas fa-calendar-day text-blue-500"></i>
+            <span>Salary Information for {selectedYear}</span>
+          </h3>
+          <div className="mt-4">
+            <table className="w-full border">
+              <thead>
+                <tr>
+                  <th className="border px-4 py-2">Month</th>
+                  <th className="border px-4 py-2">Amount to Pay (Cash Total)</th>
+                  <th className="border px-4 py-2">Salary (Online Total)</th>
+                  {/* <th className="border px-4 py-2">Action</th> */}
+                </tr>
+              </thead>
+              <tbody>
+                {Array.from({ length: 12 }).map((_, monthIndex) => (
+                  <tr key={monthIndex}>
+                    <td className="border px-4 py-2">
+                      {new Date(0, monthIndex).toLocaleString('en', { month: 'long' })}
+                    </td>
+                    <td className="border px-4 py-2">
+                      ₹{amountToPayMonthly[monthIndex] || 0}
+                    </td>
+                    <td className="border px-4 py-2">
+                      ₹{salaryMonthly[monthIndex] || 0}
+                    </td>
+                    <td className="border px-4 py-2">
+                      {amountToPayMonthly[monthIndex] > 0 && (
+                        <button
+                          className="bg-blue-500 text-white px-4 py-2 rounded"
+                          onClick={() => handlePayNowClick(amountToPayMonthly[monthIndex])}
+                        >
+                          Pay Now
+                        </button>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </>
+      )}
+
+      {showPaymentModal && (
+        <PaymentBySP
+          amount={amountToPay}
+          onClose={() => setShowPaymentModal(false)} 
+          onPaymentSuccess={handlePaymentSuccess}
+          // Pass the closeModal function to the modal component
+        />
+      )}
     </div>
   );
 };
