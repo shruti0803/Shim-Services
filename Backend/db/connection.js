@@ -4,7 +4,7 @@ import mysql from 'mysql2';
 const connection = mysql.createConnection({
   host: 'localhost',        // Replace with your database host
   user: 'root',             // Replace with your database user
-  password: 'IshaSql@562',     // Replace with your database password
+  password: 'Rudrach@',     // Replace with your database password
   database: 'ProjectShimServices'   // Replace with your database name
 });
 
