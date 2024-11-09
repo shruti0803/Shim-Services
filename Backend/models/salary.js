@@ -60,8 +60,11 @@ export const fetchTotalCostForSP = (details, callback) => {
 
     // Check if any result was returned
     if (result.length === 0) {
+      
       console.log('No records found for the given SP_Email and Bill_Mode');
-      return callback(null, { TotalCost: 0 });  // If no results, return a TotalCost of 0
+      
+      // Push a TotalCost of 0 into result and return result[0].TotalCost
+      result.push({ TotalCost: 0 }); // If no results, return a TotalCost of 0
     }
 
     // Return the result (ensure to access TotalCost properly)
@@ -105,7 +108,7 @@ export const fetchTotalCostForSPByMonth = (details, callback) => {
     // Check if any result was returned
     if (result.length === 0 || result[0].TotalCost === null) {
       console.log('No records found for the given criteria');
-      return callback(null, { TotalCost: 0 });  // If no results, return a TotalCost of 0
+      result.push({ TotalCost: 0 });   // If no results, return a TotalCost of 0
     }
 
     // Return the result (ensure to access TotalCost properly)
@@ -144,7 +147,7 @@ AND year=?;`;
     // Check if any result was returned
     if (result.length === 0 || result[0].Salary === null) {
       console.log('No records found for the given criteria');
-      return callback(null, { Salary: 0 });  // If no results, return a TotalCost of 0
+      result.push({ Salary: 0 });   // If no results, return a TotalCost of 0
     }
 
     // Return the result (ensure to access TotalCost properly)
@@ -181,7 +184,7 @@ AND year=?;`;
     // Check if any result was returned
     if (result.length === 0 || result[0].amount_to_pay === null) {
       console.log('No records found for the given criteria');
-      return callback(null, { amount_to_pay: 0 });  // If no results, return a TotalCost of 0
+      result.push({ amount_to_pay: 0 });   // If no results, return a TotalCost of 0
     }
 
     // Return the result (ensure to access TotalCost properly)
