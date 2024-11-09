@@ -204,25 +204,49 @@ const Carpentry = () => {
 
       {/* Additional Section */}
       <div className="flex flex-col-reverse md:flex-row p-2.5 m-6">
-        <div className="flex flex-col text-xl md:w-1/2">
-          <hr />
-          <h2 className="font-bold text-center mt-4">What we offer</h2>
-          <p>ShimServices provides skilled carpentry services to enhance every part of your home:</p>
-          <ul className="list-disc list-inside mt-4">
-            <li><strong>Furniture Assembly & Repair</strong></li>
-            <li><strong>Custom Cabinetry</strong></li>
-            <li><strong>Door & Window Installation</strong></li>
-            <li><strong>Wooden Flooring Installation</strong></li>
-            <li><strong>Shelving & Storage Solutions</strong></li>
-            <li><strong>Wall Paneling & Decor</strong></li>
-          </ul>
-          <Reviews />
-        </div>
-      
-        <div className="flex-6">
-          <Details services={services} service_name={"Carpentry"} />
-        </div>
-      </div>
+  <div className="flex flex-col text-xl md:w-1/2">
+    <hr />
+    <h2 className="text-3xl font-semibold text-center text-gray-800 mt-4 mb-2">What We Offer</h2>
+    <p className="text-lg text-center text-gray-600 mb-4">
+      ShimServices provides skilled carpentry services to enhance every part of your home:
+    </p>
+    <ul className="list-none space-y-3 text-gray-700 mt-4">
+      <li className="flex items-center">
+        <i className="fas fa-couch text-green-600 mr-2"></i>
+        <span className="font-medium text-lg">Furniture Assembly & Repair</span>
+      </li>
+      <li className="flex items-center">
+        <i className="fas fa-tools text-blue-600 mr-2"></i>
+        <span className="font-medium text-lg">Custom Cabinetry</span>
+      </li>
+      <li className="flex items-center">
+        <i className="fas fa-door-closed text-yellow-600 mr-2"></i>
+        <span className="font-medium text-lg">Door & Window Installation</span>
+      </li>
+      <li className="flex items-center">
+        <i className="fas fa-warehouse text-purple-600 mr-2"></i>
+        <span className="font-medium text-lg">Wooden Flooring Installation</span>
+      </li>
+      <li className="flex items-center">
+        <i className="fas fa-shelf text-red-600 mr-2"></i>
+        <span className="font-medium text-lg">Shelving & Storage Solutions</span>
+      </li>
+      <li className="flex items-center">
+        <i className="fas fa-th-large text-pink-600 mr-2"></i>
+        <span className="font-medium text-lg">Wall Paneling & Decor</span>
+      </li>
+    </ul>
+   
+    <div className="mt-4">
+      <Reviews />
+    </div>
+  </div>
+
+  <div className="flex-6">
+    <Details services={services} service_name={"Carpentry"} />
+  </div>
+</div>
+
       
     </>
   );

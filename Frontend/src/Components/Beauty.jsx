@@ -255,20 +255,19 @@ const Beauty = () => {
         </li>
       </ul>
 
-  Let us help you look and feel your best at ShimServices!
-</div>
+  
 
             <hr></hr>
             <div className="mt-4">
               <Reviews />
             </div>
           </div>
-        </div>
+       
         <div className="flex-6">
           
           <Details services={services} service_name={"Beauty Services"}/>
         </div>
-      </div>
+        </div>
     </>
   );
 };

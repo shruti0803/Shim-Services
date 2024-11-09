@@ -167,15 +167,33 @@ const Electrical = () => {
       <div className="flex flex-col-reverse md:flex-row p-2.5 m-6">
         <div className="flex flex-col text-xl md:w-1/2">
           <hr />
-          <h2 className='font-bold text-center mt-4'>What we offer</h2>
-          <p>ShimServices provides reliable electrical repair services for homes and businesses:</p>
-          <ul className="list-disc list-inside mt-4">
-            <li><strong>Ceiling Fan Installation</strong></li>
-            <li><strong>Electrical Safety Check</strong></li>
-            <li><strong>Fuse Box Replacement</strong></li>
-            <li><strong>Generator Installation</strong></li>
-            <li><strong>Light Fixture Installation</strong></li>
-          </ul>
+          <h2 className="text-3xl font-semibold text-center text-gray-800 mt-4 mb-2">What We Offer</h2>
+<p className="text-lg text-center text-gray-600 mb-4">
+  ShimServices provides reliable electrical repair services for homes and businesses:
+</p>
+<ul className="list-none space-y-3 text-gray-700 mt-4">
+  <li className="flex items-center">
+    <i className="fas fa-fan text-blue-600 mr-2"></i>
+    <span className="font-medium text-lg">Ceiling Fan Installation</span>
+  </li>
+  <li className="flex items-center">
+    <i className="fas fa-shield-alt text-green-600 mr-2"></i>
+    <span className="font-medium text-lg">Electrical Safety Check</span>
+  </li>
+  <li className="flex items-center">
+    <i className="fas fa-plug text-yellow-600 mr-2"></i>
+    <span className="font-medium text-lg">Fuse Box Replacement</span>
+  </li>
+  <li className="flex items-center">
+    <i className="fas fa-cogs text-orange-600 mr-2"></i>
+    <span className="font-medium text-lg">Generator Installation</span>
+  </li>
+  <li className="flex items-center">
+    <i className="fas fa-lightbulb text-purple-600 mr-2"></i>
+    <span className="font-medium text-lg">Light Fixture Installation</span>
+  </li>
+</ul>
+
           <Reviews />
         </div>
         <div className="flex-6">
