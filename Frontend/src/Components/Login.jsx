@@ -22,35 +22,42 @@ const Login = ({ onSwitchToSignUp, closeDialog }) => {
             // Fetch customers
             const customerResponse = await fetch('http://localhost:4002/customers');
             const customers = await customerResponse.json();
+            console.log('Customers:', customers);  // Log all customer data
     
             // Find matching customer
             const customer = customers.find(c => c.U_Email === loginValues.email);
-            console.log('Customer found:', customer);
-
+            console.log('Customer found:', customer);  // Log the found customer object
+    
+            if (!customer) {
+                setErrorMessage('Invalid email or password');
+                setSuccessMessage('');
+                return;
+            }
+    
+            // Check if the password exists for the customer
             if (!customer.U_Password) {
                 throw new Error('Password not found in customer data');
             }
     
-            if(customer){
-                const isMatch = await bcrypt.compare(loginValues.password, customer.U_Password);
-                if(isMatch){
-                    login(customer);
-                    setSuccessMessage('Login Successful!');
-                    setErrorMessage('');
-                    closeDialog();
-                    return;
-                }
+            // Compare passwords
+            const isMatch = await bcrypt.compare(loginValues.password, customer.U_Password);
+            if (isMatch) {
+                login(customer);
+                setSuccessMessage('Login Successful!');
+                setErrorMessage('');
+                closeDialog();
+            } else {
+                setErrorMessage('Invalid email or password');
+                setSuccessMessage('');
             }
-    
-            // If no match found
-            setErrorMessage('Invalid email or password');
-            setSuccessMessage('');
         } catch (error) {
             console.error('Error during login:', error);
             setErrorMessage('Failed to login. Please try again.');
             setSuccessMessage('');
         }
     };
+    
+    
 
     return (
         <div className='flex items-center justify-center w-full p-6'>

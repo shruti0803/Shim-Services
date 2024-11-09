@@ -28,7 +28,9 @@ const SalaryOfSP = ({ SP_Email }) => {
           year: currentYear,
         },
       });
-      setCurrentMonthSalary(salaryResponse.data.Salary || 0);
+      // console.log("salary resp",salaryResponse);
+      
+      setCurrentMonthSalary(salaryResponse.data.Salary.Salary || 0);
 
       const amountResponse = await axios.get('http://localhost:4002/fetchAmountToPayForSPMonthly', {
         params: {
@@ -37,12 +39,15 @@ const SalaryOfSP = ({ SP_Email }) => {
           year: currentYear,
         },
       });
-      setCurrentMonthAmountToPay(amountResponse.data.amount_to_pay || 0);
+      console.log("amt res",amountResponse);
+      setCurrentMonthAmountToPay(amountResponse.data.amount_to_pay.amount_to_pay || 0);
     } catch (error) {
       console.error('Error fetching current month data:', error);
       setError('Error fetching current month data');
     }
   };
+  
+  
 
   const fetchSalaryForSP = async () => {
     if (!selectedYear) return;
