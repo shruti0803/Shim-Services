@@ -112,16 +112,21 @@ useEffect(() => {
       }
 
       // Fetch accepted orders and add payment mode
+      // Fetch accepted orders and add payment mode
       const acceptedResponse = await axios.get(`http://localhost:4002/bookings/sp/${SPEmail}`);
       const accepted = acceptedResponse.data.filter(order => order.Book_Status === 'Scheduled');
       const updatedAcceptedOrders = await fetchBillsForOrders(accepted);
+
 
       const ordersWithPaymentMode = await Promise.all(
         updatedAcceptedOrders.map(async (order) => {
           const paymentMode = await fetchPaymentMode(order.Book_ID);
           return { ...order, paymentMode }; // Add paymentMode to each order
+          return { ...order, paymentMode }; // Add paymentMode to each order
         })
       );
+
+      setAcceptedOrders(ordersWithPaymentMode); // Use ordersWithPaymentMode here
 
       setAcceptedOrders(ordersWithPaymentMode); // Use ordersWithPaymentMode here
     } catch (error) {

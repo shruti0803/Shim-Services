@@ -2,7 +2,8 @@ import React, { useRef, useEffect } from 'react';
 import Carousel from 'react-bootstrap/Carousel';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Reviews } from './Reviews';
-import DetailsBeauty from './DetailsBeauty';
+import Details from './Details';
+// import DetailsBeauty from './DetailsBeauty';
 
 const Card = ({ imageSrc, title }) => (
   <div className="m-4 p-1 text-center w-30 h-32 text-gray-900 transition-shadow duration-300 overflow-visible hover:shadow-lg">
@@ -11,7 +12,112 @@ const Card = ({ imageSrc, title }) => (
   </div>
 );
 
+
 const Beauty = () => {
+
+  const services = [
+    {
+      id: 1,
+      imgSrc: 'https://media.istockphoto.com/id/1055099140/photo/making-hairstory-everyday-with-gorgeous-hair.jpg?s=612x612&w=0&k=20&c=x-Hxtr85HmZ_U5o7-KNzLCNi63drTeijFnuFcpz5kUU=',
+      title: 'Hair Styling ',
+      description: [
+        'Precision Haircut',
+        'Blowdry & Styling',
+        'Coloring & Highlights'
+      ],
+      // price: 40
+    },
+    {
+      id: 2,
+      imgSrc: 'https://cdn.pixabay.com/photo/2024/04/02/06/47/woman-8670155_1280.png',
+      title: 'Bridal Makeup',
+      description: [
+        'Traditional Bridal Look',
+        'Airbrush Makeup',
+        'Hairstyling & Accessories'
+      ],
+      // price: 50
+    },
+    {
+      id: 3,
+      imgSrc: 'https://media.istockphoto.com/id/1303337467/photo/beautiful-young-asian-woman-holding-hands-smile-feeling-so-happy-and-cheerful-with-healthy.jpg?s=612x612&w=0&k=20&c=3wuVMmBCzda1HXNqwfex5FuCl6dJ7Cu2xHojIVHFL5g=',
+      title: 'Facial Treatment ',
+      description: [
+        'Hydrating Facial',
+        'Anti-aging Facial',
+        'Acne Treatment'
+      ],
+      // price: 35
+    },
+    {
+      id: 4,
+      imgSrc: 'https://media.istockphoto.com/id/171328031/photo/beautiful-female-hands-with-manicure.jpg?s=612x612&w=0&k=20&c=CcNWRsYli6xO4vCmds7lQXIHVjsXsWffD7MDIxVH7U8=',
+      title: 'Manicure/Pedicure ',
+      description: [
+        'Classic Manicure',
+        'Spa Pedicure',
+        'Nail Art & Extensions'
+      ],
+      // price: 40
+    },
+    {
+      id: 5,
+      imgSrc: 'https://cdn.pixabay.com/photo/2019/10/11/12/33/make-up-4541782_1280.jpg',
+      title: 'Eyebrow Threading',
+      description: [
+        'Full Face Threading',
+        'Eyebrow Shaping',
+        'Upper Lip & Chin'
+      ],
+      // price: 25
+    },
+    {
+      id: 6,
+      imgSrc: 'https://media.istockphoto.com/id/486859959/photo/eyelash-extension.jpg?s=612x612&w=0&k=20&c=ztA2zj0Pjtx53bVcwLZWt8bFRtM5vN6gxpOyzyU6R2w=',
+      title: 'Eyelash Extensions ',
+      description: [
+        'Lash Extensions',
+        'Deep Cleansing',
+        'Microdermabrasion'
+      ],
+      // price: 75
+    },
+    {
+      id: 7,
+      imgSrc: 'https://media.istockphoto.com/id/1366228042/photo/facial-aesthetics-surgery-treatment.jpg?s=612x612&w=0&k=20&c=7zOyHVSkG1FrdqUqG1jXWWdPquSKXotFbvujX1SwPyw=',
+      title: 'Skin Care Treatment',
+      description: [
+        'Beard Shaping',
+        'Trimming & Styling',
+        'Beard Oil Treatment'
+      ],
+      // price: 45
+    },
+    {
+      id: 8,
+      imgSrc: 'https://media.istockphoto.com/id/504242575/photo/total-bliss.jpg?s=612x612&w=0&k=20&c=LNDbygaPEdFC2OmjS3ibjSjmEMVVEM7YCb8wtXRWWVM=',
+      title: 'Facial Treatment ',
+      description: [
+        'Hydrating Facial for Men',
+        'Anti-aging Treatment',
+        'Exfoliation & Cleansing'
+      ],
+      // price: 35
+    },
+    {
+      id: 9,
+      imgSrc: 'https://media.istockphoto.com/id/1263295220/photo/a-beautician-waxes-a-womans-leg-in-a-salon-beautiful-female-legs-preparing-bodies-for-the.jpg?s=612x612&w=0&k=20&c=WSyTasjZDVouyCI_ndDiJvhZCcGCairj56lwM1XIHqQ=',
+      title: 'Body Waxing',
+      description: [
+        'Full Body Waxing for Smooth Skin',
+        'Gentle Hair Removal with Soothing Wax',
+        'Includes Exfoliation & Post-Wax Care'
+      ],
+      
+      // price: 35
+    }
+  ];
+  
   const cardItems = [
     { id: 1, imageSrc: 'https://cdn.pixabay.com/photo/2018/04/03/23/04/woman-3288365_1280.jpg', title: 'Hair Styling' },
     { id: 2, imageSrc: 'https://cdn.pixabay.com/photo/2020/03/30/18/31/portrait-4985147_1280.jpg', title: 'Bridal Makeup' },
@@ -149,18 +255,21 @@ const Beauty = () => {
         </li>
       </ul>
 
-      <hr />
-      <div className="mt-4">
-        <Reviews />
+  Let us help you look and feel your best at ShimServices!
+</div>
+
+            <hr></hr>
+            <div className="mt-4">
+              <Reviews />
+            </div>
+          </div>
+        </div>
+        <div className="flex-6">
+          
+          <Details services={services} service_name={"Beauty Services"}/>
+        </div>
       </div>
-    </div>
-
-    <div className="flex-6">
-      <DetailsBeauty />
-    </div>
-  </div>
-</>
-
+    </>
   );
 };
 
