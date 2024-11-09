@@ -13,7 +13,7 @@ const Card = ({ imageSrc, title }) => (
   </div>
 );
 
-const Appliance = () => {
+const PestControl = () => {
 
   
   const handleBookNow = () => {
@@ -156,7 +156,7 @@ const Appliance = () => {
         <div className="mx-4 md:w-1/2 mt-24 pl-5 box-border z-[-1]">
           <Carousel fade>
             <Carousel.Item>
-              <video className="w-full h-[400px] object-cover" src="https://videos.pexels.com/video-files/8293017/8293017-hd_1920_1080_30fps.mp4" autoPlay muted loop playsInline></video>
+              <video className="w-full h-[400px] object-cover" src="https://videos.pexels.com/video-files/6790697/6790697-sd_360_640_25fps.mp4" autoPlay muted loop playsInline></video>
               <Carousel.Caption>
               <div className="bg-white/30 backdrop-blur-sm p-4 rounded-md">
       <h2 className="text-2xl font-bold text-white">
@@ -212,4 +212,4 @@ const Appliance = () => {
   );
 };
 
-export default Appliance;
+export default PestControl;

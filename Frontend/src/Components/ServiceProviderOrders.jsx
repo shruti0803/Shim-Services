@@ -86,7 +86,6 @@ const fetchBillForOrder = async (orderId) => {
  
   
 useEffect(() => {
-  // Fetch orders from the server
   const fetchOrders = async () => {
     try {
       const responseServiceName = await axios.get(`http://localhost:4002/services/${SPEmail}`);
@@ -99,7 +98,6 @@ useEffect(() => {
         setIncomingOrders(incoming);
       } catch (incomingError) {
         if (incomingError.response && incomingError.response.status === 404) {
-          // Handle 404 error by showing a message, no impact on accepted orders
           console.log("No incoming orders.");
           setIncomingOrders([]);
         } else {
@@ -107,17 +105,19 @@ useEffect(() => {
         }
       }
 
-      // Fetch accepted orders
+      // Fetch accepted orders and add payment mode
       const acceptedResponse = await axios.get(`http://localhost:4002/bookings/sp/${SPEmail}`);
       const accepted = acceptedResponse.data.filter(order => order.Book_Status === 'Scheduled');
       const updatedAcceptedOrders = await fetchBillsForOrders(accepted);
+
       const ordersWithPaymentMode = await Promise.all(
         updatedAcceptedOrders.map(async (order) => {
           const paymentMode = await fetchPaymentMode(order.Book_ID);
-          return { ...order, paymentMode };
+          return { ...order, paymentMode }; // Add paymentMode to each order
         })
       );
-      setAcceptedOrders(updatedAcceptedOrders);
+
+      setAcceptedOrders(ordersWithPaymentMode); // Use ordersWithPaymentMode here
     } catch (error) {
       console.error("Error fetching services or accepted orders:", error);
     }
@@ -125,7 +125,6 @@ useEffect(() => {
 
   fetchOrders();
 }, [SPEmail]);
-
 
   //       const acceptedResponse = await axios.get(`http://localhost:4002/bookings/sp/${SPEmail}`);
   //       const accepted = acceptedResponse.data.filter(order => order.Book_Status === 'Scheduled');

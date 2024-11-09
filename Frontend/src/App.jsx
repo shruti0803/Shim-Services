@@ -18,6 +18,14 @@ import { AuthProvider } from './context/AuthContext';
 import ProfilePage from './Pages/Profile';
 import Login from './Components/Login';
 import Payment from './Components/Payment';
+import Plumbing from './Components/Plumbing';
+import Carpentry from './Components/Carpentry';
+import Gardening from './Components/Gardening';
+import Painting from './Components/Painting';
+import PestControl from './Components/PestControl';
+import NetworkServices from './Components/NetworkServices';
+import Electrical from './Components/Electrical';
+
 
 
 
@@ -35,6 +43,13 @@ function App() {
         <Route path="/appliance" element={<Appliance />} /> 
         <Route path="/beauty" element={<Beauty/>} /> 
         <Route path="/housecleaning" element={<HouseCleaning/>} /> 
+        <Route path="/plumbing" element={<Plumbing/>} /> 
+        <Route path="/carpentry" element={<Carpentry/>} /> 
+        <Route path="/gardening" element={<Gardening/>} /> 
+        <Route path="/painting" element={<Painting/>} /> 
+        <Route path="/pestcontrol" element={<PestControl/>} /> 
+        <Route path="/network" element={<NetworkServices/>} /> 
+        <Route path="/electrical" element={<Electrical/>} /> 
         <Route path="/services" element={<Services/>} /> 
         <Route path="/orders" element={<Orders/>} /> 
         <Route path="/becomeSP" element={<BecomeServiceProviderForm/>} /> 
