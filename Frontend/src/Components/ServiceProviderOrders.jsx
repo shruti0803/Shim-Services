@@ -9,16 +9,22 @@ const ServiceProviderOrders = ({ SPEmail }) => {
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [isCannotGenerateBillModalOpen, setIsCannotGenerateBillModalOpen] = useState(false);
 
+  const fetchPaymentMode = async (bookId) => {
+    try {
+      const response = await axios.get(`http://localhost:4002/api/payment-mode/${bookId}`);
+      return response.data.paymentMode; // Adjust based on actual response structure
+    } catch (error) {
+      console.error("Error fetching payment mode:", error);
+      return null;
+    }
+  };
 
-
-//completion 
-const handleCompletionStatusChangeonCheckbox = async (orderId) => {
-  // Toggle completion status locally
-  setAcceptedOrders((prevState) =>
-    prevState.map(order =>
-      order.Book_ID === orderId ? { ...order, isCompleted: !order.isCompleted } : order
-    )
-  );
+  const handleCompletionStatusChangeonCheckbox = async (orderId) => {
+    setAcceptedOrders((prevState) =>
+      prevState.map(order =>
+        order.Book_ID === orderId ? { ...order, isCompleted: !order.isCompleted } : order
+      )
+    );
 
   try {
     // Send the updated completion status to the backend
@@ -105,6 +111,12 @@ useEffect(() => {
       const acceptedResponse = await axios.get(`http://localhost:4002/bookings/sp/${SPEmail}`);
       const accepted = acceptedResponse.data.filter(order => order.Book_Status === 'Scheduled');
       const updatedAcceptedOrders = await fetchBillsForOrders(accepted);
+      const ordersWithPaymentMode = await Promise.all(
+        updatedAcceptedOrders.map(async (order) => {
+          const paymentMode = await fetchPaymentMode(order.Book_ID);
+          return { ...order, paymentMode };
+        })
+      );
       setAcceptedOrders(updatedAcceptedOrders);
     } catch (error) {
       console.error("Error fetching services or accepted orders:", error);
@@ -114,6 +126,21 @@ useEffect(() => {
   fetchOrders();
 }, [SPEmail]);
 
+
+  //       const acceptedResponse = await axios.get(`http://localhost:4002/bookings/sp/${SPEmail}`);
+  //       const accepted = acceptedResponse.data.filter(order => order.Book_Status === 'Scheduled');
+  //       const updatedAcceptedOrders = await fetchBillsForOrders(accepted);
+        
+      
+        
+  //       setAcceptedOrders(ordersWithPaymentMode);
+  //     } catch (error) {
+  //       console.error("Error fetching services or orders:", error);
+  //     }
+  //   };
+    
+  //   fetchOrders();
+  // }, [SPEmail]);
 
   const handleAccept = async (orderId) => {
     try {
@@ -142,7 +169,7 @@ useEffect(() => {
   };
 
   const handleGenerateBill = (order) => {
-    const bookingDate = new Date(order.Book_Date);
+    const bookingDate = new Date(order.Appointment_Date);
     const currentDate = new Date();
   
     if (currentDate < bookingDate) {
@@ -160,18 +187,6 @@ useEffect(() => {
         order.Book_ID === orderId ? { ...order, billGenerated: true } : order
       )
     );
-  };
-
-  const handleCompletionStatusChange = (orderId) => {
-    setAcceptedOrders((prevState) =>
-      prevState.map(order =>
-        order.Book_ID === orderId ? { ...order, isCompleted: !order.isCompleted } : order
-      )
-    );
-    // Optional: Send completion status to the server for persistence
-    axios.put(`http://localhost:4002/complete-order/${orderId}`, {
-      isCompleted: !acceptedOrders.find(order => order.Book_ID === orderId).isCompleted,
-    }).catch(error => console.error("Error updating completion status:", error));
   };
 
   const closeModal = () => {
@@ -243,18 +258,22 @@ useEffect(() => {
                   <p>Location: {order.Book_Area}, {order.Book_City}</p>
                   <p>Date: {new Date(order.Appointment_Date).toLocaleString()}</p>
                   <p>Status: {order.Book_Status}</p>
-                  <div className="mt-4">
+                  <div >
                     {order.billGenerated ? (
                       <div>
+                         <p className="text-gray-700">Payment Mode: {order.paymentMode}</p>
                         <p className="text-green-500">Bill has been generated.</p>
-                        <label className="flex items-center mt-2">
-                        <input 
-          type="checkbox" 
-          checked={order.isCompleted} 
-          onChange={() => handleCompletionStatusChangeonCheckbox(order.Book_ID)} 
-        />
-                          <span className="ml-2 text-gray-700">Mark as Completed</span>
-                        </label>
+
+                        {order.paymentMode === "cash" && (
+                          <label className="flex items-center mt-2">
+                            <input 
+                              type="checkbox" 
+                              checked={order.isCompleted} 
+                              onChange={() => handleCompletionStatusChangeonCheckbox(order.Book_ID)} 
+                            />
+                            <span className="ml-2 text-gray-700">Mark as Completed</span>
+                          </label>
+                        )}
                       </div>
                     ) : (
                       <button className="bg-green-500 text-white py-2 px-4 rounded-md" onClick={() => handleGenerateBill(order)}>Generate Bill</button>
@@ -272,6 +291,17 @@ useEffect(() => {
       {isCannotGenerateBillModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm text-center">
+          <div className="flex justify-center mb-4">
+          <svg
+  className="w-12 h-12 text-red-500"
+  fill="none"
+  stroke="currentColor"
+  viewBox="0 0 24 24"
+  xmlns="http://www.w3.org/2000/svg"
+>
+  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+</svg>
+      </div>
             <h2 className="text-lg font-semibold text-gray-800">Cannot Generate Bill</h2>
             <p className="text-gray-600 my-4">You cannot generate a bill before the booking date.</p>
             <button onClick={closeCannotGenerateBillModal} className="mt-4 px-4 py-2 bg-green-600 text-white font-bold rounded-md hover:bg-green-700">OK</button>
