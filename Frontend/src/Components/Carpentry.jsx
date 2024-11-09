@@ -55,7 +55,7 @@ const Carpentry = () => {
     },
     {
       id: 4,
-      imgSrc: 'https://www.istockphoto.com/en/photo/locksmith-man-and-maintenance-handyman-with-home-renovation-and-fixing-change-door-gm1488903542-513938965',
+      imgSrc: 'https://media.istockphoto.com/id/1425248860/photo/carpenter-working-on-his-project.jpg?s=612x612&w=0&k=20&c=WIh90x2gMxv-OVTzXfSZJarmU9hbYQEvaZjYOAoHDIg=',
       title: 'Door Repair',
       description: [
         'Repair of damaged or misaligned doors',
@@ -65,7 +65,7 @@ const Carpentry = () => {
     },
     {
       id: 5,
-      imgSrc: 'https://www.istockphoto.com/en/photo/home-remodel-floor-installation-gm1464814939-497406859',
+      imgSrc: 'https://media.istockphoto.com/id/1135016158/photo/man-repairing-the-doorknob-closeup-of-workers-hands-installing-new-door-locker.jpg?s=612x612&w=0&k=20&c=JSwzPZhPJnh3kqRjUpZKnurzC7saO8n61sAsEEE42-k=',
       title: 'Flooring Installation',
       description: [
         'Professional installation of hardwood, laminate, and tile',
@@ -75,7 +75,7 @@ const Carpentry = () => {
     },
     {
       id: 6,
-      imgSrc: 'https://www.istockphoto.com/en/photo/portrait-of-woman-running-business-in-workshop-at-home-restoring-and-upcycling-gm1404390132-456617180',
+      imgSrc: 'https://media.istockphoto.com/id/1061173208/photo/young-carpenter-using-sander-while-working-on-a-piece-of-wood.jpg?s=612x612&w=0&k=20&c=dG_8gk4Zkfq2hsXcxZSHzc1e39QpQODb5AXvx1dWRAw=',
       title: 'Furniture Repair',
       description: [
         'Restoration of broken or damaged furniture',
@@ -85,7 +85,7 @@ const Carpentry = () => {
     },
     {
       id: 7,
-      imgSrc: 'https://www.istockphoto.com/en/photo/installing-bookshelves-on-a-drywall-wall-gm1717392947-540425587',
+      imgSrc: 'https://media.istockphoto.com/id/155157558/photo/a-tradesman-installing-hanging-shelves.jpg?s=612x612&w=0&k=20&c=9GV8u0QcOAzKhR_IijuAT4_t8_a6fVysSvBKn_TDv_E=',
       title: 'Shelving Installation',
       description: [
         'Custom shelving solutions for homes and offices',
@@ -109,10 +109,10 @@ const Carpentry = () => {
   const cardItems = [
     { id: 1, imageSrc: 'https://images.pexels.com/photos/5089180/pexels-photo-5089180.jpeg?auto=compress&cs=tinysrgb&w=600', title: 'Shelving Installation' },
     { id: 2, imageSrc: 'https://media.istockphoto.com/id/2167884011/photo/carpentry-expertise-in-action.jpg?s=612x612&w=0&k=20&c=vEt3eADZk9k91Ys80UB_DgIEjF5LT6kxi5DR7G6bORw=', title: 'Cabinet Installation' },
-    { id: 3, imageSrc: 'https://media.istockphoto.com/id/1366302220/photo/air-conditioner-repair-and-maintenance-the-technician-removes-the-filter-of-the-indoor-unit.jpg?s=612x612&w=0&k=20&c=viTVTD839XCpg45eFa8C2mYXfKwA6-mGJMILRv5Gv2E=', title: 'Custom Furniture Building' },
-    { id: 4, imageSrc: 'https://media.istockphoto.com/id/512511894/photo/repairman-is-repairing-a-washing-machine-entering-malfunction.jpg?s=1024x1024&w=is&k=20&c=iSUTD2qjWJP7uuhTGh5yLccPWy9oqvkJ7QZaWmzXCKg=', title: 'Door Repair' },
-    { id: 5, imageSrc: 'https://www.istockphoto.com/en/photo/installation-of-wood-deck-at-residential-home-gm1368087395-438163396', title: 'Deck Construction' },
-    { id: 6, imageSrc: 'https://www.istockphoto.com/en/photo/cleaning-tiles-gm826420556-134447527', title: 'Floor Installation' },
+    { id: 3, imageSrc: 'https://media.istockphoto.com/id/1077179862/photo/man-assembly-wooden-furniture-fixing-or-repairing-house-with-tape-measures.jpg?s=612x612&w=0&k=20&c=D6LwK3NGW4_zxrozdLZ8a65gDJl-Jh3H9cactMFSlqE=', title: 'Custom Furniture Building' },
+    { id: 4, imageSrc: 'https://media.istockphoto.com/id/962184006/photo/construction-worker-screwing-down-wood-deck-with-battery-power-screw-gun-or-drill.jpg?s=612x612&w=0&k=20&c=5J7IsAM32q9e7VJu3S4OtCmR331XS36R0MfRqj5V0h8=', title: 'Door Repair' },
+    { id: 5, imageSrc: 'https://media.istockphoto.com/id/2158693978/photo/dismantle-a-retro-kitchen-with-sink.jpg?s=612x612&w=0&k=20&c=2j26LcRyA_l5ad0I4qjdsKZxqLavGxBnQ-R8jkCXX2w=', title: 'Deck Construction' },
+    { id: 6, imageSrc: 'https://media.istockphoto.com/id/1135016158/photo/man-repairing-the-doorknob-closeup-of-workers-hands-installing-new-door-locker.jpg?s=612x612&w=0&k=20&c=JSwzPZhPJnh3kqRjUpZKnurzC7saO8n61sAsEEE42-k=', title: 'Floor Installation' },
   ];
 
   const leftSectionRef = useRef(null);
@@ -177,7 +177,7 @@ const Carpentry = () => {
             <Carousel.Item>
               <img
                 className="w-full h-[400px] object-cover"
-                src="https://www.istockphoto.com/en/photo/young-man-working-with-drill-in-the-workshop-gm1191423486-338109698"
+                src="https://images.pexels.com/photos/834892/pexels-photo-834892.jpeg?auto=compress&cs=tinysrgb&w=600"
                 alt="carousel item"
               />
               <Carousel.Caption>
@@ -189,7 +189,7 @@ const Carpentry = () => {
             <Carousel.Item>
               <img
                 className="w-full h-[400px] object-cover"
-                src="https://www.istockphoto.com/en/photo/carpenter-measuring-a-wooden-plank-gm157641166-13708213"
+                src="https://images.pexels.com/photos/8447849/pexels-photo-8447849.jpeg?auto=compress&cs=tinysrgb&w=600"
                 alt="carousel item"
               />
               <Carousel.Caption>
