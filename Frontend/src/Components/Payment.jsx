@@ -75,66 +75,89 @@ function Payment() {
   };
 
   // Function to handle Razorpay screen for payment
-  const handleRazorPayScreen = async (amount) => {
-    const res = await loadScript("https://checkout.razorpay.com/v1/checkout.js");
-  
-    if (!res) {
-      alert('Failed to load Razorpay SDK');
-      return;
-    }
-  
-    const options = {
-      key: "rzp_test_iDWZYaECE3rES2",  // Replace with your Razorpay key
-      amount: amount,
-      currency: "INR",
-      name: "ShimServices",
-      description: "Payment for Order",
-      handler: async function (response) {
-        setResponseId(response.razorpay_payment_id);
-        console.log("Payment Successful, Response:", response);
-        setPaymentSuccessful(true);  // Mark payment as successful
-  
+  // Function to handle Razorpay screen for payment
+const handleRazorPayScreen = async (amount) => {
+  const res = await loadScript("https://checkout.razorpay.com/v1/checkout.js");
+
+  if (!res) {
+    alert('Failed to load Razorpay SDK');
+    return;
+  }
+
+  const options = {
+    key: "rzp_test_iDWZYaECE3rES2",  // Replace with your Razorpay key
+    amount: amount,
+    currency: "INR",
+    name: "ShimServices",
+    description: "Payment for Order",
+    handler: async function (response) {
+      setResponseId(response.razorpay_payment_id);
+      console.log("Payment Successful, Response:", response);
+      setPaymentSuccessful(true);  // Mark payment as successful
+
+      try {
+        // Step 1: Update the bill with razorpay_payment_id
+        const updateBillResponse = await axios.put(
+          `http://localhost:4002/bills/${billDetails.Bill_ID}`,  // Update bill with razorpay_payment_id
+          { razorpay_payment_id: response.razorpay_payment_id }
+        );
+        console.log("Bill updated with Razorpay payment ID:", updateBillResponse.data);
+
+        // Update billDetails with razorpay_payment_id for display
+        setBillDetails((prevDetails) => ({
+          ...prevDetails,
+          razorpay_payment_id: response.razorpay_payment_id,
+        }));
+        console.log("Updated Bill Details:", billDetails);
+
+        // Step 2: Only update the book status if the bill update is successful
         try {
-          // Step 1: Update the bill with razorpay_payment_id
-          const updateBillResponse = await axios.put(
-            `http://localhost:4002/bills/${billDetails.Bill_ID}`,  // Update bill with razorpay_payment_id
-            { razorpay_payment_id: response.razorpay_payment_id }
+          console.log("Book ID inside try", billDetails.Book_ID);
+          const updateBookStatusResponse = await axios.put(
+            `http://localhost:4002/bookStatusAfterPayment/${billDetails.Book_ID}`,  // Use Book_ID from the response
+            { newStatus: 'Completed' }  // Update status to 'completed'
           );
-          console.log("Bill updated with Razorpay payment ID:", updateBillResponse.data);
-  
-          // Update billDetails with razorpay_payment_id for display
-          setBillDetails((prevDetails) => ({
-            ...prevDetails,
-            razorpay_payment_id: response.razorpay_payment_id,
-          }));
-          console.log("details",billDetails);
-          
-  
-          // Step 2: Only update the book status if the bill update is successful
-          
-            try {
-              console.log("details inside try",billDetails.Book_ID);
-              const updateBookStatusResponse = await axios.put(
-                `http://localhost:4002/bookStatusAfterPayment/${billDetails.Book_ID}`,  // Use Book_ID from the response
-                { newStatus: 'Completed' }  // Update status to 'completed'
-              );
-              console.log("Book status updated to completed:", updateBookStatusResponse.data);
-            } catch (error) {
-              console.error("Error updating book status:", error);
-            }
-          
+          console.log("Book status updated to completed:", updateBookStatusResponse.data);
         } catch (error) {
-          console.error("Error updating bill:", error);
+          console.error("Error updating book status:", error);
         }
-      },
-      theme: {
-        color: "#F4C430"
+
+// Step 3: Call the /salary API with SP_Email, Total_Cost, Month, and Year
+        try {
+          const billDate = new Date(billDetails.Bill_Date);
+          const month = billDate.getMonth()+1;
+
+          const year = billDate.getFullYear();
+          const Salary=(billDetails.Total_Cost*90)/100;
+          const salaryData = {
+            SP_Email: billDetails.SP_Email,
+            Salary:Salary ,
+            month: month,
+            year: year
+          };
+
+          const salaryResponse = await axios.post(
+            "http://localhost:4002/salary",  // Your API URL
+            salaryData
+          );
+          console.log("Salary API response:", salaryResponse.data);
+        } catch (error) {
+          console.error("Error calling /salary API:", error);
+        }
+
+      } catch (error) {
+        console.error("Error updating bill:", error);
       }
-    };
-  
-    const paymentObject = new window.Razorpay(options);
-    paymentObject.open();
+    },
+    theme: {
+      color: "#F4C430"
+    }        
   };
+
+  const paymentObject = new window.Razorpay(options);
+  paymentObject.open();
+};
+
   
   
   // Fetch bill details when the component mounts or bookId changes
@@ -172,11 +195,43 @@ function Payment() {
             <p className="text-lg font-medium">Bill Date:</p>
             <p className="text-gray-700">{new Date(billDetails.Bill_Date).toLocaleString()}</p>
           </div>
+          <div className="flex justify-between items-center">
+            <p className="text-lg font-medium">Appointment Date:</p>
+            <p className="text-gray-700">{new Date(billDetails.Book_Date).toLocaleString()}</p>
+          </div>
+          <div className="flex justify-between items-center">
+            <p className="text-lg font-medium">Customer Name:</p>
+            <p className="text-gray-700">{billDetails.Customer_Name}</p>
+          </div>
+          <div className="flex justify-between items-center">
+            <p className="text-lg font-medium">Customer Phone Number:</p>
+            <p className="text-gray-700">{billDetails.Customer_Phone}</p>
+          </div>
+          <div className="flex justify-between items-center">
+            <p className="text-lg font-medium">SP_Email:</p>
+            <p className="text-gray-700">{billDetails.SP_Email}</p>
+          </div>
+
+
 
           <div className="flex justify-between items-center">
             <p className="text-lg font-medium">Bill Mode:</p>
             <p className="text-gray-700">{billDetails.Bill_Mode}</p>
           </div>
+
+          <div className="flex justify-between items-center">
+            <p className="text-lg font-medium">Address:</p>
+            <p className="text-gray-700">{billDetails.Book_HouseNo},{billDetails.Book_Area},{billDetails.Book_City},{billDetails.Book_City_PIN},{billDetails.Book_State}</p>
+          </div>
+          <div className="flex justify-between items-center">
+            <p className="text-lg font-medium">Service Name:</p>
+            <p className="text-gray-700">{billDetails.Service_Name}</p>
+          </div>
+          <div className="flex justify-between items-center">
+            <p className="text-lg font-medium">Service Category:</p>
+            <p className="text-gray-700">{billDetails.Service_Category}</p>
+          </div>
+
 
           {/* Labor Entries */}
           <div className="mt-4">

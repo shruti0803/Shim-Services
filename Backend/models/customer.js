@@ -17,20 +17,20 @@ export const getAllCustomers = (callback) => {
 export const addCustomer = (customerData, callback) => {
   const { U_Name, U_Email, U_Phone, U_Password, is_SP } = customerData;
   
-  console.log('Checking for existing email or phone:', U_Email, U_Phone);
+    // console.log('Checking for existing email or phone:', U_Email, U_Phone);
   
-  // Check if email or phone already exists
-  connection.query('SELECT * FROM user WHERE U_Email = ? OR U_Phone = ?', [U_Email, U_Phone], (err, results) => {
-    if (err) {
-      console.error('Error checking email or phone:', err);
-      return callback(err, null);
-    }
-
-    console.log('Query results for existing email or phone:', results);
-
-    if (results.length > 0) {
-      return callback({ error: 'Email or Phone already exists' }, null);
-    }
+    // Check if email or phone already exists
+    connection.query('SELECT * FROM user WHERE U_Email = ? OR U_Phone = ?', [U_Email, U_Phone], (err, results) => {
+      if (err) {
+        console.error('Error checking email or phone:', err);
+        return callback(err, null);
+      }
+  
+      // console.log('Query results for existing email or phone:', results);
+  
+      if (results.length > 0) {
+        return callback({ error: 'Email or Phone already exists' }, null);
+      }
 
     // Hash the password
     bcrypt.hash(U_Password, 10, (hashErr, hashedPassword) => {

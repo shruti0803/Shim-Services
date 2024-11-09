@@ -51,7 +51,14 @@ export const addBill = (billData, callback) => {
 
 // Get a specific bill by Book_ID
 export const getBillById = (Book_ID, callback) => {
-  connection.query('SELECT * FROM bill WHERE Book_ID = ?', [Book_ID], (err, results) => {
+  connection.query(`
+    SELECT * FROM 
+    bill B
+    JOIN
+    booking BK
+    ON B.Book_ID=BK.Book_ID
+    WHERE BK.Book_ID = ?
+    `, [Book_ID], (err, results) => {
     if (err) {
       console.error('Error executing query:', err);
       return callback(err, null);

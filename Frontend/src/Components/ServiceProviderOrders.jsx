@@ -26,45 +26,121 @@ const ServiceProviderOrders = ({ SPEmail }) => {
       )
     );
 
-    try {
-      const updatedOrder = acceptedOrders.find(order => order.Book_ID === orderId);
-      await axios.put(`http://localhost:4002/booking/completion/${orderId}`, {
-        isCompleted: !updatedOrder.isCompleted,
-      });
-    } catch (error) {
-      console.error("Error updating completion status:", error);
+  try {
+    // Send the updated completion status to the backend
+    const updatedOrder = acceptedOrders.find(order => order.Book_ID === orderId);
+    await axios.put(`http://localhost:4002/booking/completion/${orderId}`, {
+      isCompleted: !updatedOrder.isCompleted,
+    });
+
+    // Fetch the bill for the completed order
+    fetchBillForOrder(orderId);
+
+  } catch (error) {
+    console.error("Error updating completion status:", error);
+  }
+};
+
+const fetchBillForOrder = async (orderId) => {
+  try {
+    const response = await axios.get(`http://localhost:4002/bills/${orderId}`);
+    if (response.status === 200) {
+      console.log("Bill details fetched successfully", response.data);
+      console.log("Data:",response.data.Bill_Date);
+      console.log("Email",response.data.SP_Email);
+      console.log("amount ",response.data.Total_Cost);
+      
+      
+      // You can further process the bill details if necessary
     }
-  };
+    // Call the /salary API with SP_Email, Total_Cost, Month, and Year
+        try {
+          const billDate = new Date(response.data.Bill_Date);
+          const month = billDate.getMonth()+1;
 
-  useEffect(() => {
-    const fetchOrders = async () => {
+          const year = billDate.getFullYear();
+          const amount_to_pay=(response.data.Total_Cost*10)/100;
+
+          const salaryData = {
+            SP_Email: response.data.SP_Email,
+            month: month,
+            year: year,
+            amount_to_pay:amount_to_pay
+            
+          };
+
+          const salaryResponse = await axios.post(
+            "http://localhost:4002/salary",  // Your API URL
+            salaryData
+          );
+          console.log("Salary API response:", salaryResponse.data);
+        } catch (error) {
+          console.error("Error calling /salary API:", error);
+        }
+  } catch (error) {
+    console.error("Error fetching bill details:", error);
+  }
+};
+
+
+ 
+  
+useEffect(() => {
+  // Fetch orders from the server
+  const fetchOrders = async () => {
+    try {
+      const responseServiceName = await axios.get(`http://localhost:4002/services/${SPEmail}`);
+      const serviceName = responseServiceName.data.services.map(service => service.Service_Name);
+
+      // Attempt to fetch incoming orders
       try {
-        const responseServiceName = await axios.get(`http://localhost:4002/services/${SPEmail}`);
-        const serviceName = responseServiceName.data.services.map(service => service.Service_Name);
-
         const response = await axios.get(`http://localhost:4002/available-bookings/${serviceName}`);
         const incoming = response.data.filter(order => order.Book_Status === 'Pending');
         setIncomingOrders(incoming);
-
-        const acceptedResponse = await axios.get(`http://localhost:4002/bookings/sp/${SPEmail}`);
-        const accepted = acceptedResponse.data.filter(order => order.Book_Status === 'Scheduled');
-        const updatedAcceptedOrders = await fetchBillsForOrders(accepted);
-        
-        const ordersWithPaymentMode = await Promise.all(
-          updatedAcceptedOrders.map(async (order) => {
-            const paymentMode = await fetchPaymentMode(order.Book_ID);
-            return { ...order, paymentMode };
-          })
-        );
-        
-        setAcceptedOrders(ordersWithPaymentMode);
-      } catch (error) {
-        console.error("Error fetching services or orders:", error);
+      } catch (incomingError) {
+        if (incomingError.response && incomingError.response.status === 404) {
+          // Handle 404 error by showing a message, no impact on accepted orders
+          console.log("No incoming orders.");
+          setIncomingOrders([]);
+        } else {
+          console.error("Error fetching incoming orders:", incomingError);
+        }
       }
-    };
+
+      // Fetch accepted orders
+      const acceptedResponse = await axios.get(`http://localhost:4002/bookings/sp/${SPEmail}`);
+      const accepted = acceptedResponse.data.filter(order => order.Book_Status === 'Scheduled');
+      const updatedAcceptedOrders = await fetchBillsForOrders(accepted);
+      const ordersWithPaymentMode = await Promise.all(
+        updatedAcceptedOrders.map(async (order) => {
+          const paymentMode = await fetchPaymentMode(order.Book_ID);
+          return { ...order, paymentMode };
+        })
+      );
+      setAcceptedOrders(updatedAcceptedOrders);
+    } catch (error) {
+      console.error("Error fetching services or accepted orders:", error);
+    }
+  };
+
+  fetchOrders();
+}, [SPEmail]);
+
+
+  //       const acceptedResponse = await axios.get(`http://localhost:4002/bookings/sp/${SPEmail}`);
+  //       const accepted = acceptedResponse.data.filter(order => order.Book_Status === 'Scheduled');
+  //       const updatedAcceptedOrders = await fetchBillsForOrders(accepted);
+        
+      
+        
+  //       setAcceptedOrders(ordersWithPaymentMode);
+  //     } catch (error) {
+  //       console.error("Error fetching services or orders:", error);
+  //     }
+  //   };
     
-    fetchOrders();
-  }, [SPEmail]);
+  //   fetchOrders();
+  // }, [SPEmail]);
 
   const handleAccept = async (orderId) => {
     try {

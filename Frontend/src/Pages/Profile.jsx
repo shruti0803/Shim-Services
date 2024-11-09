@@ -3,7 +3,7 @@ import "@fortawesome/fontawesome-free/css/all.min.css";
 import { useAuth } from "../context/AuthContext";
 import axios from "axios";
 import ServiceProviderOrders from "../Components/ServiceProviderOrders";
-
+import SalaryOfSP from "../Components/SalaryOfSP";
 
 const Profile = () => {
   const { currentUser } = useAuth();
@@ -70,25 +70,28 @@ const Profile = () => {
 
         {/* Service Display for Service Provider */}
         {isServiceProvider && (
-          <div className="mt-6 space-y-4">
-            <h3 className="text-lg font-semibold flex items-center space-x-2">
-              <i className="fas fa-cogs text-blue-500"></i>
-              <span>Services Offered</span>
-            </h3>
-            <div className="space-y-2">
-              {services.length > 0 ? (
-                services.map((service) => (
-                  <div key={service.Service_ID} className="flex items-center space-x-2 p-4 bg-gray-100 rounded-md shadow-md">
-                    <i className="fas fa-check-circle text-green-500"></i>
-                    <span className="font-semibold">{service.Service_Name}</span>
-                  </div>
-                ))
-              ) : (
-                <p className="text-gray-500">No services available.</p>
-              )}
-            </div>
+        <div className="mt-6 space-y-4">
+          <h3 className="text-lg font-semibold flex items-center space-x-2">
+            <i className="fas fa-cogs text-blue-500"></i>
+            <span>Services Offered</span>
+          </h3>
+          <div className="space-y-2">
+            {services.length > 0 ? (
+              services.map((service) => (
+                <div key={service.Service_ID} className="flex items-center space-x-2 p-4 bg-gray-100 rounded-md shadow-md">
+                  <i className="fas fa-check-circle text-green-500"></i>
+                  <span className="font-semibold">{service.Service_Name}</span>
+                </div>
+              ))
+            ) : (
+              <p className="text-gray-500">No services available.</p>
+            )}
           </div>
-        )}
+
+          {/* Salary Component */}
+          <SalaryOfSP SP_Email={email} />
+        </div>
+      )}
       </div>
 
       {isServiceProvider ? (

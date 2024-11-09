@@ -418,8 +418,8 @@ app.put('/update-status/:bookingId', (req, res) => {
 app.put('/bookStatusAfterPayment/:bookId', (req, res) => {
   const { bookId } = req.params;
   const { newStatus } = req.body;
-  console.log("Book id",bookId);
-  console.log("Status",newStatus);
+  // console.log("Book id",bookId);
+  // console.log("Status",newStatus);
   
   
   // Ensure newStatus and bookingId are provided
@@ -520,6 +520,7 @@ app.get('/sp_city_mobile/:spEmail', (req, res) => {
 
 //--------- Payment Integration ----------//
 import Razorpay from "razorpay";
+import { addSalary, fetchAmountToPayForSPByMonth, fetchSalaryForSPByMonth, fetchTotalCostForSP, fetchTotalCostForSPByMonth, updateAmountToPayForSPByMonth } from './models/salary.js';
 
 //RAZORPAYX_API_KEY="rzp_test_iDWZYaECE3rES2"
 // RAZORPAYX_API_SECRET="5bx32uiT2GpnGJOurYwR2uSk"
@@ -600,6 +601,128 @@ app.put('/booking/completion/:bookingId', (req, res) => {
     }
 
     res.status(200).json({ message: 'Booking status updated to Completed', result });
+  });
+});
+
+// apis for salary 
+// API to fetch total cost for a service provider
+// Ensure this is in your server file
+app.get('/fetchTotalCostForSP', (req, res) => {
+  const { SP_Email, Bill_Mode } = req.query; // Access query parameters, not body
+  
+  // Log the received query parameters for debugging
+  // console.log('Received request to fetch total cost with:', { SP_Email, Bill_Mode });
+
+  // Fetch the total cost from the database
+  fetchTotalCostForSP({ SP_Email, Bill_Mode }, (err, result) => {
+    if (err) {
+      // Log the error if there is an issue fetching from the database
+      console.error('Error fetching total cost:', err);
+      return res.status(500).json({ error: err.message });
+    }
+    
+    // Log the fetched result for debugging
+    // console.log('Fetched total cost:', result);
+    
+    // Send the total cost in the response
+    res.json({ TotalCost: result || 0 });
+  });
+});
+// API to add salary for a service provider
+app.post('/salary', (req, res) => {
+  const { SP_Email, Salary = 0, month, year, amount_to_pay = 0 } = req.body;
+
+  
+
+  // Validate required fields
+  if (!SP_Email  || !month || !year) {
+    return res.status(400).json({ error: 'Missing required fields' });
+  }
+
+  // Prepare the details object
+  const details = { SP_Email, Salary, month, year, amount_to_pay };
+
+  // Call the addSalary function
+  addSalary(details, (err, result) => {
+    if (err) {
+      console.error('Error adding/updating salary:', err);
+      return res.status(500).json({ error: 'Database error occurred' });
+    }
+    
+    res.status(200).json({ message: 'Salary added or updated successfully', result });
+  });
+});
+
+app.get('/fetchTotalCostForSPMonthly', (req, res) => {
+  const { SP_Email, Bill_Mode, Month, Year } = req.query;
+  // console.log(req.query);
+  
+  // Validate query parameters
+  if (!SP_Email || !Bill_Mode || !Month || !Year) {
+    return res.status(400).json({ error: 'Missing required query parameters' });
+  }
+
+  // Call the function to fetch total cost
+  
+  fetchTotalCostForSPByMonth({ SP_Email, Bill_Mode, Month, Year }, (err, totalCost) => {
+    if (err) {
+      console.error('Error fetching monthly total cost:', err);
+      return res.status(500).json({ error: 'An error occurred while fetching data' });
+    }
+
+    // Send the total cost in the response
+    res.json({ TotalCost: totalCost });
+  });
+});
+
+app.get('/fetchSalaryForSPMonthly', (req, res) => {
+  const { SP_Email, month, year } = req.query;
+  console.log("request sent",req.query);
+  
+
+  // Call the function to fetch salary
+  fetchSalaryForSPByMonth({ SP_Email, month, year }, (error, result) => {
+    if (error) {
+      return res.status(400).json({ error: error.error || 'Something went wrong' });
+    }
+
+    // Send the result back to the client
+    return res.status(200).json({ Salary: result || 0 });
+  });
+});
+app.get('/fetchAmountToPayForSPMonthly', (req, res) => {
+  const { SP_Email, month, year } = req.query;
+  console.log("request sent",req.query);
+  
+
+  // Call the function to fetch salary
+  
+  fetchAmountToPayForSPByMonth({ SP_Email, month, year }, (error, result) => {
+    if (error) {
+      return res.status(400).json({ error: error.error || 'Something went wrong' });
+    }
+
+    // Send the result back to the client
+    return res.status(200).json({ amount_to_pay: result || 0 });
+  });
+});
+
+app.post('/updateAmountToPay', (req, res) => {
+  const details = req.body; // Assuming the details are sent in the body of the request
+
+  // Call the service function to update the amount
+  
+  updateAmountToPayForSPByMonth(details, (error, result) => {
+    if (error) {
+      return res.status(500).json(error); // Respond with error status and message
+    }
+    
+    // If successful, respond with the updated amount to pay
+    return res.status(200).json({
+      success: true,
+      message: 'Amount updated successfully.',
+      data: result
+    });
   });
 });
 

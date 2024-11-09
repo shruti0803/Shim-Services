@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
-import bcrypt from "bcryptjs";
+import bcrypt from 'bcryptjs';
+
 
 const Login = ({ onSwitchToSignUp, closeDialog }) => {
     const [loginValues, setLoginValues] = useState({ email: '', password: '' });
@@ -24,6 +25,11 @@ const Login = ({ onSwitchToSignUp, closeDialog }) => {
     
             // Find matching customer
             const customer = customers.find(c => c.U_Email === loginValues.email);
+            console.log('Customer found:', customer);
+
+            if (!customer.U_Password) {
+                throw new Error('Password not found in customer data');
+            }
     
             if(customer){
                 const isMatch = await bcrypt.compare(loginValues.password, customer.U_Password);
