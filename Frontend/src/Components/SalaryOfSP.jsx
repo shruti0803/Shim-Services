@@ -28,6 +28,8 @@ const SalaryOfSP = ({ SP_Email }) => {
           year: currentYear,
         },
       });
+      console.log("curr salary resp",salaryResponse.data);
+      
       setCurrentMonthSalary(salaryResponse.data.Salary || 0);
 
       const amountResponse = await axios.get('http://localhost:4002/fetchAmountToPayForSPMonthly', {
@@ -37,12 +39,17 @@ const SalaryOfSP = ({ SP_Email }) => {
           year: currentYear,
         },
       });
+      console.log("curr amt res",amountResponse.data.amount_to_pay);
       setCurrentMonthAmountToPay(amountResponse.data.amount_to_pay || 0);
+      console.log("Current Amount to Pay",currentMonthAmountToPay);
+      
     } catch (error) {
       console.error('Error fetching current month data:', error);
       setError('Error fetching current month data');
     }
   };
+  
+  
 
   const fetchSalaryForSP = async () => {
     if (!selectedYear) return;
@@ -50,15 +57,19 @@ const SalaryOfSP = ({ SP_Email }) => {
       const onlineTotals = [];
 
       for (let month = 1; month <= 12; month++) {
-        const formattedMonth = month.toString().padStart(2, '0');
+        // const formattedMonth = month.toString().padStart(2, '0');
 
         const response = await axios.get('http://localhost:4002/fetchSalaryForSPMonthly', {
           params: {
             SP_Email,
-            month: formattedMonth,
+            month: month,
             year: selectedYear,
           },
         });
+        console.log(`salary for ${month} ${response.data.Salary}`);
+        // console.log("salary monthly");
+        
+        
 
         const salary = isNaN(response.data.Salary) ? 0 : response.data.Salary;
         onlineTotals.push(salary);
@@ -77,12 +88,12 @@ const SalaryOfSP = ({ SP_Email }) => {
       const cashTotals = [];
 
       for (let month = 1; month <= 12; month++) {
-        const formattedMonth = month.toString().padStart(2, '0');
+        // const formattedMonth = month.toString().padStart(2, '0');
 
         const response = await axios.get('http://localhost:4002/fetchAmountToPayForSPMonthly', {
           params: {
             SP_Email,
-            month: formattedMonth,
+            month: month,
             year: selectedYear,
           },
         });
@@ -90,6 +101,8 @@ const SalaryOfSP = ({ SP_Email }) => {
         const totalAmountToPay = isNaN(response.data.amount_to_pay) ? 0 : response.data.amount_to_pay;
         cashTotals.push(totalAmountToPay);
       }
+      console.log(`amount to pay for ${month} is ${response.data}`);
+      
 
       setAmountToPayMonthly(cashTotals);
     } catch (error) {

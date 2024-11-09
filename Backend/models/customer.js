@@ -9,6 +9,7 @@ export const getAllCustomers = (callback) => {
       console.error('Error executing query:', err);
       return callback(err, null);
     }
+    // console.log('Query results:', results); 
     callback(null, results);
   });
 };
@@ -38,14 +39,12 @@ export const addCustomer = (customerData, callback) => {
         console.error('Error hashing password:', hashErr);
         return callback({ error: 'Failed to hash password' }, null);
       }
-
-      // Insert query for adding new customer with hashed password
+    
+      // Insert the customer with the hashed password
       const query = `
         INSERT INTO user (U_Name, U_Email, U_Phone, U_Password, is_SP)
         VALUES (?, ?, ?, ?, ?)
       `;
-
-      // Insert the customer data with the hashed password
       connection.query(query, [U_Name, U_Email, U_Phone, hashedPassword, is_SP], (err, result) => {
         if (err) {
           console.error('Error inserting customer:', err);
@@ -54,6 +53,7 @@ export const addCustomer = (customerData, callback) => {
         callback(null, result);
       });
     });
+    
   });
 };
 
