@@ -105,11 +105,11 @@ const BillModal = ({ order, onClose, onBillGenerated }) => {
               </div>
               <div className="flex justify-between">
                 <p className="font-semibold text-gray-600">Date:</p>
-                <p>{new Date(order.Book_Date).toLocaleDateString()}</p>
+                <p>{new Date(order.Appointment_Date).toLocaleDateString()}</p>
               </div>
               <div className="flex justify-between">
                 <p className="font-semibold text-gray-600">Time:</p>
-                <p>{new Date(order.Book_Date).toLocaleTimeString()}</p>
+                <p>{new Date(order.Appointment_Date).toLocaleTimeString()}</p>
               </div>
             </div>
 
