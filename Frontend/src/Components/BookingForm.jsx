@@ -53,6 +53,20 @@ const BookingForm = ({ isOpen, onClose, serviceName, service }) => {
     return Object.keys(errors).length === 0;
   };
 
+  const validateFields = () => {
+    const { customerPhone } = formData;
+    let errors = {};
+    //Phone number
+    if (!customerPhone) {
+      errors.customerPhone = 'Phone number is required';
+    } else if (!/^\d{10}$/.test(customerPhone)) {
+      errors.customerPhone = 'Phone number must be 10 digits';
+    }
+
+    setErrorMessages(errors);
+    return Object.keys(errors).length === 0;
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     if (name === 'bookCity') {
@@ -61,6 +75,7 @@ const BookingForm = ({ isOpen, onClose, serviceName, service }) => {
         ...prevData,
         [name]: value,
         bookCityPin: selectedCity ? selectedCity.City_PIN : '', // Set city PIN based on selected city
+        bookState: selectedCity ? selectedCity.City_State : '',
         bookState: selectedCity ? selectedCity.City_State : '',
       }));
     } else {
@@ -71,6 +86,18 @@ const BookingForm = ({ isOpen, onClose, serviceName, service }) => {
     }
   };
 
+  // Function to format date in dd/mm/yyyy format 
+  const formatDate = (date) => {
+    const d = new Date(date);
+    const day = String(d.getDate()).padStart(2, '0');
+    const month = String(d.getMonth() + 1).padStart(2, '0'); // months are 0-based
+    const year = d.getFullYear();
+    return `${day}/${month}/${year}`;
+  };
+
+  const handleDateChange = (event) => {
+    const dateValue = event.target.value;
+    setBookingDate(dateValue); // Save in yyyy-mm-dd format for input
   // Function to format date in dd/mm/yyyy format 
   const formatDate = (date) => {
     const d = new Date(date);
@@ -158,17 +185,20 @@ const BookingForm = ({ isOpen, onClose, serviceName, service }) => {
           </div>
 
           {/* Booking Date Input */}
+          {/* Booking Date Input */}
           <div>
             <label className="block text-sm font-bold mb-1 text-gray-700">Booking Date <span className="text-red-500">*</span></label>
             <input
               type="date"
               name="bookingDate"
               value={bookingDate} // Use the yyyy-mm-dd format for input value
+              value={bookingDate} // Use the yyyy-mm-dd format for input value
               onChange={handleDateChange}
               min={new Date().toISOString().split('T')[0]}
               className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
               required
             />
+            <p className="mt-2 text-gray-500">{bookingDate && `Selected date: ${formatDate(bookingDate)}`}</p>
             <p className="mt-2 text-gray-500">{bookingDate && `Selected date: ${formatDate(bookingDate)}`}</p>
           </div>
 
@@ -196,6 +226,7 @@ const BookingForm = ({ isOpen, onClose, serviceName, service }) => {
               className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
               required
             />
+            {errorMessages.customerPhone && <p className="text-red-500">{errorMessages.customerPhone}</p>}
             {errorMessages.customerPhone && <p className="text-red-500">{errorMessages.customerPhone}</p>}
           </div>
 
