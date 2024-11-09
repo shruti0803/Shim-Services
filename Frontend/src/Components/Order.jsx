@@ -14,7 +14,7 @@ function Order({ order, onHelp, onCancel, payNow }) {
 
   const { 
     Book_ID, SP_Email, U_Email, Book_Status, Service_Name, 
-    Service_Category, Book_Date, Book_HouseNo, Book_Area, Book_City, 
+    Service_Category, Appointment_Date, Book_HouseNo, Book_Area, Book_City, 
     Book_State 
   } = order;
 
@@ -27,7 +27,7 @@ function Order({ order, onHelp, onCancel, payNow }) {
     statusColorClass = 'text-orange-500';
   }
 
-  const formattedDate = new Date(Book_Date).toLocaleDateString();
+  const formattedDate = new Date(Appointment_Date).toLocaleDateString();
 
   const handleCancel = (orderId) => {
     setOrderToCancel(orderId);

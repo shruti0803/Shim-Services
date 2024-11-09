@@ -13,7 +13,7 @@ import { getAllServices, addService } from './models/service.js'; // Import serv
 import { getAllServicesForProvider, addNewServiceForProvider } from './models/sp_services.js';
 import { getAllCities, addCity } from './models/city.js';
 import { addBookingPost } from './models/bookingPost.js';
-import { updateBookingStatus, updateBookingStatusAfterPayment} from './models/updateBooking.js';
+import { updateBookingStatus, updateBookingStatusAfterPayment, updateBookingStatusAfterCheckbox} from './models/updateBooking.js';
 import { addBill,getAllBills,getBillById,updateRazorpayPaymentId } from './models/bill.js';
 // Load environment variables
 dotenv.config();
@@ -305,58 +305,57 @@ app.post('/bookingPost', (req, res) => {
   const bookingData = req.body;
 
   // Ensure required fields are present
-  const requiredFields = [ 'U_Email', 'Book_Status', 'Service_Name', 'Book_Date', 'Book_HouseNo', 'Book_Area', 'Book_City', 'Book_City_PIN', 'Book_State'];
+  const requiredFields = [ 'U_Email', 'Book_Status', 'Service_Name', 'Appointment_Date', 'Book_HouseNo', 'Book_Area', 'Book_City', 'Book_City_PIN', 'Book_State'];
   for (let field of requiredFields) {
     if (!bookingData[field]) {
       return res.status(400).json({ message: `Missing required field: ${field}` });
     }
   }
 
+//---Shruti
 
-  //---Shruti
+app.post('/bookings/accept-order/:bookId', async (req, res) => {
+  const bookId = req.params.bookId;
+  const spEmail = req.body.spEmail; // Ensure spEmail is sent in the request body
 
-  app.post('/bookings/accept-order/:bookId', async (req, res) => {
-    const bookId = req.params.bookId;
-    const spEmail = req.body.spEmail; // Ensure spEmail is sent in the request body
-  
-    // if (isNaN(bookId)) {
-    //   return res.status(400).json({ error: 'Invalid bookId' });
-    // }
-  
-    // if (!spEmail || typeof spEmail !== 'string') {
-    //   return res.status(400).json({ error: 'Invalid or missing spEmail' });
-    // }
-  
-    try {
-      const result = await acceptBooking(bookId, spEmail);
-      res.json({ message: 'Booking accepted', result });
-    } catch (error) {
-      if (error.error === 'Booking not found') {
+  // if (isNaN(bookId)) {
+  //   return res.status(400).json({ error: 'Invalid bookId' });
+  // }
+
+  // if (!spEmail || typeof spEmail !== 'string') {
+  //   return res.status(400).json({ error: 'Invalid or missing spEmail' });
+  // }
+
+  try {
+    const result = await acceptBooking(bookId, spEmail);
+    res.json({ message: 'Booking accepted', result });
+  } catch (error) {
+    if (error.error === 'Booking not found') {
+      return res.status(404).json({ error: 'Booking not found' });
+    }
+    res.status(500).json({ error: 'Error accepting booking', details: error.message });
+  }
+});
+
+
+app.post('/bookings/cancel-order/:bookId', async (req, res) => {
+  const bookId = req.params.bookId;
+
+  // Call the cancelBooking function from the model
+  cancelBooking(bookId, (err, result) => {
+    if (err) {
+      if (err.error === 'Booking not found') {
         return res.status(404).json({ error: 'Booking not found' });
       }
-      res.status(500).json({ error: 'Error accepting booking', details: error.message });
+      return res.status(500).json({ error: 'Error canceling booking', message: err.message });
     }
-  });
 
+    res.json({ message: 'Booking cancelled', result });
+  });
+});
 
-  app.post('/bookings/cancel-order/:bookId', async (req, res) => {
-    const bookId = req.params.bookId;
-  
-    // Call the cancelBooking function from the model
-    cancelBooking(bookId, (err, result) => {
-      if (err) {
-        if (err.error === 'Booking not found') {
-          return res.status(404).json({ error: 'Booking not found' });
-        }
-        return res.status(500).json({ error: 'Error canceling booking', message: err.message });
-      }
-  
-      res.json({ message: 'Booking cancelled', result });
-    });
-  });
+//--Shruti end
 
-  //--Shruti end
-  // Add booking to the database
   addBookingPost(bookingData, (err, result) => {
     if (err) {
       console.error('Error adding booking:', err);
@@ -366,6 +365,10 @@ app.post('/bookingPost', (req, res) => {
     res.status(201).json({ message: 'Booking created successfully', bookingId: bookingData.Book_ID });
   });
 });
+
+  
+  // Add booking to the database
+  
 
 
 //fetching all the orders for sp where the sp_email is null and service_name =their service_name
@@ -580,5 +583,21 @@ app.put('/bills/:billId', (req, res) => {
     } else {
       res.status(200).json({ message: 'Bill updated with Razorpay payment ID successfully.' });
     }
+  });
+});
+
+
+
+//checkbox
+app.put('/booking/completion/:bookingId', (req, res) => {
+  const bookingId = req.params.bookingId;
+
+  // Call the database function to update the booking status
+  updateBookingStatusAfterCheckbox(bookingId, (error, result) => {
+    if (error) {
+      return res.status(500).json({ error: 'Error updating booking status', details: error });
+    }
+
+    res.status(200).json({ message: 'Booking status updated to Completed', result });
   });
 });
