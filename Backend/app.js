@@ -6,6 +6,7 @@ import bodyParser from 'body-parser';// Load environment variables
 import { createServer } from 'http'; // Import to create HTTP server
 import { Server } from 'socket.io'; // Import socket.io
 
+
 import { getAllServiceProviders, addServiceProvider,getServiceNamesByServiceProvider, getCityAndMobileByEmail } from './models/serviceProvider.js';
 import { getAllCustomers, addCustomer, updateIsSP } from './models/customer.js'; // Added updateIsSP import
 import { getAllBookings,getBookingsByServiceProvider, addBooking, acceptBooking,cancelBooking, deleteBooking,getAvailableBookingsForService } from './models/booking.js';
@@ -14,7 +15,7 @@ import { getAllServicesForProvider, addNewServiceForProvider } from './models/sp
 import { getAllCities, addCity } from './models/city.js';
 import { addBookingPost } from './models/bookingPost.js';
 import { updateBookingStatus, updateBookingStatusAfterPayment, updateBookingStatusAfterCheckbox} from './models/updateBooking.js';
-import { addBill,getAllBills,getBillById,updateRazorpayPaymentId } from './models/bill.js';
+import { addBill,getAllBills,getBillById,updateRazorpayPaymentId, cashPayment } from './models/bill.js';
 // Load environment variables
 dotenv.config();
 // console.log(process.env.R);
@@ -600,4 +601,26 @@ app.put('/booking/completion/:bookingId', (req, res) => {
 
     res.status(200).json({ message: 'Booking status updated to Completed', result });
   });
+});
+
+
+// cash payment -- shruti
+app.get('/api/payment-mode/:bookId', async (req, res) => {
+  const { bookId } = req.params;  // Get Book_ID from the route parameter
+
+  try {
+    const paymentMode = await cashPayment(bookId);
+
+    if (paymentMode) {
+      // Send the payment mode in the response
+      res.json({ paymentMode });
+    } else {
+      // Send a 404 if no record is found
+      res.status(404).json({ message: 'Payment mode not found for the given booking ID.' });
+    }
+  } catch (error) {
+    // Handle errors (e.g., database issues)
+    console.error('Error fetching payment mode:', error);
+    res.status(500).json({ message: 'Server error, please try again later.' });
+  }
 });
