@@ -9,16 +9,28 @@ const ServiceProviderOrders = ({ SPEmail }) => {
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [isCannotGenerateBillModalOpen, setIsCannotGenerateBillModalOpen] = useState(false);
 
-
-
-//completion 
-const handleCompletionStatusChangeonCheckbox = async (orderId) => {
-  // Toggle completion status locally
-  setAcceptedOrders((prevState) =>
-    prevState.map(order =>
-      order.Book_ID === orderId ? { ...order, isCompleted: !order.isCompleted } : order
-    )
-  );
+  const fetchPaymentMode = async (bookId) => {
+    try {
+      const response = await axios.get(`http://localhost:4002/api/payment-mode/${bookId}`);
+      console.log("Response from API:", response);  // Log response to check the structure
+      if (response && response.data && response.data.paymentMode) {
+        return response.data.paymentMode;  // Adjust this based on actual response structure
+      } else {
+        console.error("Payment mode not found in the response.");
+        return null;
+      }
+    } catch (error) {
+      console.error("Error fetching payment mode:", error);
+      return "Default";
+    }
+  };
+  
+  const handleCompletionStatusChangeonCheckbox = async (orderId) => {
+    setAcceptedOrders((prevState) =>
+      prevState.map(order =>
+        order.Book_ID === orderId ? { ...order, isCompleted: !order.isCompleted } : order
+      )
+    );
 
   try {
     // Send the updated completion status to the backend
@@ -26,35 +38,121 @@ const handleCompletionStatusChangeonCheckbox = async (orderId) => {
     await axios.put(`http://localhost:4002/booking/completion/${orderId}`, {
       isCompleted: !updatedOrder.isCompleted,
     });
+
+    // Fetch the bill for the completed order
+    fetchBillForOrder(orderId);
+
   } catch (error) {
     console.error("Error updating completion status:", error);
   }
 };
 
+const fetchBillForOrder = async (orderId) => {
+  try {
+    const response = await axios.get(`http://localhost:4002/bills/${orderId}`);
+    if (response.status === 200) {
+      console.log("Bill details fetched successfully", response.data);
+      console.log("Data:",response.data.Bill_Date);
+      console.log("Email",response.data.SP_Email);
+      console.log("amount ",response.data.Total_Cost);
+      
+      
+      // You can further process the bill details if necessary
+    }
+    // Call the /salary API with SP_Email, Total_Cost, Month, and Year
+        try {
+          const billDate = new Date(response.data.Bill_Date);
+          const month = billDate.getMonth()+1;
+
+          const year = billDate.getFullYear();
+          const amount_to_pay=(response.data.Total_Cost*10)/100;
+
+          const salaryData = {
+            SP_Email: response.data.SP_Email,
+            month: month,
+            year: year,
+            amount_to_pay:amount_to_pay
+            
+          };
+
+          const salaryResponse = await axios.post(
+            "http://localhost:4002/salary",  // Your API URL
+            salaryData
+          );
+          console.log("Salary API response:", salaryResponse.data);
+        } catch (error) {
+          console.error("Error calling /salary API:", error);
+        }
+  } catch (error) {
+    console.error("Error fetching bill details:", error);
+  }
+};
+
+
  
   
-  useEffect(() => {
-    // Fetch orders from the server
-    const fetchOrders = async () => {
-      try {
-        const responseServiceName = await axios.get(`http://localhost:4002/services/${SPEmail}`);
-        const serviceName = responseServiceName.data.services.map(service => service.Service_Name);
+useEffect(() => {
+  const fetchOrders = async () => {
+    try {
+      const responseServiceName = await axios.get(`http://localhost:4002/services/${SPEmail}`);
+      const serviceName = responseServiceName.data.services.map(service => service.Service_Name);
 
+      // Attempt to fetch incoming orders
+      try {
         const response = await axios.get(`http://localhost:4002/available-bookings/${serviceName}`);
         const incoming = response.data.filter(order => order.Book_Status === 'Pending');
         setIncomingOrders(incoming);
-
-        const acceptedResponse = await axios.get(`http://localhost:4002/bookings/sp/${SPEmail}`);
-        const accepted = acceptedResponse.data.filter(order => order.Book_Status === 'Scheduled');
-        const updatedAcceptedOrders = await fetchBillsForOrders(accepted);
-        setAcceptedOrders(updatedAcceptedOrders);
-      } catch (error) {
-        console.error("Error fetching services or orders:", error);
+      } catch (incomingError) {
+        if (incomingError.response && incomingError.response.status === 404) {
+          console.log("No incoming orders.");
+          setIncomingOrders([]);
+        } else {
+          console.error("Error fetching incoming orders:", incomingError);
+        }
       }
-    };
+
+      // Fetch accepted orders and add payment mode
+      // Fetch accepted orders and add payment mode
+      const acceptedResponse = await axios.get(`http://localhost:4002/bookings/sp/${SPEmail}`);
+      const accepted = acceptedResponse.data.filter(order => order.Book_Status === 'Scheduled');
+      const updatedAcceptedOrders = await fetchBillsForOrders(accepted);
+
+
+      const ordersWithPaymentMode = await Promise.all(
+        updatedAcceptedOrders.map(async (order) => {
+          const paymentMode = await fetchPaymentMode(order.Book_ID);
+          return { ...order, paymentMode }; // Add paymentMode to each order
+          return { ...order, paymentMode }; // Add paymentMode to each order
+        })
+      );
+
+      setAcceptedOrders(ordersWithPaymentMode); // Use ordersWithPaymentMode here
+
+      setAcceptedOrders(ordersWithPaymentMode); // Use ordersWithPaymentMode here
+    } catch (error) {
+      console.error("Error fetching services or accepted orders:", error);
+    }
+  };
+
+  fetchOrders();
+}, [SPEmail]);
+
+
+
+  //       const acceptedResponse = await axios.get(`http://localhost:4002/bookings/sp/${SPEmail}`);
+  //       const accepted = acceptedResponse.data.filter(order => order.Book_Status === 'Scheduled');
+  //       const updatedAcceptedOrders = await fetchBillsForOrders(accepted);
+        
+      
+        
+  //       setAcceptedOrders(ordersWithPaymentMode);
+  //     } catch (error) {
+  //       console.error("Error fetching services or orders:", error);
+  //     }
+  //   };
     
-    fetchOrders();
-  }, [SPEmail]);
+  //   fetchOrders();
+  // }, [SPEmail]);
 
   const handleAccept = async (orderId) => {
     try {
@@ -83,7 +181,7 @@ const handleCompletionStatusChangeonCheckbox = async (orderId) => {
   };
 
   const handleGenerateBill = (order) => {
-    const bookingDate = new Date(order.Book_Date);
+    const bookingDate = new Date(order.Appointment_Date);
     const currentDate = new Date();
   
     if (currentDate < bookingDate) {
@@ -101,18 +199,6 @@ const handleCompletionStatusChangeonCheckbox = async (orderId) => {
         order.Book_ID === orderId ? { ...order, billGenerated: true } : order
       )
     );
-  };
-
-  const handleCompletionStatusChange = (orderId) => {
-    setAcceptedOrders((prevState) =>
-      prevState.map(order =>
-        order.Book_ID === orderId ? { ...order, isCompleted: !order.isCompleted } : order
-      )
-    );
-    // Optional: Send completion status to the server for persistence
-    axios.put(`http://localhost:4002/complete-order/${orderId}`, {
-      isCompleted: !acceptedOrders.find(order => order.Book_ID === orderId).isCompleted,
-    }).catch(error => console.error("Error updating completion status:", error));
   };
 
   const closeModal = () => {
@@ -184,18 +270,22 @@ const handleCompletionStatusChangeonCheckbox = async (orderId) => {
                   <p>Location: {order.Book_Area}, {order.Book_City}</p>
                   <p>Date: {new Date(order.Appointment_Date).toLocaleString()}</p>
                   <p>Status: {order.Book_Status}</p>
-                  <div className="mt-4">
+                  <div >
                     {order.billGenerated ? (
                       <div>
+                         <p className="text-gray-700">Payment Mode: {order.paymentMode}</p>
                         <p className="text-green-500">Bill has been generated.</p>
-                        <label className="flex items-center mt-2">
-                        <input 
-          type="checkbox" 
-          checked={order.isCompleted} 
-          onChange={() => handleCompletionStatusChangeonCheckbox(order.Book_ID)} 
-        />
-                          <span className="ml-2 text-gray-700">Mark as Completed</span>
-                        </label>
+
+                        {order.paymentMode === "cash" && (
+                          <label className="flex items-center mt-2">
+                            <input 
+                              type="checkbox" 
+                              checked={order.isCompleted} 
+                              onChange={() => handleCompletionStatusChangeonCheckbox(order.Book_ID)} 
+                            />
+                            <span className="ml-2 text-gray-700">Mark as Completed</span>
+                          </label>
+                        )}
                       </div>
                     ) : (
                       <button className="bg-green-500 text-white py-2 px-4 rounded-md" onClick={() => handleGenerateBill(order)}>Generate Bill</button>
@@ -213,6 +303,17 @@ const handleCompletionStatusChangeonCheckbox = async (orderId) => {
       {isCannotGenerateBillModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm text-center">
+          <div className="flex justify-center mb-4">
+          <svg
+  className="w-12 h-12 text-red-500"
+  fill="none"
+  stroke="currentColor"
+  viewBox="0 0 24 24"
+  xmlns="http://www.w3.org/2000/svg"
+>
+  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+</svg>
+      </div>
             <h2 className="text-lg font-semibold text-gray-800">Cannot Generate Bill</h2>
             <p className="text-gray-600 my-4">You cannot generate a bill before the booking date.</p>
             <button onClick={closeCannotGenerateBillModal} className="mt-4 px-4 py-2 bg-green-600 text-white font-bold rounded-md hover:bg-green-700">OK</button>

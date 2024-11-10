@@ -33,14 +33,14 @@ export const getBookingsByServiceProvider = (email, callback) => {
   WHERE b.SP_Email = ? OR b.Book_Status = "Pending" OR b.Book_Status="Accepted"
 `;
 
-  //console.log('Executing query:', query, 'with email:', email); // Debugging print
+  // console.log('Executing query:', query, 'with email:', email); // Debugging print
 
   connection.query(query, [email], (err, results) => {
       if (err) {
           console.error('Error executing query:', err);
           return callback(err, null);
       }
-     // console.log('Query results:', results); // Debugging print
+      // console.log('Query results:', results); // Debugging print
       callback(null, results);
   });
 };
@@ -97,7 +97,7 @@ export const acceptBooking = (bookId, spEmail) => {
       }
 
       // Success response
-     // console.log(`Booking ${bookId} accepted by ${spEmail}.`);
+      // console.log(`Booking ${bookId} accepted by ${spEmail}.`);
       resolve({ message: 'Booking accepted and SP_Email updated successfully' });
     });
   });
@@ -116,20 +116,20 @@ export const getAllBookings = (callback) => {
 
 // Add a new booking
 export const addBooking = (bookingData, callback) => {
-  const { SP_Email, C_Email, Book_Status, Service_Name, Service_Category, Book_HouseNo, Book_Area, Book_City, Book_State } = bookingData;
+  const { SP_Email, C_Email, Book_Status, Service_Name, Service_Category, Book_HouseNo, Book_Area, Book_City, Book_State, Book_Date } = bookingData;
 
   // Generate current date and time
   const currentDate = new Date().toISOString().slice(0, 19).replace('T', ' '); // Format: YYYY-MM-DD HH:MM:SS
-
+  const currentDate2 = new Date().toISOString().slice(0, 10);
   // Insert query for adding a new booking
   const query = `
-    INSERT INTO booking (SP_Email, C_Email, Book_Status, Service_Name, Service_Category, Appointment_Date, Book_HouseNo, Book_Area, Book_City, Book_State)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    INSERT INTO booking (SP_Email, C_Email, Book_Status, Service_Name, Service_Category, Appointment_Date, Book_HouseNo, Book_Area, Book_City, Book_State, Book_Date)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `;
 
   connection.query(
     query,
-    [SP_Username, C_username, Book_Status, Service_Name, Service_Category, currentDate, Book_HouseNo, Book_Area, Book_City, Book_State],
+    [SP_Username, C_username, Book_Status, Service_Name, Service_Category, currentDate, Book_HouseNo, Book_Area, Book_City, Book_State, currentDate2],
     (err, result) => {
       if (err) {
         console.error('Error inserting booking:', err);
@@ -162,14 +162,14 @@ export const getAvailableBookingsForService = (serviceName, callback) => {
     AND Service_Name = ?
   `;
 
- // console.log('Executing query:', query, 'with service name:', serviceName); // Debugging print
+  // console.log('Executing query:', query, 'with service name:', serviceName); // Debugging print
 
   connection.query(query, [serviceName], (err, results) => {
     if (err) {
       console.error('Error executing query:', err);
       return callback(err, null);
     }
-  //  console.log('Query results:', results); // Debugging print
+    // console.log('Query results:', results); // Debugging print
     callback(null, results);
   });
 };

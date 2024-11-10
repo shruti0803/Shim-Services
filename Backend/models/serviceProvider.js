@@ -73,7 +73,7 @@ export const getServiceNamesByServiceProvider = (SP_Email, callback) => {
     WHERE SP_Email = ?
   `;
 
-  console.log('Executing query:', query, 'with SP_Email:', SP_Email); // Debugging print
+  // console.log('Executing query:', query, 'with SP_Email:', SP_Email); // Debugging print
 
   connection.query(query, [SP_Email], (err, results) => {
     if (err) {
@@ -85,7 +85,7 @@ export const getServiceNamesByServiceProvider = (SP_Email, callback) => {
       return callback({ message: 'No services found for this service provider' }, null);
     }
 
-    console.log('Query results:', results); // Debugging print
+    // console.log('Query results:', results); // Debugging print
     callback(null, results);
   });
 };
@@ -106,7 +106,7 @@ export const getCityAndMobileByEmail = (SP_Email, callback) => {
     WHERE U_Email = ?
   `;
 
-  console.log('Executing query for service provider city:', query1, 'with SP_Email:', SP_Email);
+  // console.log('Executing query for service provider city:', query1, 'with SP_Email:', SP_Email);
 
   connection.query(query1, [SP_Email], (err, results) => {
     if (err) {
@@ -118,7 +118,7 @@ export const getCityAndMobileByEmail = (SP_Email, callback) => {
       return callback({ message: 'No data found for this service provider' }, null);
     }
 
-    console.log('City query results:', results);
+    // console.log('City query results:', results);
 
     // Now execute the query for the phone number
     connection.query(query2, [SP_Email], (err2, results2) => {
@@ -131,7 +131,7 @@ export const getCityAndMobileByEmail = (SP_Email, callback) => {
         return callback({ message: 'No phone data found for this user' }, null);
       }
 
-      console.log('Phone query results:', results2);
+      // console.log('Phone query results:', results2);
 
       // Combine the results and return them
       const data = {

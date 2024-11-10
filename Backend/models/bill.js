@@ -51,7 +51,14 @@ export const addBill = (billData, callback) => {
 
 // Get a specific bill by Book_ID
 export const getBillById = (Book_ID, callback) => {
-  connection.query('SELECT * FROM bill WHERE Book_ID = ?', [Book_ID], (err, results) => {
+  connection.query(`
+    SELECT * FROM 
+    bill B
+    JOIN
+    booking BK
+    ON B.Book_ID=BK.Book_ID
+    WHERE BK.Book_ID = ?
+    `, [Book_ID], (err, results) => {
     if (err) {
       console.error('Error executing query:', err);
       return callback(err, null);
@@ -78,3 +85,25 @@ export const updateRazorpayPaymentId = (billId, razorpay_payment_id, callback) =
   });
 };
 
+//cash payments -- shruti
+
+export const cashPayment = async (bookId) => {
+  try {
+    // SQL query to get the payment mode (Bill_Mode) for the given Book_ID
+    const query = 'SELECT Bill_Mode FROM bill WHERE Book_ID = ?';
+
+    // Use the query method to fetch data
+    const [rows] = await connection.promise().query(query, [bookId]);
+
+    // Check if a result was found
+    if (rows.length > 0) {
+      return rows[0].Bill_Mode;  // Return the payment mode (Bill_Mode) for the order
+    } else {
+      // If no record is found, return null or handle the case as needed
+      return null;
+    }
+  } catch (error) {
+    console.error('Error fetching payment mode:', error);
+    throw error;  // Propagate the error for further handling (e.g., in the controller)
+  }
+};

@@ -56,6 +56,7 @@ const BecomeServiceProviderForm = () => {
       errors.experience = 'Experience must be a number between 0 and 50';
     }
 
+
     //accountNumber
     if(accountNumber === undefined || accountNumber === ''){
       errors.accountNumber = 'Account Number is required';
@@ -69,6 +70,7 @@ const BecomeServiceProviderForm = () => {
     } else if (!/^[A-Za-z]{4}[0-9]{7}$/.test(ifscCode)) {
       errors.ifscCode = 'IFSC Code must be in the format XXXX0000000';
     }
+
 
     setErrorMessages(errors);
     return Object.keys(errors).length === 0;
@@ -183,13 +185,19 @@ const BecomeServiceProviderForm = () => {
 
   const handleSubCategoryChange = (e) => {
     const { value, checked } = e.target;
-    setFormData({
-      ...formData,
-      subCategories: checked
-        ? [...formData.subCategories, value]
-        : formData.subCategories.filter((item) => item !== value),
+  
+    setFormData((prevFormData) => {
+      const updatedSubCategories = checked
+        ? [...prevFormData.subCategories, value]  // Add subcategory if checked
+        : prevFormData.subCategories.filter((item) => item !== value);  // Remove subcategory if unchecked
+  
+      return {
+        ...prevFormData,
+        subCategories: updatedSubCategories,  // Update subcategories array
+      };
     });
   };
+  
 
 
 
@@ -310,8 +318,8 @@ const onClosePopup = () => {
 
   const categoryToSubCategories = {
     'Appliance Repair': [
-      'Appliance Installation', 'Appliance Servicing', 'Appliance Gas Refill',
-      'Compressor Repair', 'Filter Replacement', 'Duct Cleaning',
+      'Appliance  Installation', 'Appliance  Servicing', 'Appliance  Gas Refill',
+      'Appliance  Compressor Repair', 'Appliance  Filter Replacement', 'Duct Cleaning',
       'Thermostat Replacement', 'Evaporator Coil Cleaning',
     ],
     'Automobile Services': [
@@ -552,7 +560,8 @@ const onClosePopup = () => {
                         checked={formData.subCategories.includes(subCategory)}
                         onChange={handleSubCategoryChange}
                         className="form-checkbox"
-                        required
+                        
+                      
                       />
                       <span className="ml-2">{subCategory}</span>
                     </label>
@@ -603,7 +612,7 @@ const onClosePopup = () => {
                     checked={selectedDays.includes(day)}
                     onChange={() => handleDaySelect(day)}
                     className="mr-2"
-                    required
+                    
                   />
                   <label>{day}</label>
                 </div>
