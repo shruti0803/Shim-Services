@@ -25,94 +25,53 @@ const NetworkServices = () => {
   const services = [
     {
       id: 1,
-      imgSrc: 'https://media.istockphoto.com/id/1353114711/photo/close-up-image-of-unrecognisable-person-doing-a-maintenance-service-on-a-household-filtration.jpg?s=612x612&w=0&k=20&c=NIMYCik-K0SUHDoI3FVD_9x9qcsBGyXf0kkfzHBbg-g=',
-      title: 'Appliance  Compressor Repair',
+      imgSrc: 'https://cdn.pixabay.com/photo/2022/09/27/15/52/network-cabling-installation-7483084_1280.jpg',
+      title: 'Network Installation',
       description: [
-        'Thorough servicing of appliance compressors',
-        'Filter replacement and comprehensive cleaning'
+        'Setting up network infrastructure and devices',
+        'Configuration of routers, switches, and access points'
       ],
-      // price: 120
+      price: 80
     },
     {
       id: 2,
-      imgSrc: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcThf6ou9ZEt19JPPZtaTeI2bcjfaHRMczbFEbVEjPem8Qwkos-0Pe9RFjRePotO5_uCvJk&usqp=CAU',
-      title: 'Appliance  Filter Replacement',
+      imgSrc: 'https://cdn.pixabay.com/photo/2018/05/14/16/25/cyber-security-3400657_1280.jpg',
+      title: 'Network Security Audit',
       description: [
-        'Advanced filter replacement technology',
-        'Deep cleaning of air filters'
+        'Comprehensive security review of network infrastructure',
+        'Identification and mitigation of vulnerabilities'
       ],
-      // price: 80
+      price: 120
     },
     {
       id: 3,
-      imgSrc: 'https://tse4.mm.bing.net/th?id=OIP.A_j-Llwh9Y2sSRsuX3GoqQHaDu&pid=Api&P=0&h=180',
-      title: 'Appliance Gas Refill',
+      imgSrc: 'https://cdn.pixabay.com/photo/2024/07/24/16/15/engineering-8918766_1280.jpg',
+      title: 'Network Troubleshooting',
       description: [
-        'Complete gas refill for refrigerators',
-        'Includes inspection and repair of leaks'
+        'Identifying and resolving network issues',
+        'Optimizing network performance and connectivity'
       ],
-      // price: 100
+      price: 70
     },
     {
       id: 4,
-      imgSrc: 'https://tse4.mm.bing.net/th?id=OIP.vm36fnWRKXKChjahir4uEwHaE8&pid=Api&P=0&h=180',
-      title: 'Appliance Installation',
+      imgSrc: 'https://cdn.pixabay.com/photo/2018/10/02/21/39/smart-3720021_1280.jpg',
+      title: 'Wireless Network Setup',
       description: [
-        'Expert installation of new appliances',
-        'Full diagnostic and testing post-installation'
+        'Setting up secure and stable wireless networks',
+        'Configuration of wireless access points and routers'
       ],
-      // price: 120
-    },
-    {
-      id: 5,
-      imgSrc: 'https://media.istockphoto.com/id/1347513910/photo/microwave-control.jpg?s=612x612&w=0&k=20&c=kTHeSYMCHxPSHTqoy2U_RjqnA01tvaQvqymofctrITI=',
-      title: 'Appliance Servicing',
-      description: [
-        'Comprehensive servicing for appliances',
-        'Includes repairs and safety checks'
-      ],
-      // price: 80
-    },
-    {
-      id: 6,
-      imgSrc: 'https://tse1.mm.bing.net/th?id=OIP.MOl_Fp2e77BMIhd8KwNw3QHaEI&pid=Api&P=0&h=180',
-      title: 'Duct Cleaning',
-      description: [
-        'Thorough cleaning of HVAC ducts',
-        'Includes inspection and removal of debris'
-      ],
-      // price: 80
-    },
-    {
-      id: 7,
-      imgSrc: 'https://media.istockphoto.com/id/1410734240/photo/electrician-installing-an-oven-at-a-house.jpg?s=612x612&w=0&k=20&c=o9AL96Rg__M4QPnunpKh2ECo3dnGQr8oBRuTgIrJVG0=',
-      title: 'Evaporator Coil Cleaning',
-      description: [
-        'Detailed cleaning of evaporator coils',
-        'Includes inspection and maintenance of the coil'
-      ],
-      // price: 85
-    },
-    {
-      id: 8,
-      imgSrc: 'https://media.istockphoto.com/id/542214568/photo/he-knows-those-pipes-like-the-back-of-his-hands.jpg?s=612x612&w=0&k=20&c=O62eQCe5qKBpiffhcn53lUdNSmCA-PtNDhgbugtjN8k=',
-      title: 'Thermostat Replacement',
-      description: [
-        'Replacement of faulty thermostats',
-        'Includes calibration and testing'
-      ],
-      // price: 70
+      price: 60
     }
   ];
-
+  
   const cardItems = [
-    { id: 1, imageSrc: 'https://media.istockphoto.com/id/1308686330/photo/technician-examining-dishwasher.jpg?s=612x612&w=0&k=20&c=dOnBvAdU8y_OlEjDbN_DxAUkSVUxXwg4OSIra5yX93o=', title: 'Appliance Installation' },
-    { id: 2, imageSrc: 'https://media.istockphoto.com/id/614135768/photo/repairman-is-repairing-a-washing-machine-on-the-white-background.jpg?s=612x612&w=0&k=20&c=nKCPfBCkfKEBBKWwK4muG8wdhyJoBRIHlLH6JZEBG6k=', title: 'Appliance Servicing' },
-    { id: 3, imageSrc: 'https://media.istockphoto.com/id/1180607321/photo/two-young-male-movers-placing-steel-refrigerator-in-kitchen.jpg?s=612x612&w=0&k=20&c=PW4dVclZ9wCgc-qq6BLHuMKzzStEW2N4-DxmlUk0K54=', title: 'Appliance Gas Refill' },
-    { id: 4, imageSrc: 'https://media.istockphoto.com/id/512511894/photo/repairman-is-repairing-a-washing-machine-entering-malfunction.jpg?s=1024x1024&w=is&k=20&c=iSUTD2qjWJP7uuhTGh5yLccPWy9oqvkJ7QZaWmzXCKg=', title: 'Appliance Duct Cleaning' },
-    { id: 5, imageSrc: 'https://media.istockphoto.com/id/912624814/photo/young-repairman-in-protective-workwear-fixing-oven-in-kitchen.jpg?s=1024x1024&w=is&k=20&c=pIc7EIHJxrkdYsDfKbcfwis6lyOYbx8kw7pxRCEEPgQ=', title: 'Thermostat Replacement' },
-    { id: 6, imageSrc: 'https://cdn.pixabay.com/photo/2020/12/28/09/44/man-5866475_1280.jpg', title: 'Appliance Filter Replacement' },
+    { id: 1, imageSrc: 'https://cdn.pixabay.com/photo/2024/06/22/18/09/ai-generated-8846759_1280.jpg', title: 'Network Installation' },
+    { id: 2, imageSrc: 'https://cdn.pixabay.com/photo/2020/08/09/14/25/business-5475656_1280.jpg', title: 'Network Security Audit' },
+    { id: 3, imageSrc: 'https://cdn.pixabay.com/photo/2018/09/06/22/11/electrician-3659459_1280.jpg', title: 'Network Troubleshooting' },
+    { id: 4, imageSrc: 'https://cdn.pixabay.com/photo/2021/11/11/23/17/connection-6787481_1280.png', title: 'Wireless Network Setup' }
   ];
+  
 
   const leftSectionRef = useRef(null);
 
@@ -134,79 +93,93 @@ const NetworkServices = () => {
   return (
     <>
       <div className="flex flex-col-reverse justify-between gap-2.5 md:flex-row">
-        {/* Left Section */}
-        <div className="md:w-1/2 text-black flex flex-wrap p-2.5 sticky top-0 max-h-[calc(100vh-40px)] overflow-y-auto" ref={leftSectionRef}>
-          <div className="mb-2.5 mt-2.5 pl-4">
-            <h2 className="text-5xl font-extrabold text-center mb-4">Appliances Repair</h2>
-            <p className="mt-2">Don't let appliance issues slow you down. ShimServices is here to help. When appliances break, ShimServices fixes them fast.</p>
-            <div className="flex items-center underline">
-              <img src="https://t3.ftcdn.net/jpg/04/20/03/48/360_F_420034841_AKpgqQGkkUyeD7oWc9y8vGTMwT4GmbHm.jpg" className="h-5 w-20 mt-2" alt="rating" />
-              <p className="ml-2">6M+ bookings till now</p>
-            </div>
-            <button onClick={handleBookNow} className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md">Book Now</button>
-          </div>
-          <div className='grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-4'>
-            {cardItems.map(item => (
-              <Card key={item.id} imageSrc={item.imageSrc} title={item.title} />
-            ))}
-          </div>
-        </div>
-
-        {/* Right Section */}
-        <div className="mx-4 md:w-1/2 mt-24 pl-5 box-border z-[-1]">
-          <Carousel fade>
-            <Carousel.Item>
-              <video className="w-full h-[400px] object-cover" src="https://videos.pexels.com/video-files/6790697/6790697-sd_360_640_25fps.mp4" autoPlay muted loop playsInline></video>
-              <Carousel.Caption>
-              <div className="bg-white/30 backdrop-blur-sm p-4 rounded-md">
-      <h2 className="text-2xl font-bold text-white">
-        Where Appliances meet Expertise!
-      </h2>
+  {/* Left Section */}
+  <div className="md:w-1/2 text-black flex flex-wrap p-2.5 sticky top-0 max-h-[calc(100vh-40px)] overflow-y-auto" ref={leftSectionRef}>
+    <div className="mb-2.5 mt-2.5 pl-4">
+      <h2 className="text-5xl font-extrabold text-center mb-4">Network Services</h2>
+      <p className="mt-2">Don't let network issues slow you down. ShimServices is here to provide professional network solutions for home and office setups. Whether you need installation, troubleshooting, or security audits, we’ve got you covered.</p>
+      <div className="flex items-center underline">
+        <img src="https://t3.ftcdn.net/jpg/04/20/03/48/360_F_420034841_AKpgqQGkkUyeD7oWc9y8vGTMwT4GmbHm.jpg" className="h-5 w-20 mt-2" alt="rating" />
+        <p className="ml-2">6M+ bookings till now</p>
+      </div>
+      <button onClick={handleBookNow} className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md">Book Now</button>
     </div>
-              </Carousel.Caption>
-            </Carousel.Item>
-            <Carousel.Item>
-              <img className="w-full h-[400px] object-cover" src="https://media.istockphoto.com/id/1469519318/photo/home-appliances-household-kitchen-technics-in-appartments.jpg?s=612x612&w=0&k=20&c=7G4E68TtgAoKInU1jFtZ3JGkbAEtxCZVuMIJ2SWNSTg=" alt="carousel item" />
-              <Carousel.Caption>
+    <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-4">
+      {cardItems.map(item => (
+        <Card key={item.id} imageSrc={item.imageSrc} title={item.title} />
+      ))}
+    </div>
+  </div>
 
-               <div className="bg-white/30 backdrop-blur-sm p-4 rounded-md">
-      <h2 className="text-2xl font-bold text-white">
-        Appliance Rescue, Done Right</h2>
-        </div>
-              </Carousel.Caption>
-            </Carousel.Item>
-            <Carousel.Item>
-              <img className="w-full h-[400px] object-cover" src="https://media.istockphoto.com/id/1347516184/photo/repairman-handshake-in-house-door.jpg?s=612x612&w=0&k=20&c=ePJmBK67AQ1O__VvHkMFKp7UE4rwHbSNhUTNqQ9M2j0=" alt="carousel item" />
-              <Carousel.Caption>
-              <div className="bg-white/30 backdrop-blur-sm p-4 rounded-md">
-              <h2 className="text-2xl font-bold text-white">All things done Right. At your pace, At your comfort.</h2>
-              </div>
-              </Carousel.Caption>
-            </Carousel.Item>
-          </Carousel>
-        </div>
-      </div>
+  {/* Right Section */}
+  <div className="mx-4 md:w-1/2 mt-24 pl-5 box-border z-[-1]">
+    <Carousel fade>
+      <Carousel.Item>
+        <video className="w-full h-[400px] object-cover" src="https://videos.pexels.com/video-files/7140937/7140937-sd_640_360_24fps.mp4" autoPlay muted loop playsInline></video>
+        <Carousel.Caption>
+          <div className="bg-white/30 backdrop-blur-sm p-4 rounded-md">
+            <h2 className="text-2xl font-bold text-white">
+              Where Network Expertise Meets Your Needs
+            </h2>
+          </div>
+        </Carousel.Caption>
+      </Carousel.Item>
+      <Carousel.Item>
+        <img className="w-full h-[400px] object-cover" src="https://cdn.pixabay.com/photo/2016/04/04/14/12/monitor-1307227_1280.jpg" alt="carousel item" />
+        <Carousel.Caption>
+          <div className="bg-white/30 backdrop-blur-sm p-4 rounded-md">
+            <h2 className="text-2xl font-bold text-white">
+              Network Security, Done Right
+            </h2>
+          </div>
+        </Carousel.Caption>
+      </Carousel.Item>
+      <Carousel.Item>
+        <img className="w-full h-[400px] object-cover" src="https://cdn.pixabay.com/photo/2017/07/31/16/18/engineer-2558705_1280.jpg" alt="carousel item" />
+        <Carousel.Caption>
+          <div className="bg-white/30 backdrop-blur-sm p-4 rounded-md">
+            <h2 className="text-2xl font-bold text-white">
+              Get Your Network Up and Running Fast
+            </h2>
+          </div>
+        </Carousel.Caption>
+      </Carousel.Item>
+    </Carousel>
+  </div>
+</div>
 
-      {/* Additional Section */}
-      <div className="flex flex-col-reverse md:flex-row p-2.5 m-6">
-        <div className="flex flex-col text-xl md:w-1/2">
-          <hr />
-          <h2 className='font-bold text-center mt-4'>What we offer</h2>
-          <p>ShimServices provides reliable repair services for home appliances:</p>
-          <ul className="list-disc list-inside mt-4">
-            <li><strong>AC Repair & Service</strong></li>
-            <li><strong>Refrigerator Repair</strong></li>
-            <li><strong>Washing Machine Repair</strong></li>
-            <li><strong>Microwave Repair</strong></li>
-            <li><strong>Television Repair</strong></li>
-            <li><strong>Geyser Repair</strong></li>
-          </ul>
-          <Reviews />
-        </div>
-        <div className="flex-6">
-          <Details services={services} service_name={"Appliance Repair"} />
-        </div>
-      </div>
+{/* Additional Section */}
+<div className="flex flex-col-reverse  md:flex-row p-2.5 m-6">
+  <div className="flex flex-col text-xl md:w-1/2">
+    <hr />
+    <h2 className='font-bold text-center mt-4'>What We Offer</h2>
+    <p>ShimServices provides reliable network services for home and office setups:</p>
+    <ul className="list-disc list-inside mt-4 space-y-2">
+      <li className="flex items-center">
+        <i className="fas fa-plug text-blue-500 mr-2"></i>
+        <strong>Network Installation</strong>
+      </li>
+      <li className="flex items-center">
+        <i className="fas fa-shield-alt text-green-500 mr-2"></i>
+        <strong>Network Security Audits</strong>
+      </li>
+      <li className="flex items-center">
+        <i className="fas fa-cogs text-orange-500 mr-2"></i>
+        <strong>Network Troubleshooting</strong>
+      </li>
+      <li className="flex items-center">
+        <i className="fas fa-wifi text-purple-500 mr-2"></i>
+        <strong>Wireless Network Setup</strong>
+      </li>
+    </ul>
+    <Reviews />
+  </div>
+  <div className="flex-6 w-1/2 p-4">
+    <Details services={services} service_name={"Network Services"} />
+  </div>
+</div>
+
+
       
     </>
   );

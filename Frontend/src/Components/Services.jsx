@@ -67,7 +67,7 @@ function Services() {
           <Link to="/pestcontrol" className="text-inherit no-underline">
           <ServiceCard
             heading="Pest Control"
-            image="https://tse3.explicit.bing.net/th?id=OIP.kmrQ-dvG9rAbyCXswDQ-tgHaHa&pid=Api&P=0&h=180"
+            image="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSndP0lpxeHDhwamxqOgBnplZ3-E1ijxY-CEQ&s"
           />
           </Link>
          
