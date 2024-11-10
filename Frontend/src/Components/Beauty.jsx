@@ -146,116 +146,128 @@ const Beauty = () => {
 
   return (
     <>
-      <div className="flex flex-col-reverse justify-between gap-2.5 md:flex-row">
-        {/* Left Section */}
-        <div
-          className="md:w-1/2 text-black flex flex-wrap p-2.5 sticky top-0 max-h-[calc(100vh-40px)] overflow-y-auto"
-          ref={leftSectionRef}
-        >
-          <div className="mb-2.5 mt-2.5 pl-4">
-            <h2 className="text-5xl font-extrabold text-center mb-4">Beauty Services</h2>
-            <p className="mt-2">
-              Elevate Your Glamour. Step into ShimServices' World: Where Beauty is Celebrated, Confidence Reigns!
-            </p>
-            <div className="flex items-center underline">
-              <img
-                src="https://t3.ftcdn.net/jpg/04/20/03/48/360_F_420034841_AKpgqQGkkUyeD7oWc9y8vGTMwT4GmbHm.jpg"
-                className="h-5 w-20 mt-2"
-                alt="rating"
-              />
-              <p className="ml-2">6M+ bookings till now</p>
-            </div>
-          </div>
-          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-4">
-            {cardItems.map((item) => (
-              <Card key={item.id} imageSrc={item.imageSrc} title={item.title} />
-            ))}
-          </div>
-        </div>
-
-        {/* Right Section */}
-        <div className="mx-4 md:w-1/2 mt-24 pl-5 box-border z-[-1]">
-          <Carousel fade>
-            <Carousel.Item>
-              <video
-                className="w-full h-[400px] object-cover"
-                src="https://videos.pexels.com/video-files/8830239/8830239-uhd_3840_2160_25fps.mp4"
-                autoPlay
-                muted
-                loop
-                playsInline
-              ></video>
-              <Carousel.Caption>
-                <div className="bg-white/30 backdrop-blur-sm p-4 rounded-md">
-                  <h2 className="text-2xl font-bold text-white">Discover Your ShimStyle: Unveil Beauty, Embrace Grace</h2>
-                </div>
-              </Carousel.Caption>
-            </Carousel.Item>
-            <Carousel.Item>
-              <img
-                className="w-full h-[400px] object-cover"
-                src="https://cdn.pixabay.com/photo/2020/08/30/14/57/beautician-5529805_1280.jpg"
-                alt="carousel item"
-              />
-              <Carousel.Caption>
-                <div className="bg-white/30 backdrop-blur-sm p-4 rounded-md">
-                  <h2 className="text-2xl font-bold text-white">Discover ShimmerSculpt, Where Elegance Reigns</h2>
-                </div>
-              </Carousel.Caption>
-            </Carousel.Item>
-            <Carousel.Item>
-              <img
-                className="w-full h-[400px] object-cover"
-                src="https://cdn.pixabay.com/photo/2017/07/31/22/59/salon-2561845_1280.jpg"
-                alt="carousel item"
-              />
-              <Carousel.Caption>
-                <div className="bg-white/30 backdrop-blur-sm p-4 rounded-md">
-                  <h2 className="text-2xl font-bold text-white">All things done Right. At your pace, At your comfort.</h2>
-                </div>
-              </Carousel.Caption>
-            </Carousel.Item>
-          </Carousel>
+  <div className="flex flex-col-reverse justify-between gap-2.5 md:flex-row">
+    {/* Left Section */}
+    <div
+      className="md:w-1/2 text-black flex flex-wrap p-2.5 sticky top-0 max-h-[calc(100vh-40px)] overflow-y-auto"
+      ref={leftSectionRef}
+    >
+      <div className="mb-2.5 mt-2.5 pl-4">
+        <h2 className="text-5xl font-extrabold text-center mb-4">Beauty Services</h2>
+        <p className="mt-2">
+          Elevate Your Glamour. Step into ShimServices' World: Where Beauty is Celebrated, Confidence Reigns!
+        </p>
+        <div className="flex items-center underline">
+          <img
+            src="https://t3.ftcdn.net/jpg/04/20/03/48/360_F_420034841_AKpgqQGkkUyeD7oWc9y8vGTMwT4GmbHm.jpg"
+            className="h-5 w-20 mt-2"
+            alt="rating"
+          />
+          <p className="ml-2">6M+ bookings till now</p>
         </div>
       </div>
+      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-4">
+        {cardItems.map((item) => (
+          <Card key={item.id} imageSrc={item.imageSrc} title={item.title} />
+        ))}
+      </div>
+    </div>
 
-      {/* Additional Section */}
-      <div className="flex flex-col-reverse md:flex-row p-2.5 m-6">
-        <div className="flex flex-col text-xl md:w-1/2">
-          <hr></hr>
-          <h2 className="font-bold text-center mt-4">What we offer</h2>
-          <div>
-          <div className="mb-4">
-  At ShimServices, we offer a range of beauty services to elevate your look and boost your confidence. Whether it's a big event or self-care, our services include:
+    {/* Right Section */}
+    <div className="mx-4 md:w-1/2 mt-24 pl-5 box-border z-[-1]">
+      <Carousel fade>
+        <Carousel.Item>
+          <video
+            className="w-full h-[400px] object-cover"
+            src="https://videos.pexels.com/video-files/8830239/8830239-uhd_3840_2160_25fps.mp4"
+            autoPlay
+            muted
+            loop
+            playsInline
+          ></video>
+          <Carousel.Caption>
+            <div className="bg-white/30 backdrop-blur-sm p-4 rounded-md">
+              <h2 className="text-2xl font-bold text-white">Discover Your ShimStyle: Unveil Beauty, Embrace Grace</h2>
+            </div>
+          </Carousel.Caption>
+        </Carousel.Item>
+        <Carousel.Item>
+          <img
+            className="w-full h-[400px] object-cover"
+            src="https://cdn.pixabay.com/photo/2020/08/30/14/57/beautician-5529805_1280.jpg"
+            alt="carousel item"
+          />
+          <Carousel.Caption>
+            <div className="bg-white/30 backdrop-blur-sm p-4 rounded-md">
+              <h2 className="text-2xl font-bold text-white">Discover ShimmerSculpt, Where Elegance Reigns</h2>
+            </div>
+          </Carousel.Caption>
+        </Carousel.Item>
+        <Carousel.Item>
+          <img
+            className="w-full h-[400px] object-cover"
+            src="https://cdn.pixabay.com/photo/2017/07/31/22/59/salon-2561845_1280.jpg"
+            alt="carousel item"
+          />
+          <Carousel.Caption>
+            <div className="bg-white/30 backdrop-blur-sm p-4 rounded-md">
+              <h2 className="text-2xl font-bold text-white">All things done Right. At your pace, At your comfort.</h2>
+            </div>
+          </Carousel.Caption>
+        </Carousel.Item>
+      </Carousel>
+    </div>
+  </div>
+
+  {/* Additional Section */}
+  <div className="flex flex-col-reverse md:flex-row p-2.5 m-6">
+    <div className="flex flex-col text-xl md:w-1/2">
+      <hr />
+      <h2 className="text-3xl font-semibold text-center text-gray-800 mt-4 mb-2">What We Offer</h2>
+      <p className="text-lg text-center text-gray-600 mb-4">
+        At ShimServices, we offer a range of beauty services to elevate your look and boost your confidence. Whether it’s a big event or self-care, our services include:
+      </p>
+
+      <ul className="list-none space-y-3 text-gray-700 mt-4">
+        <li className="flex items-center">
+          <i className="fas fa-cut text-pink-600 mr-2"></i>
+          <span className="font-medium text-lg">Hair Styling</span>
+        </li>
+        <li className="flex items-center">
+          <i className="fas fa-spa text-red-600 mr-2"></i>
+          <span className="font-medium text-lg">Bridal Makeup</span>
+        </li>
+        <li className="flex items-center">
+          <i className="fas fa-leaf text-green-600 mr-2"></i>
+          <span className="font-medium text-lg">Facial Treatments</span>
+        </li>
+        <li className="flex items-center">
+          <i className="fas fa-hand-sparkles text-yellow-500 mr-2"></i>
+          <span className="font-medium text-lg">Manicure & Pedicure</span>
+        </li>
+        <li className="flex items-center">
+          <i className="fas fa-archway text-purple-600 mr-2"></i>
+          <span className="font-medium text-lg">Threading & Waxing</span>
+        </li>
+        <li className="flex items-center">
+          <i className="fas fa-male text-blue-600 mr-2"></i>
+          <span className="font-medium text-lg">Men's Grooming</span>
+        </li>
+      </ul>
+
   
-  <ul className="list-disc list-inside mt-4">
-    <li><strong>Hair Styling:</strong> Trendy cuts, coloring, and highlights to refresh your look.</li>
-    
-    <li><strong>Bridal Makeup:</strong> Flawless makeup to make your special day perfect.</li>
-    
-    <li><strong>Facial Treatments:</strong> Hydrating, anti-aging, and customized facials for glowing skin.</li>
-    
-    <li><strong>Manicure & Pedicure:</strong> Luxurious nail care, from classic to intricate nail art.</li>
-    
-    <li><strong>Threading & Waxing:</strong> Precise shaping and smooth skin with professional care.</li>
-    
-    <li><strong>Men's Grooming:</strong> Tailored grooming services including beard trims and facials.</li>
-  </ul>
-
-  Let us help you look and feel your best at ShimServices!
-</div>
 
             <hr></hr>
             <div className="mt-4">
               <Reviews />
             </div>
           </div>
-        </div>
+       
         <div className="flex-6">
           
           <Details services={services} service_name={"Beauty Services"}/>
         </div>
-      </div>
+        </div>
     </>
   );
 };

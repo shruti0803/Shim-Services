@@ -208,25 +208,57 @@ const BillModal = ({ order, onClose, onBillGenerated }) => {
           </>
         ) : (
           <>
-            <h3 className="text-xl font-bold text-gray-700 mb-4">Bill Generated Successfully</h3>
-            <div className="text-gray-600">
-              <p><strong>Bill ID:</strong> {billData.Bill_ID}</p>
-              <p><strong>Book ID:</strong> {billData.Book_ID}</p>
-              <p><strong>Date:</strong> {billData.Bill_Date}</p>
-              <p><strong>Payment Method:</strong> {paymentMethod}</p>
-              {/* <p><strong>Labor Description:</strong> {laborEntries}</p> */}
-              <p><strong>Total Cost:</strong> {totalCost}</p>
-              {/* Add more bill data as needed */}
-            </div>
-            <div className="mt-4">
-              <button
-                onClick={onClose}
-                className="bg-gray-500 text-white py-2 px-4 rounded-md hover:bg-gray-600"
-              >
-                Close
-              </button>
-            </div>
-          </>
+  <div className="p-6 bg-white rounded-lg shadow-md text-gray-700">
+    <h3 className="text-2xl font-bold text-gray-800 mb-4 flex items-center">
+      <i className="fas fa-file-invoice text-green-500 mr-2"></i>
+      Bill Generated Successfully
+    </h3>
+    
+    <div className="space-y-2 text-gray-600">
+      <p className="flex items-center">
+        <i className="fas fa-receipt text-blue-500 mr-2"></i>
+        <strong>Bill ID:</strong>
+        <span className="ml-2">{billData.Bill_ID}</span>
+      </p>
+      <p className="flex items-center">
+        <i className="fas fa-book text-blue-500 mr-2"></i>
+        <strong>Book ID:</strong>
+        <span className="ml-2">{billData.Book_ID}</span>
+      </p>
+      <p className="flex items-center">
+        <i className="fas fa-calendar-day text-blue-500 mr-2"></i>
+        <strong>Date:</strong>
+        <span className="ml-2">{billData.Bill_Date}</span>
+      </p>
+      <p className="flex items-center">
+        <i className="fas fa-credit-card text-blue-500 mr-2"></i>
+        <strong>Payment Method:</strong>
+        <span className="ml-2">{paymentMethod}</span>
+      </p>
+      {/* <p className="flex items-center">
+        <i className="fas fa-wrench text-blue-500 mr-2"></i>
+        <strong>Labor Description:</strong>
+        <span className="ml-2">{laborEntries}</span>
+      </p> */}
+      <p className="flex items-center">
+        <i className="fas fa-dollar-sign text-blue-500 mr-2"></i>
+        <strong>Total Cost:</strong>
+        <span className="ml-2">{totalCost}</span>
+      </p>
+    </div>
+
+    <div className="mt-6 text-center">
+      <button
+        onClick={onClose}
+        className="bg-blue-500 text-white py-2 px-6 rounded-md shadow hover:bg-blue-600 transition duration-200"
+      >
+        <i className="fas fa-times mr-2"></i>
+        Close
+      </button>
+    </div>
+  </div>
+</>
+
         )}
       </div>
     </div>

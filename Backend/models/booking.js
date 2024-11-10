@@ -116,20 +116,20 @@ export const getAllBookings = (callback) => {
 
 // Add a new booking
 export const addBooking = (bookingData, callback) => {
-  const { SP_Email, C_Email, Book_Status, Service_Name, Service_Category, Book_HouseNo, Book_Area, Book_City, Book_State } = bookingData;
+  const { SP_Email, C_Email, Book_Status, Service_Name, Service_Category, Book_HouseNo, Book_Area, Book_City, Book_State, Book_Date } = bookingData;
 
   // Generate current date and time
   const currentDate = new Date().toISOString().slice(0, 19).replace('T', ' '); // Format: YYYY-MM-DD HH:MM:SS
-
+  const currentDate2 = new Date().toISOString().slice(0, 10);
   // Insert query for adding a new booking
   const query = `
-    INSERT INTO booking (SP_Email, C_Email, Book_Status, Service_Name, Service_Category, Appointment_Date, Book_HouseNo, Book_Area, Book_City, Book_State)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    INSERT INTO booking (SP_Email, C_Email, Book_Status, Service_Name, Service_Category, Appointment_Date, Book_HouseNo, Book_Area, Book_City, Book_State, Book_Date)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `;
 
   connection.query(
     query,
-    [SP_Username, C_username, Book_Status, Service_Name, Service_Category, currentDate, Book_HouseNo, Book_Area, Book_City, Book_State],
+    [SP_Username, C_username, Book_Status, Service_Name, Service_Category, currentDate, Book_HouseNo, Book_Area, Book_City, Book_State, currentDate2],
     (err, result) => {
       if (err) {
         console.error('Error inserting booking:', err);

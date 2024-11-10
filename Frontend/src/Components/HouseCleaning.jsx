@@ -116,19 +116,43 @@ const HouseCleaning = () => {
       <div className="flex flex-col-reverse md:flex-row p-2.5 m-6">
         <div className="flex flex-col text-xl md:w-1/2">
           <hr></hr>
-          <h2 className="font-bold text-center mt-4">What we offer</h2>
+       
           <div>
             <div className="mb-4">
-              At ShimServices, we provide a wide range of house cleaning services to ensure your home is sparkling clean and hygienic. Our services include:
-              <ul className="list-disc list-inside mt-4">
-                <li><strong>Home Cleaning:</strong> Complete cleaning for all rooms, including dusting, mopping, and surface sanitization.</li>
-                <li><strong>Office Cleaning:</strong> Professional cleaning for your workplace to keep it safe and spotless.</li>
-                <li><strong>Carpet Cleaning:</strong> Deep cleaning and stain removal to restore your carpets to their original beauty.</li>
-                <li><strong>Window Cleaning:</strong> Streak-free window cleaning for crystal-clear views.</li>
-                <li><strong>Post-Construction Cleaning:</strong> Thorough cleaning after renovation or construction projects to remove debris and dust.</li>
-                <li><strong>Move-In/Move-Out Cleaning:</strong> Comprehensive cleaning to ensure your new or former home is spotless and ready for the next resident.</li>
-              </ul>
-              Let ShimServices take care of your cleaning needs so you can relax and enjoy a fresh, clean home.
+            
+              <h2 className="text-3xl font-semibold text-center text-gray-800 mt-4 mb-2">What We Offer</h2>
+<p className="text-lg text-center text-gray-600 mb-4">
+  ShimServices provides professional cleaning services for homes and offices.
+</p>
+<ul className="list-none space-y-3 text-gray-700 mt-4">
+  <li className="flex items-center">
+    <i className="fas fa-home text-blue-600 mr-2"></i>
+    <span className="font-medium text-lg">Home Cleaning</span>
+  </li>
+  <li className="flex items-center">
+    <i className="fas fa-briefcase text-gray-600 mr-2"></i>
+    <span className="font-medium text-lg">Office Cleaning</span>
+  </li>
+  <li className="flex items-center">
+    <i className="fas fa-carpet text-red-600 mr-2"></i>
+    <span className="font-medium text-lg">Carpet Cleaning</span>
+  </li>
+  <li className="flex items-center">
+    <i className="fas fa-window-maximize text-green-600 mr-2"></i>
+    <span className="font-medium text-lg">Window Cleaning</span>
+  </li>
+  <li className="flex items-center">
+    <i className="fas fa-hard-hat text-yellow-500 mr-2"></i>
+    <span className="font-medium text-lg">Post-Construction Cleaning</span>
+  </li>
+  <li className="flex items-center">
+    <i className="fas fa-arrow-alt-circle-right text-purple-600 mr-2"></i>
+    <span className="font-medium text-lg">Move-In/Move-Out Cleaning</span>
+  </li>
+</ul>
+
+
+             
             </div>
             <hr></hr>
             <div className="mt-4">

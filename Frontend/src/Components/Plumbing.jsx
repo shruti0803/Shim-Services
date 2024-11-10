@@ -26,84 +26,59 @@ const Plumbing = () => {
     {
       id: 1,
       imgSrc: 'https://media.istockphoto.com/id/1353114711/photo/close-up-image-of-unrecognisable-person-doing-a-maintenance-service-on-a-household-filtration.jpg?s=612x612&w=0&k=20&c=NIMYCik-K0SUHDoI3FVD_9x9qcsBGyXf0kkfzHBbg-g=',
-      title: 'Appliance  Compressor Repair',
+      title: 'Faucet Repair',
       description: [
-        'Thorough servicing of appliance compressors',
-        'Filter replacement and comprehensive cleaning'
-      ],
-      // price: 120
+        'Repair and replacement of leaking or damaged faucets',
+        'Installation of new faucet systems and upgrades'
+      ]
     },
     {
       id: 2,
       imgSrc: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcThf6ou9ZEt19JPPZtaTeI2bcjfaHRMczbFEbVEjPem8Qwkos-0Pe9RFjRePotO5_uCvJk&usqp=CAU',
-      title: 'Appliance  Filter Replacement',
+      title: 'Leak Detection',
       description: [
-        'Advanced filter replacement technology',
-        'Deep cleaning of air filters'
-      ],
-      // price: 80
+        'Detection and repair of hidden water leaks in pipes',
+        'Use of advanced tools to pinpoint and fix leaks efficiently'
+      ]
     },
     {
       id: 3,
       imgSrc: 'https://tse4.mm.bing.net/th?id=OIP.A_j-Llwh9Y2sSRsuX3GoqQHaDu&pid=Api&P=0&h=180',
-      title: 'Appliance Gas Refill',
+      title: 'Pipe Repair',
       description: [
-        'Complete gas refill for refrigerators',
-        'Includes inspection and repair of leaks'
-      ],
-      // price: 100
+        'Fixing broken or corroded pipes to prevent water damage',
+        'Repipe and replacement of worn-out piping systems'
+      ]
     },
     {
       id: 4,
       imgSrc: 'https://tse4.mm.bing.net/th?id=OIP.vm36fnWRKXKChjahir4uEwHaE8&pid=Api&P=0&h=180',
-      title: 'Appliance Installation',
+      title: 'Septic Tank Cleaning',
       description: [
-        'Expert installation of new appliances',
-        'Full diagnostic and testing post-installation'
-      ],
-      // price: 120
+        'Cleaning and maintenance of septic tanks to prevent blockages',
+        'Inspection and pumping of tanks to ensure proper function'
+      ]
     },
     {
       id: 5,
       imgSrc: 'https://media.istockphoto.com/id/1347513910/photo/microwave-control.jpg?s=612x612&w=0&k=20&c=kTHeSYMCHxPSHTqoy2U_RjqnA01tvaQvqymofctrITI=',
-      title: 'Appliance Servicing',
+      title: 'Toilet Repair',
       description: [
-        'Comprehensive servicing for appliances',
-        'Includes repairs and safety checks'
-      ],
-      // price: 80
+        'Fixing clogged or malfunctioning toilets',
+        'Installation and replacement of toilet systems'
+      ]
     },
     {
       id: 6,
       imgSrc: 'https://tse1.mm.bing.net/th?id=OIP.MOl_Fp2e77BMIhd8KwNw3QHaEI&pid=Api&P=0&h=180',
-      title: 'Duct Cleaning',
+      title: 'Water Heater Installation',
       description: [
-        'Thorough cleaning of HVAC ducts',
-        'Includes inspection and removal of debris'
-      ],
-      // price: 80
-    },
-    {
-      id: 7,
-      imgSrc: 'https://media.istockphoto.com/id/1410734240/photo/electrician-installing-an-oven-at-a-house.jpg?s=612x612&w=0&k=20&c=o9AL96Rg__M4QPnunpKh2ECo3dnGQr8oBRuTgIrJVG0=',
-      title: 'Evaporator Coil Cleaning',
-      description: [
-        'Detailed cleaning of evaporator coils',
-        'Includes inspection and maintenance of the coil'
-      ],
-      // price: 85
-    },
-    {
-      id: 8,
-      imgSrc: 'https://media.istockphoto.com/id/542214568/photo/he-knows-those-pipes-like-the-back-of-his-hands.jpg?s=612x612&w=0&k=20&c=O62eQCe5qKBpiffhcn53lUdNSmCA-PtNDhgbugtjN8k=',
-      title: 'Thermostat Replacement',
-      description: [
-        'Replacement of faulty thermostats',
-        'Includes calibration and testing'
-      ],
-      // price: 70
+        'Installation and repair of water heating systems',
+        'Inspection and maintenance of water heaters for optimal performance'
+      ]
     }
-  ];
+];
+
 
   const cardItems = [
     { id: 1, imageSrc: 'https://media.istockphoto.com/id/1308686330/photo/technician-examining-dishwasher.jpg?s=612x612&w=0&k=20&c=dOnBvAdU8y_OlEjDbN_DxAUkSVUxXwg4OSIra5yX93o=', title: 'Appliance Installation' },
@@ -137,8 +112,8 @@ const Plumbing = () => {
         {/* Left Section */}
         <div className="md:w-1/2 text-black flex flex-wrap p-2.5 sticky top-0 max-h-[calc(100vh-40px)] overflow-y-auto" ref={leftSectionRef}>
           <div className="mb-2.5 mt-2.5 pl-4">
-            <h2 className="text-5xl font-extrabold text-center mb-4">Appliances Repair</h2>
-            <p className="mt-2">Don't let appliance issues slow you down. ShimServices is here to help. When appliances break, ShimServices fixes them fast.</p>
+            <h2 className="text-5xl font-extrabold text-center mb-4">Plumbing</h2>
+            <p className="mt-2">Don't let Plumbing issues slow you down. ShimServices is here to help. When Plumbing break, ShimServices fixes them fast.</p>
             <div className="flex items-center underline">
               <img src="https://t3.ftcdn.net/jpg/04/20/03/48/360_F_420034841_AKpgqQGkkUyeD7oWc9y8vGTMwT4GmbHm.jpg" className="h-5 w-20 mt-2" alt="rating" />
               <p className="ml-2">6M+ bookings till now</p>
@@ -160,7 +135,7 @@ const Plumbing = () => {
               <Carousel.Caption>
               <div className="bg-white/30 backdrop-blur-sm p-4 rounded-md">
       <h2 className="text-2xl font-bold text-white">
-        Where Appliances meet Expertise!
+        Where Plumbing meet Expertise!
       </h2>
     </div>
               </Carousel.Caption>
@@ -171,7 +146,8 @@ const Plumbing = () => {
 
                <div className="bg-white/30 backdrop-blur-sm p-4 rounded-md">
       <h2 className="text-2xl font-bold text-white">
-        Appliance Rescue, Done Right</h2>
+      "Plumbing Rescue, Done Right"
+      </h2>
         </div>
               </Carousel.Caption>
             </Carousel.Item>
@@ -191,20 +167,41 @@ const Plumbing = () => {
       <div className="flex flex-col-reverse md:flex-row p-2.5 m-6">
         <div className="flex flex-col text-xl md:w-1/2">
           <hr />
-          <h2 className='font-bold text-center mt-4'>What we offer</h2>
-          <p>ShimServices provides reliable repair services for home appliances:</p>
-          <ul className="list-disc list-inside mt-4">
-            <li><strong>AC Repair & Service</strong></li>
-            <li><strong>Refrigerator Repair</strong></li>
-            <li><strong>Washing Machine Repair</strong></li>
-            <li><strong>Microwave Repair</strong></li>
-            <li><strong>Television Repair</strong></li>
-            <li><strong>Geyser Repair</strong></li>
-          </ul>
+          <h2 className='font-bold text-center mt-4 text-3xl text-gray-800'>What We Offer</h2>
+<p className="text-center text-lg text-gray-600 mb-4">
+  ShimServices provides reliable Plumbing services.
+</p>
+<ul className="list-none space-y-3 text-gray-700 mt-4">
+  <li className="flex items-center">
+    <i className="fas fa-tint text-blue-600 mr-2"></i>
+    <span className="font-medium text-lg">Faucet Repair</span>
+  </li>
+  <li className="flex items-center">
+    <i className="fas fa-droplet text-green-600 mr-2"></i>
+    <span className="font-medium text-lg">Leak Detection</span>
+  </li>
+  <li className="flex items-center">
+    <i className="fas fa-pipe text-red-600 mr-2"></i>
+    <span className="font-medium text-lg">Pipe Repair</span>
+  </li>
+  <li className="flex items-center">
+    <i className="fas fa-fire text-yellow-500 mr-2"></i>
+    <span className="font-medium text-lg">Water Heater Installation</span>
+  </li>
+  <li className="flex items-center">
+    <i className="fas fa-toilet text-gray-600 mr-2"></i>
+    <span className="font-medium text-lg">Toilet Repair</span>
+  </li>
+  <li className="flex items-center">
+    <i className="fas fa-snowflake text-blue-400 mr-2"></i>
+    <span className="font-medium text-lg">Geyser Repair</span>
+  </li>
+</ul>
+
           <Reviews />
         </div>
         <div className="flex-6">
-          <Details services={services} service_name={"Appliance Repair"} />
+          <Details services={services} service_name={"Plumbing"} />
         </div>
       </div>
       

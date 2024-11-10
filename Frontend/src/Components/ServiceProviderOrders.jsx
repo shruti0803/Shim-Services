@@ -12,13 +12,19 @@ const ServiceProviderOrders = ({ SPEmail }) => {
   const fetchPaymentMode = async (bookId) => {
     try {
       const response = await axios.get(`http://localhost:4002/api/payment-mode/${bookId}`);
-      return response.data.paymentMode; // Adjust based on actual response structure
+      console.log("Response from API:", response);  // Log response to check the structure
+      if (response && response.data && response.data.paymentMode) {
+        return response.data.paymentMode;  // Adjust this based on actual response structure
+      } else {
+        console.error("Payment mode not found in the response.");
+        return null;
+      }
     } catch (error) {
       console.error("Error fetching payment mode:", error);
-      return null;
+      return "Default";
     }
   };
-
+  
   const handleCompletionStatusChangeonCheckbox = async (orderId) => {
     setAcceptedOrders((prevState) =>
       prevState.map(order =>
@@ -106,16 +112,21 @@ useEffect(() => {
       }
 
       // Fetch accepted orders and add payment mode
+      // Fetch accepted orders and add payment mode
       const acceptedResponse = await axios.get(`http://localhost:4002/bookings/sp/${SPEmail}`);
       const accepted = acceptedResponse.data.filter(order => order.Book_Status === 'Scheduled');
       const updatedAcceptedOrders = await fetchBillsForOrders(accepted);
+
 
       const ordersWithPaymentMode = await Promise.all(
         updatedAcceptedOrders.map(async (order) => {
           const paymentMode = await fetchPaymentMode(order.Book_ID);
           return { ...order, paymentMode }; // Add paymentMode to each order
+          return { ...order, paymentMode }; // Add paymentMode to each order
         })
       );
+
+      setAcceptedOrders(ordersWithPaymentMode); // Use ordersWithPaymentMode here
 
       setAcceptedOrders(ordersWithPaymentMode); // Use ordersWithPaymentMode here
     } catch (error) {
@@ -125,6 +136,8 @@ useEffect(() => {
 
   fetchOrders();
 }, [SPEmail]);
+
+
 
   //       const acceptedResponse = await axios.get(`http://localhost:4002/bookings/sp/${SPEmail}`);
   //       const accepted = acceptedResponse.data.filter(order => order.Book_Status === 'Scheduled');
