@@ -100,6 +100,10 @@ const BillModal = ({ order, onClose, onBillGenerated }) => {
                 <p>{order.Service_Name}</p>
               </div>
               <div className="flex justify-between">
+                <p className="font-semibold text-gray-600">Service Category:</p>
+                <p>{order.Service_Category}</p>
+              </div>
+              <div className="flex justify-between">
                 <p className="font-semibold text-gray-600">Address:</p>
                 <p>{order.Book_Area}, {order.Book_City}</p>
               </div>

@@ -154,7 +154,7 @@ const NetworkServices = () => {
     <hr />
     <h2 className="text-3xl font-semibold text-center text-gray-800 mt-4 mb-2">What We Offer</h2>
     <p className="text-lg text-center text-gray-600 mb-4">
-    ShimServices provides reliable network services for home and office setups:</p>
+    ShimServices provides reliable network services for home and office setups</p>
     <ul className="list-disc list-inside mt-4 space-y-2">
       <li className="flex items-center">
         <i className="fas fa-plug text-blue-500 mr-2"></i>
