@@ -4,7 +4,8 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Navigation from './Components/Navigation';
 import Services from './Components/Services';
 import Appliance from './Components/Appliances';
-import Footer from "./Components/Footer"
+import Footer from "./Components/Footer";
+import AboutUs from './Components/AboutUs';
 
 import Option from "./Components/Option"
 import VideoCarousel from "./Components/VideoCarousel"
@@ -57,6 +58,7 @@ function App() {
         <Route path="/profile" element={<ProfilePage/>} /> 
         <Route path="/login" element={<Login/>} /> 
         <Route path="/payment" element={<Payment/>} /> 
+        <Route path="/aboutUs" element={<AboutUs/>} />
         {/* <Route path="/profile" element={<ProfilePage/>} />  */}
       </Routes>
       <Footer />
