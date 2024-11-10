@@ -103,7 +103,7 @@ const Navigation = () => {
                 <div className='flex flex-1 justify-end items-center mx-4'>
                     <ul className='flex gap-5 list-none mx-4'>
                         <li><Link to='/'>Home</Link></li>
-                        <li><Link>About Us</Link></li>
+                        <li><Link to='/aboutUs'>About Us</Link></li>
                         <li><Link to='/services'>Services</Link></li>
 
                         {/* Show "Orders" and "Become a Servicer" based on user login and is_SP status */}

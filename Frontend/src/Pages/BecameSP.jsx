@@ -30,11 +30,16 @@ const BecomeServiceProviderForm = () => {
     experience: '',
     languages: [],
     governmentID: '',
+    //account no., ifsc, bank name, branch
+    accountNumber: '',
+    ifscCode: '',
+    bankName:'',
+    branchName:'',
     termsAccepted: false,
   });
 
   const validateFields = () => {
-    const {email,  phone, experience } = formData;
+    const {email, experience, accountNumber, ifscCode } = formData;
     let errors = {};
 
     // Email validation
@@ -44,13 +49,6 @@ const BecomeServiceProviderForm = () => {
       errors.email = 'Email must be in the form @gmail.com';
     }
 
-    //Phone number
-    // if (!phone) {
-    //   errors.phone = 'Phone number is required';
-    // } else if (!/^\d{10}$/.test(phone)) {
-    //   errors.phone = 'Phone number must be 10 digits';
-    // }
-
     //experience
     if (experience === undefined || experience === '') {
       errors.experience = 'Experience is required';
@@ -58,7 +56,22 @@ const BecomeServiceProviderForm = () => {
       errors.experience = 'Experience must be a number between 0 and 50';
     }
 
-   
+
+    //accountNumber
+    if(accountNumber === undefined || accountNumber === ''){
+      errors.accountNumber = 'Account Number is required';
+    }else if(isNaN(accountNumber) || accountNumber.length !==11){
+      errors.accountNumber = 'Account Number must be of 11 digits';
+    }
+
+    //IFSC Code
+    if (ifscCode === undefined || ifscCode === '') {
+      errors.ifscCode = 'IFSC Code is required';
+    } else if (!/^[A-Za-z]{4}[0-9]{7}$/.test(ifscCode)) {
+      errors.ifscCode = 'IFSC Code must be in the format XXXX0000000';
+    }
+
+
     setErrorMessages(errors);
     return Object.keys(errors).length === 0;
   };
@@ -109,6 +122,7 @@ const BecomeServiceProviderForm = () => {
     }
     navigate('/');
   };
+
 
   // const handleDaySelect = (e) => {
   //   const day = e.target.value;
@@ -192,6 +206,7 @@ const BecomeServiceProviderForm = () => {
     e.preventDefault();
 
     if(!validateFields())return;
+
     currentUser.is_SP=1;
 
     console.log('Form data submitted:', formData);
@@ -209,7 +224,11 @@ const BecomeServiceProviderForm = () => {
       GovernmentID: formData.governmentID,
       CityName: formData.city,
       State: formData.state,
-      Country: 'India' // or use formData.country if you add it to your state
+      Country: 'India' ,// or use formData.country if you add it to your state
+      AccountNo: formData.accountNumber,
+      IFSCcode: formData.ifscCode,
+      Bank_Name: formData.bankName,
+      Branch_Name: formData.branchName
     };
 
     const serviceDataToSend = {
@@ -613,16 +632,67 @@ const onClosePopup = () => {
             />
           </div>
 
+          {/* additiion of bank details */}
           <div>
-  <label className="inline-flex items-center">
-    <input
-      type="checkbox"  // Ensures it's a checkbox
-      className="form-checkbox h-5 w-5 text-blue-600"
-      required  // Makes it required
-    />
-    <span className="ml-2 text-gray-700">I accept the terms and conditions<span className="text-red-500 text-sm">*</span></span>
-  </label>
-</div>
+            <label className="block font-medium">Account Number: <span className="text-red-500 text-sm">*</span></label>
+            <input
+              type="number"
+              name="accountNumber"
+              value={formData.accountNumber}
+              onChange={handleChange}
+              className="mt-1 block w-full p-2 border border-gray-300 rounded"
+              required
+            />
+            {errorMessages.accountNumber && <p className="text-red-500">{errorMessages.accountNumber}</p>}
+          </div>
+
+          <div>
+            <label className="block font-medium">IFSC Code:<span className="text-red-500 text-sm">*</span></label>
+            <input
+              type="text"
+              name="ifscCode"
+              value={formData.ifscCode}
+              onChange={handleChange}
+              className="mt-1 block w-full p-2 border border-gray-300 rounded"
+              required
+            />
+            {errorMessages.ifscCode && <p className="text-red-500">{errorMessages.ifscCode}</p>}
+          </div>
+
+          <div>
+            <label className="block font-medium">Bank Name:<span className="text-red-500 text-sm">*</span></label>
+            <input
+              type="text"
+              name="bankName"
+              value={formData.bankName}
+              onChange={handleChange}
+              className="mt-1 block w-full p-2 border border-gray-300 rounded"
+              required
+            />
+          </div>
+
+          <div>
+            <label className="block font-medium">Branch Name:<span className="text-red-500 text-sm">*</span></label>
+            <input
+              type="text"
+              name="branchName"
+              value={formData.branchName}
+              onChange={handleChange}
+              className="mt-1 block w-full p-2 border border-gray-300 rounded"
+              required
+            />
+          </div>
+
+          <div>
+            <label className="inline-flex items-center">
+              <input
+                type="checkbox"  // Ensures it's a checkbox
+                className="form-checkbox h-5 w-5 text-blue-600"
+                required  // Makes it required
+              />
+              <span className="ml-2 text-gray-700">I accept the terms and conditions<span className="text-red-500 text-sm">*</span></span>
+            </label>
+          </div>
 
           <div className="text-center flex justify-around">
             <button
@@ -634,9 +704,9 @@ const onClosePopup = () => {
             <button
             onClick={onClose}
             className="bg-red-600  text-white px-4 py-2 rounded-md hover:bg-red-700"
-          >
+            >
             Cancel
-          </button>
+            </button>
           </div>
         </div>
       </form>
