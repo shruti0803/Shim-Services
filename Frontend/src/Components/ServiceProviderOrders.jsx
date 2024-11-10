@@ -247,8 +247,9 @@ useEffect(() => {
                   <h3 className="text-lg font-bold">Booking ID: {order.Book_ID}</h3>
                   <p>Customer: {order.U_Email}</p>
                   <p>Service: {order.Service_Name}</p>
+                  <p>Service Category: {order.Service_Category}</p>
                   <p>Location: {order.Book_Area}, {order.Book_City}</p>
-                  <p>Date: {new Date(order.Appointment_Date).toLocaleString()}</p>
+                  <p>Appointment Date: {new Date(order.Appointment_Date).toLocaleString()}</p>
                   <p>Status: {order.Book_Status}</p>
                   {order.Book_Status === "Pending" && (
                     <div className="mt-2 flex space-x-4">
@@ -273,8 +274,9 @@ useEffect(() => {
                   <h3 className="text-lg font-bold">Booking ID: {order.Book_ID}</h3>
                   <p>Customer: {order.U_Email}</p>
                   <p>Service: {order.Service_Name}</p>
+                  <p>Service Category: {order.Service_Category}</p>
                   <p>Location: {order.Book_Area}, {order.Book_City}</p>
-                  <p>Date: {new Date(order.Appointment_Date).toLocaleString()}</p>
+                  <p> Appointment Date: {new Date(order.Appointment_Date).toLocaleString()}</p>
                   <p>Status: {order.Book_Status}</p>
                   <div >
                     {order.billGenerated ? (

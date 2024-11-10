@@ -184,15 +184,27 @@ const Gardening = () => {
 <div className="flex flex-col-reverse md:flex-row p-2.5 m-6">
   <div className="flex flex-col text-xl md:w-1/2">
     <hr />
-    <h2 className="font-bold text-center mt-4">What We Offer</h2>
-    <p>We provide a range of reliable gardening services to transform your outdoor space:</p>
-    <ul className="list-disc list-inside mt-4">
-      <li><strong>Garden Design</strong></li>
-      <li><strong>Hedge Trimming</strong></li>
-      <li><strong>Lawn Mowing</strong></li>
-      <li><strong>Tree Pruning</strong></li>
-      <li><strong>Weed Control</strong></li>
-    </ul>
+    <h2 className="text-3xl font-semibold text-center text-gray-800 mt-4 mb-2">What We Offer</h2>
+<p className="text-lg text-center text-gray-600 mb-4">
+We provide a range of reliable gardening services to transform your outdoor space:</p>
+<ul className="list-none mt-4 space-y-2">
+  <li className="flex items-center">
+    <i class="fas fa-seedling mr-2 text-green-600"></i> Garden Design
+  </li>
+  <li className="flex items-center">
+    <i class="fas fa-cut mr-2 text-amber-500"></i> Hedge Trimming
+  </li>
+  <li className="flex items-center">
+    <i class="fas fa-tractor mr-2 text-green-700"></i> Lawn Mowing
+  </li>
+  <li className="flex items-center">
+    <i class="fas fa-tree mr-2 text-brown-600"></i> Tree Pruning
+  </li>
+  <li className="flex items-center">
+    <i class="fas fa-leaf mr-2 text-yellow-500"></i> Weed Control
+  </li>
+</ul>
+
     <Reviews/>
   </div>
   <div className="flex-6">

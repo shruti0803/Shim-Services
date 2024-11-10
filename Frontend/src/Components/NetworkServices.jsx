@@ -152,24 +152,25 @@ const NetworkServices = () => {
 <div className="flex flex-col-reverse  md:flex-row p-2.5 m-6">
   <div className="flex flex-col text-xl md:w-1/2">
     <hr />
-    <h2 className='font-bold text-center mt-4'>What We Offer</h2>
-    <p>ShimServices provides reliable network services for home and office setups:</p>
+    <h2 className="text-3xl font-semibold text-center text-gray-800 mt-4 mb-2">What We Offer</h2>
+    <p className="text-lg text-center text-gray-600 mb-4">
+    ShimServices provides reliable network services for home and office setups</p>
     <ul className="list-disc list-inside mt-4 space-y-2">
       <li className="flex items-center">
         <i className="fas fa-plug text-blue-500 mr-2"></i>
-        <strong>Network Installation</strong>
+        Network Installation
       </li>
       <li className="flex items-center">
         <i className="fas fa-shield-alt text-green-500 mr-2"></i>
-        <strong>Network Security Audits</strong>
+        Network Security Audits
       </li>
       <li className="flex items-center">
         <i className="fas fa-cogs text-orange-500 mr-2"></i>
-        <strong>Network Troubleshooting</strong>
+        Network Troubleshooting
       </li>
       <li className="flex items-center">
         <i className="fas fa-wifi text-purple-500 mr-2"></i>
-        <strong>Wireless Network Setup</strong>
+       Wireless Network Setup
       </li>
     </ul>
     <Reviews />
