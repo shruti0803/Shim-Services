@@ -26,7 +26,7 @@ function PaymentBySP({ amount, onClose, onPaymentSuccess }) {
 
     axios.request(config)
       .then((response) => {
-        console.log("Order created:", response.data);
+        // console.log("Order created:", response.data);
         handleRazorPayScreen(response.data.amount);
       })
       .catch((error) => {

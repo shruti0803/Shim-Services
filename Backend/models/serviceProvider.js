@@ -27,7 +27,11 @@ export const addServiceProvider = (serviceProviderData, callback) => {
     GovernmentID,
     CityName,
     State,
-    Country
+    Country,
+    AccountNo,
+    IFSCcode,
+    Bank_Name,
+    Branch_Name
   } = serviceProviderData;
 
   // Check if the CityName exists before inserting
@@ -43,13 +47,13 @@ export const addServiceProvider = (serviceProviderData, callback) => {
     // Insert query for adding new service provider with all required columns
     const query = `
       INSERT INTO serviceprovider 
-      (SP_Email, SP_PIN, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday, LanguageSpoken, GovernmentID, CityName, State, Country)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      (SP_Email, SP_PIN, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday, LanguageSpoken, GovernmentID, CityName, State, Country, AccountNo, IFSCcode, Bank_Name, Branch_Name)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?, ?, ?, ?)
     `;
 
     connection.query(
       query,
-      [SP_Email, SP_PIN, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday,  LanguageSpoken, GovernmentID, CityName, State, Country],
+      [SP_Email, SP_PIN, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday,  LanguageSpoken, GovernmentID, CityName, State, Country, AccountNo, IFSCcode, Bank_Name, Branch_Name],
       (err, result) => {
         if (err) {
           console.error('Error inserting service provider:', err);

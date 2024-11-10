@@ -2,17 +2,19 @@ import React, { useState, useEffect } from "react";
 import axios from 'axios';
 import BillModal from "./BillModal";
 
-const ServiceProviderOrders = ({ SPEmail }) => {
+const ServiceProviderOrders = ({ SPEmail,SPCity }) => {
   const [incomingOrders, setIncomingOrders] = useState([]);
   const [acceptedOrders, setAcceptedOrders] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [isCannotGenerateBillModalOpen, setIsCannotGenerateBillModalOpen] = useState(false);
+  console.log("SP City",SPCity);
+  
 
   const fetchPaymentMode = async (bookId) => {
     try {
       const response = await axios.get(`http://localhost:4002/api/payment-mode/${bookId}`);
-      console.log("Response from API:", response);  // Log response to check the structure
+      // console.log("Response from API:", response);  // Log response to check the structure
       if (response && response.data && response.data.paymentMode) {
         return response.data.paymentMode;  // Adjust this based on actual response structure
       } else {
@@ -51,10 +53,10 @@ const fetchBillForOrder = async (orderId) => {
   try {
     const response = await axios.get(`http://localhost:4002/bills/${orderId}`);
     if (response.status === 200) {
-      console.log("Bill details fetched successfully", response.data);
-      console.log("Data:",response.data.Bill_Date);
-      console.log("Email",response.data.SP_Email);
-      console.log("amount ",response.data.Total_Cost);
+      // console.log("Bill details fetched successfully", response.data);
+      // console.log("Data:",response.data.Bill_Date);
+      // console.log("Email",response.data.SP_Email);
+      // console.log("amount ",response.data.Total_Cost);
       
       
       // You can further process the bill details if necessary
@@ -79,7 +81,7 @@ const fetchBillForOrder = async (orderId) => {
             "http://localhost:4002/salary",  // Your API URL
             salaryData
           );
-          console.log("Salary API response:", salaryResponse.data);
+          // console.log("Salary API response:", salaryResponse.data);
         } catch (error) {
           console.error("Error calling /salary API:", error);
         }
@@ -100,7 +102,11 @@ useEffect(() => {
       // Attempt to fetch incoming orders
       try {
         const response = await axios.get(`http://localhost:4002/available-bookings/${serviceName}`);
-        const incoming = response.data.filter(order => order.Book_Status === 'Pending');
+        console.log(response);
+        
+        const incoming = response.data.filter(order => order.Book_Status === 'Pending' && order.Book_City===SPCity && order.U_Email!==SPEmail );
+        console.log();
+        
         setIncomingOrders(incoming);
       } catch (incomingError) {
         if (incomingError.response && incomingError.response.status === 404) {
@@ -122,20 +128,20 @@ useEffect(() => {
         updatedAcceptedOrders.map(async (order) => {
           const paymentMode = await fetchPaymentMode(order.Book_ID);
           return { ...order, paymentMode }; // Add paymentMode to each order
-          return { ...order, paymentMode }; // Add paymentMode to each order
+          // return { ...order, paymentMode }; // Add paymentMode to each order
         })
       );
 
       setAcceptedOrders(ordersWithPaymentMode); // Use ordersWithPaymentMode here
 
-      setAcceptedOrders(ordersWithPaymentMode); // Use ordersWithPaymentMode here
+      // setAcceptedOrders(ordersWithPaymentMode); // Use ordersWithPaymentMode here
     } catch (error) {
       console.error("Error fetching services or accepted orders:", error);
     }
   };
 
   fetchOrders();
-}, [SPEmail]);
+}, [SPEmail,SPCity]);
 
 
 
