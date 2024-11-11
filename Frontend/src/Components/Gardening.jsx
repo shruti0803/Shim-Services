@@ -121,7 +121,7 @@ const Gardening = () => {
         />
         <p className="ml-2">6M+ bookings till now</p>
       </div>
-      <button onClick={handleBookNow} className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md">Book Now</button>
+      {/* <button onClick={handleBookNow} className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md">Book Now</button> */}
     </div>
     <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-4">
       {services.map(item => (

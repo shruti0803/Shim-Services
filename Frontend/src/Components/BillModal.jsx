@@ -73,7 +73,7 @@ const BillModal = ({ order, onClose, onBillGenerated }) => {
 
 
   return (
-    <div className="fixed inset-0 pt-3 flex items-center justify-center bg-black bg-opacity-50 z-3">
+    <div className="fixed z-3 inset-0 pt-3 flex items-center justify-center bg-black bg-opacity-50">
       <div className="bg-white p-6 rounded-lg w-1/2 max-h-[80vh] overflow-auto shadow-lg border border-gray-300">
       
         <div className="border-b pb-4 mb-4 text-center">
