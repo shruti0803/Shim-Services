@@ -15,7 +15,7 @@ function Services() {
             placeholder="Search..."
             className="w-2/5 p-2 bg-transparent border border-gray-400 rounded-md text-white"
           />
-          <button className="ml-2 p-2 bg-green-700 hover:bg-blue-700 text-white rounded-md">
+          <button className="ml-2 p-2 bg-green-600 hover:bg-green-700 text-white rounded-md">
             Search
           </button>
         </div>
