@@ -12,7 +12,7 @@ import twilio from 'twilio';
 // });
 
 // Set up Twilio for SMS
-// const client = twilio('ACb46b06526d1cb3bd34879cbadbad7cf7', '41af1d542cc3e8ac0ba8d1c72ee5e9ba');  // Your Twilio SID and Auth Token
+const client = twilio('ACb46b06526d1cb3bd34879cbadbad7cf7', '41af1d542cc3e8ac0ba8d1c72ee5e9ba');  // Your Twilio SID and Auth Token
 
 // Function to update booking status and send email/SMS notifications
 export const updateBookingStatus = (bookingId, newStatus, SP_Email, callback) => { 
