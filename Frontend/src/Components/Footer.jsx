@@ -18,44 +18,45 @@ const Footer = () => {
 
         {/* Centered Quick Links Section */}
         <div className="mb-6 md:mb-0 md:w-1/3 text-center">
-          <h2 className="text-xl font-semibold mb-4">Quick Links</h2>
-          <ul className="space-y-2 ">
-            {[
-              { name: 'Home', href: '#' },
-              { name: 'About Us', href: '#' },
-              { name: 'Services', href: '#' },
-              { name: 'Contact Us', href: '#' },
-            ].map((link, index) => (
-              <li key={index} className="relative group text-left">
-                <a href={link.href} className="flex items-center justify-center space-x-2 hover:text-gray-300 transition-all duration-200">
-                  <FaChevronRight className="text-white group-hover:text-gray-300 transition duration-200 transform group-hover:translate-x-1" />
-                  <span className="relative after:absolute after:-bottom-1 after:left-0 after:h-0.5 after:w-full after:scale-x-0 after:bg-gray-300 after:origin-left after:transition-transform after:duration-300 group-hover:after:scale-x-100">
-                    {link.name}
-                  </span>
-                </a>
-              </li>
-            ))}
-          </ul>
-        </div>
+  <h2 className="text-xl font-semibold mb-4">Quick Links</h2>
+  <ul className="space-y-2 flex flex-col items-center text-center">
+    {[
+      { name: 'Home', href: '#' },
+      { name: 'About Us', href: '#' },
+      { name: 'Services', href: '#' },
+      { name: 'Contact Us', href: '#' },
+    ].map((link, index) => (
+      <li key={index} className="relative group flex items-center text-center">
+        <a href={link.href} className="flex space-x-2 hover:text-gray-300 transition-all duration-200">
+          <FaChevronRight className="text-white group-hover:text-yellow-400 transition duration-200 transform group-hover:translate-x-1" />
+          <span className="relative after:absolute after:-bottom-1 after:left-0 after:h-0.5 after:w-full after:scale-x-0 after:bg-gray-300 after:origin-left after:transition-transform after:duration-300 group-hover:after:scale-x-100">
+            {link.name}
+          </span>
+        </a>
+      </li>
+    ))}
+  </ul>
+</div>
+
 
         {/* Contact Information Section */}
         <div className="md:w-1/3">
           <h2 className="text-xl font-semibold mb-4">Contact Information</h2>
-          <p>123 Street Name, City, Country</p>
+          <p>Maulana Azad National Institute of Technology, Bhopal, Madhya Pradesh, India</p>
           <div className="flex flex-col space-y-2 mt-2">
             <p className="text-sm">
               <FaEnvelope className="inline mr-2" />
-              Email: <a href="mailto:info@example.com" className="hover:text-gray-300">info@example.com</a>
+              Email: <a href="mailto:info@example.com" className="hover:text-yellow-400">shimservices5@gmail.com</a>
             </p>
             <p className="text-sm">
               <FaPhoneAlt className="inline mr-2" />
-              Phone: <a href="tel:+1234567890" className="hover:text-gray-300">+123 456 7890</a>
+              Phone: <a href="tel:+1234567890" className="hover:text-yellow-400">+123 456 7890</a>
             </p>
             <div className="flex space-x-4 mt-4">
-              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="hover:text-gray-300 transition transform hover:scale-110">
+              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="hover:text-yellow-400 transition transform hover:scale-110">
                 <FaFacebook size={24} />
               </a>
-              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="hover:text-gray-300 transition transform hover:scale-110">
+              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="hover:text-yellow-400 transition transform hover:scale-110">
                 <FaInstagram size={24} />
               </a>
             </div>
