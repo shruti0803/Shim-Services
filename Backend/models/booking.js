@@ -105,14 +105,7 @@ export const acceptBooking = (bookId, spEmail) => {
 
 // Get all bookings
 export const getAllBookings = (callback) => {
-  connection.query(`
-    SELECT * FROM 
-    booking BK
-    JOIN User U
-    ON BK.U_Email=U.U_Email
-    JOIN serviceprovider S
-    ON BK.SP_Email=S.SP_Email
-    `
+  connection.query(`SELECT * FROM booking`
     , (err, results) => {
     if (err) {
       console.error('Error executing query:', err);

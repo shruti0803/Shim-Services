@@ -12,7 +12,7 @@ function Order({ order, onHelp, onCancel, payNow }) {
   console.log("Order:",order);
   
   const { 
-    Book_ID, SP_Email, U_Name, Book_Status, Service_Name, 
+    Book_ID, SP_Email, U_Email, Book_Status, Service_Name, 
     Service_Category, Appointment_Date, Book_HouseNo, Book_Area, Book_City, 
     Book_State 
   } = order;
@@ -62,7 +62,7 @@ function Order({ order, onHelp, onCancel, payNow }) {
         )}
 
         <h3 className="text-lg font-semibold mb-2">Order ID: {Book_ID}</h3>
-        <p className="text-gray-700"><strong>Customer:</strong> {U_Name}</p>
+        <p className="text-gray-700"><strong>Customer:</strong> {U_Email}</p>
         <p className="text-gray-700"><strong>Service:</strong> {Service_Name}</p>
         <p className="text-gray-700"><strong>Category:</strong> {Service_Category}</p>
         <p className="text-gray-700"><strong>Address:</strong> {Book_HouseNo}, {Book_Area}, {Book_City}, {Book_State}</p>

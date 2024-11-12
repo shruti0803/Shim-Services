@@ -19,7 +19,8 @@ function Orders() {
 
   const location = useLocation();
   const { selectedStatus } = location.state || {};
-
+  console.log("selected status",selectedStatus);
+  
   const reportTypes = [
     'Service Delay',
     'Quality Issue',
@@ -40,8 +41,10 @@ function Orders() {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
         const data = await response.json();
+        console.log("data",data);
+        
         const filteredOrders = data.filter(order => order.U_Email === currentUser.U_Email);
-        console.log("Filtered",data);
+        console.log("Filtered",filteredOrders);
         
 
         const statusMap = {
@@ -54,8 +57,12 @@ function Orders() {
           ...order,
           status: statusMap[order.Book_Status] || order.Book_Status,
         }));
+        
+        
 
         setOrders(mappedOrders);
+        console.log("orders",orders);
+        
         await fetchBills(mappedOrders);
       } catch (error) {
         console.error('There was a problem with the fetch operation:', error);
@@ -232,19 +239,6 @@ function Orders() {
                 return hasOnlinePaymentA - hasOnlinePaymentB;
               })
               .map(order => (
-                <Order
-                  key={order.Book_ID}
-                  order={order}
-                  onCancel={handleCancel}
-                  onHelp={handleGetHelp}
-                  onPayNow={handlePayNow}
-                  payNow={bills[order.Book_ID]?.Bill_Mode === 'online'}
-                />
-              ))
-          ) : (
-            orders
-              .filter(order => order.status === selectedStatus)
-              .map(order => (
                 <div key={order.Book_ID} className="relative">
                   <Order
                     order={order}
@@ -275,6 +269,19 @@ function Orders() {
                     </div>
                   )}
                 </div>
+              ))
+          ) : (
+            orders
+              .filter(order => order.status === selectedStatus)
+              .map(order => (
+                <Order
+                  key={order.Book_ID}
+                  order={order}
+                  onCancel={handleCancel}
+                  onHelp={handleGetHelp}
+                  onPayNow={handlePayNow}
+                  payNow={bills[order.Book_ID]?.Bill_Mode === 'online'}
+                />
               ))
           )
         ) : (
