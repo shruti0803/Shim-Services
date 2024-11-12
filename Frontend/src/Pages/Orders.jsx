@@ -92,7 +92,7 @@ function Orders() {
     <div className="container mx-auto p-6">
       <h1 className="text-3xl text-center font-bold mb-6">My Orders</h1>
       <div className="mb-6">
-        <h2 className="text-2xl font-semibold mb-4">In Progress</h2>
+        <h2 className="text-2xl font-semibold mb-4">In Progress Orders</h2>
         {orders.filter(order => order.status === 'In Progress').length > 0 ? (
           orders
             .filter(order => order.status === 'In Progress')
@@ -104,7 +104,7 @@ function Orders() {
         )}
       </div>
       <div className="mb-6">
-        <h2 className="text-2xl font-semibold mb-4">Scheduled</h2>
+        <h2 className="text-2xl font-semibold mb-4">Scheduled Orders</h2>
         {orders.filter(order => order.status === 'Scheduled').length > 0 ? (
           orders
             .filter(order => order.status === 'Scheduled')
@@ -123,7 +123,7 @@ function Orders() {
         )}
       </div>
       <div className="mb-6">
-        <h2 className="text-2xl font-semibold mb-4">Completed</h2>
+        <h2 className="text-2xl font-semibold mb-4">Past Orders</h2>
         {orders.filter(order => order.status === 'Completed').length > 0 ? (
           orders
             .filter(order => order.status === 'Completed')
