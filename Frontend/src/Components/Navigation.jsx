@@ -69,7 +69,7 @@ const Navigation = () => {
                 {currentUser ? (
                     <div className='flex items-center ml-4 relative'>
                         <div 
-                            className='flex items-center justify-center w-8 h-8 bg-gray-600 text-white rounded-full cursor-pointer' 
+                            className='flex items-center justify-center w-8 h-8 bg-green-600 text-white rounded-full cursor-pointer' 
                             onClick={() => setDropdownOpen(!dropdownOpen)}
                             ref={dropdownRef}
                         >

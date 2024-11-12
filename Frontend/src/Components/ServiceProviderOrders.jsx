@@ -246,7 +246,7 @@ useEffect(() => {
   <div className="flex w-full space-x-8">
     {/* Incoming Orders */}
     <div className="w-1/2">
-      <h2 className="text-xl font-semibold mb-4">Incoming Orders</h2>
+      <h2 className="text-2xl font-bold mb-4">Incoming Orders</h2>
       <ul className="space-y-4 overflow-y-auto max-h-96"> {/* Add scroll if list is long */}
         {incomingOrders.length > 0 ? (
           incomingOrders.map((order) => (
@@ -274,7 +274,7 @@ useEffect(() => {
 
     {/* Accepted Orders */}
     <div className="w-1/2">
-      <h2 className="text-xl font-semibold mb-4">Accepted Orders</h2>
+      <h2 className="text-2xl font-bold mb-4">Accepted Orders</h2>
       <ul className="space-y-4 overflow-y-auto max-h-96"> {/* Add scroll if list is long */}
         {acceptedOrders.length > 0 ? (
           acceptedOrders.map((order) => (
@@ -318,7 +318,7 @@ useEffect(() => {
 
   {/* Bottom Section - Completed Orders */}
   <div className="w-full mt-8">
-    <h2 className="text-xl font-semibold mb-4">Completed Orders</h2>
+    <h2 className="text-2xl font-bold mb-4">Completed Orders</h2>
     <ul className="space-y-4 overflow-y-auto max-h-96"> {/* Add scroll if list is long */}
       {completedOrders.length > 0 ? (
         completedOrders.map((order) => (
