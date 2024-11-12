@@ -751,7 +751,6 @@ app.get('/api/payment-mode/:bookId', async (req, res) => {
 
 
 
-<<<<<<< HEAD
 
 
 //shruti 
@@ -794,7 +793,6 @@ app.post('/api/insert-report', (req, res) => {
   });
 });
 
-=======
 //Reviews API
 app.get('/reviews/:Service_Name', async (req, res) => {
   const { Service_Name } = req.params;
@@ -824,4 +822,3 @@ app.get('/reviews/:Service_Name', async (req, res) => {
     res.json({ reviews });
   });
 });
->>>>>>> fb164ee7181eab118d17855c67901c2ba7de763f
