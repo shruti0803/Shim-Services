@@ -103,11 +103,18 @@ function Orders() {
           <p>No orders in progress.</p>
         )}
       </div>
+
+      {/* Scheduled Orders with "Pay Now" First */}
       <div className="mb-6">
         <h2 className="text-2xl font-semibold mb-4">Scheduled</h2>
         {orders.filter(order => order.status === 'Scheduled').length > 0 ? (
           orders
             .filter(order => order.status === 'Scheduled')
+            .sort((a, b) => {
+              const hasOnlinePaymentA = bills[a.Book_ID]?.Bill_Mode === 'online' ? 0 : 1;
+              const hasOnlinePaymentB = bills[b.Book_ID]?.Bill_Mode === 'online' ? 0 : 1;
+              return hasOnlinePaymentA - hasOnlinePaymentB;
+            })
             .map(order => (
               <Order
                 key={order.Book_ID}
