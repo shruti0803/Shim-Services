@@ -115,6 +115,32 @@ function Orders() {
         </div>
       </div>
 
+
+      {/* Scheduled Orders with "Pay Now" First */}
+      <div className="mb-6">
+        <h2 className="text-2xl font-semibold mb-4">Scheduled</h2>
+        {orders.filter(order => order.status === 'Scheduled').length > 0 ? (
+          orders
+            .filter(order => order.status === 'Scheduled')
+            .sort((a, b) => {
+              const hasOnlinePaymentA = bills[a.Book_ID]?.Bill_Mode === 'online' ? 0 : 1;
+              const hasOnlinePaymentB = bills[b.Book_ID]?.Bill_Mode === 'online' ? 0 : 1;
+              return hasOnlinePaymentA - hasOnlinePaymentB;
+            })
+            .map(order => (
+              <Order
+                key={order.Book_ID}
+                order={order}
+                onCancel={handleCancel}
+                onHelp={handleGetHelp}
+                onPayNow={handlePayNow}
+                payNow={bills[order.Book_ID]?.Bill_Mode === 'online'}
+              />
+            ))
+        ) : (
+          <p>No scheduled orders.</p>
+        )}
+
       <div className="mb-10">
         <h2 className="text-3xl font-semibold mb-6 flex items-center">
           <FaCalendarCheck className="mr-2 text-green-600" /> Scheduled
@@ -141,6 +167,7 @@ function Orders() {
             <p>No scheduled orders.</p>
           )}
         </div>
+
       </div>
 
       <div className="mb-10">
