@@ -1,34 +1,65 @@
 import React from 'react';
+import { FaFacebook, FaInstagram, FaEnvelope, FaPhoneAlt, FaChevronRight } from 'react-icons/fa';
 import img from '../assets/BWlogo.jpg'
 const Footer = () => {
   return (
     <footer className="bg-black text-white py-10">
       <div className="container mx-auto px-6 md:px-12 flex flex-col md:flex-row justify-between">
+        
+        {/* About Us Section */}
         <div className="mb-6 md:mb-0 md:w-1/3">
           <h2 className="text-xl font-bold mb-4">
             <img className='w-36 h-15' src={img}/>
           </h2>
           <p>
-          We deliver precise, high-quality shim solutions that optimize performance and efficiency, tailored to fit your exact needs.
+            We are a trusted company providing a wide range of services including home repairs, cleaning, and maintenance. Our aim is to offer efficient and affordable solutions to all your home service needs.
           </p>
         </div>
 
-        <div className="mb-6 md:mb-0 md:w-1/3">
-          <h2 className="text-xl font-bold mb-4">Quick Links</h2>
-          <ul className="space-y-2">
-            <li><a href="#" className="hover:text-yellow-400">Home</a></li>
-            <li><a href="#" className="hover:text-yellow-400">About Us</a></li>
-            <li><a href="#" className="hover:text-yellow-400">Services</a></li>
-            <li><a href="#" className="hover:text-yellow-400">Contact Us</a></li>
+        {/* Centered Quick Links Section */}
+        <div className="mb-6 md:mb-0 md:w-1/3 text-center">
+          <h2 className="text-xl font-semibold mb-4">Quick Links</h2>
+          <ul className="space-y-2 ">
+            {[
+              { name: 'Home', href: '#' },
+              { name: 'About Us', href: '#' },
+              { name: 'Services', href: '#' },
+              { name: 'Contact Us', href: '#' },
+            ].map((link, index) => (
+              <li key={index} className="relative group text-left">
+                <a href={link.href} className="flex items-center justify-center space-x-2 hover:text-gray-300 transition-all duration-200">
+                  <FaChevronRight className="text-white group-hover:text-gray-300 transition duration-200 transform group-hover:translate-x-1" />
+                  <span className="relative after:absolute after:-bottom-1 after:left-0 after:h-0.5 after:w-full after:scale-x-0 after:bg-gray-300 after:origin-left after:transition-transform after:duration-300 group-hover:after:scale-x-100">
+                    {link.name}
+                  </span>
+                </a>
+              </li>
+            ))}
           </ul>
         </div>
 
+        {/* Contact Information Section */}
         <div className="md:w-1/3">
-          <h2 className="text-xl font-bold mb-4">Contact Information</h2>
-          <p>Maulana Azad National Institute of Technology, Bhopal, Madhya Pradesh,India</p>
-          
-          <p className='pt-2 font-semibold'>Email: <a href="mailto:shimservices5@gmail.com" className="hover:text-yellow-400 ">shimservices5@gmail.com</a></p>
-          <p className='pt-2 font-semibold'>Phone: <a href="tel:+1234567890" className="hover:text-yellow-400">+123 456 7890</a></p>
+          <h2 className="text-xl font-semibold mb-4">Contact Information</h2>
+          <p>123 Street Name, City, Country</p>
+          <div className="flex flex-col space-y-2 mt-2">
+            <p className="text-sm">
+              <FaEnvelope className="inline mr-2" />
+              Email: <a href="mailto:info@example.com" className="hover:text-gray-300">info@example.com</a>
+            </p>
+            <p className="text-sm">
+              <FaPhoneAlt className="inline mr-2" />
+              Phone: <a href="tel:+1234567890" className="hover:text-gray-300">+123 456 7890</a>
+            </p>
+            <div className="flex space-x-4 mt-4">
+              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="hover:text-gray-300 transition transform hover:scale-110">
+                <FaFacebook size={24} />
+              </a>
+              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="hover:text-gray-300 transition transform hover:scale-110">
+                <FaInstagram size={24} />
+              </a>
+            </div>
+          </div>
         </div>
       </div>
     </footer>
