@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'; 
+import React, { useState, useEffect } from 'react';
 import Order from '../Components/Order';
 import { useAuth } from '../context/AuthContext';
 import { FaTasks, FaCalendarCheck, FaCheckCircle } from 'react-icons/fa';
@@ -7,12 +7,11 @@ import { useLocation } from 'react-router-dom';
 function Orders() {
   const [orders, setOrders] = useState([]);
   const [bills, setBills] = useState({});
-  // const [selectedStatus, setSelectedStatus] = useState('In Progress');
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const { currentUser } = useAuth();
 
   const location = useLocation();
-    const { selectedStatus } = location.state || {};
+  const { selectedStatus } = location.state || {};
 
   useEffect(() => {
     const fetchData = async () => {
@@ -94,49 +93,41 @@ function Orders() {
 
   return (
     <div className="container mx-auto p-6">
-      {/* <h1 className="text-4xl text-center font-bold mb-8">My Orders</h1> */}
-
-      {/* Dropdown for order categories */}
-      {/* <div className="relative inline-block text-left mb-10">
-        <button
-          onClick={toggleDropdown}
-          className="flex items-center px-4 py-2 bg-gray-200 rounded-md shadow-md focus:outline-none"
-        >
-          <span>Orders: {selectedStatus}</span>
-        </button>
-        {dropdownOpen && (
-          <ul className="absolute left-0 mt-2 w-48 bg-white border rounded-md shadow-lg">
-            <li onClick={() => { setSelectedStatus('In Progress'); setDropdownOpen(false); }} className="px-4 py-2 cursor-pointer hover:bg-gray-100">
-              <FaTasks className="inline mr-2 text-blue-600" /> In Progress
-            </li>
-            <li onClick={() => { setSelectedStatus('Scheduled'); setDropdownOpen(false); }} className="px-4 py-2 cursor-pointer hover:bg-gray-100">
-              <FaCalendarCheck className="inline mr-2 text-green-600" /> Scheduled
-            </li>
-            <li onClick={() => { setSelectedStatus('Completed'); setDropdownOpen(false); }} className="px-4 py-2 cursor-pointer hover:bg-gray-100">
-              <FaCheckCircle className="inline mr-2 text-gray-700" /> Past Orders
-            </li>
-          </ul>
-        )}
-      </div> */}
       <h1 className="text-4xl text-center font-bold mb-8">{selectedStatus} Orders</h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {orders.filter(order => order.status === selectedStatus).length > 0 ? (
-          orders
-            .filter(order => order.status === selectedStatus)
-            .map(order => (
-              <div
-                key={order.Book_ID}
-                className="p-4 border rounded-lg shadow-md hover:shadow-lg hover:scale-105 transition-transform duration-300"
-              >
+          selectedStatus === 'Scheduled' ? (
+            orders
+              .filter(order => order.status === 'Scheduled')
+              .sort((a, b) => {
+                const hasOnlinePaymentA = bills[a.Book_ID]?.Bill_Mode === 'online' ? 0 : 1;
+                const hasOnlinePaymentB = bills[b.Book_ID]?.Bill_Mode === 'online' ? 0 : 1;
+                return hasOnlinePaymentA - hasOnlinePaymentB;
+              })
+              .map(order => (
                 <Order
+                  key={order.Book_ID}
                   order={order}
                   onCancel={handleCancel}
                   onHelp={handleGetHelp}
                   onPayNow={handlePayNow}
                   payNow={bills[order.Book_ID]?.Bill_Mode === 'online'}
                 />
-              </div>
-            ))
+              ))
+          ) : (
+            orders
+              .filter(order => order.status === selectedStatus)
+              .map(order => (
+                <Order
+                  key={order.Book_ID}
+                  order={order}
+                  onCancel={handleCancel}
+                  onHelp={handleGetHelp}
+                  onPayNow={handlePayNow}
+                  payNow={bills[order.Book_ID]?.Bill_Mode === 'online'}
+                />
+              ))
+          )
         ) : (
           <p>No orders in this category.</p>
         )}
