@@ -120,7 +120,7 @@ const HouseCleaning = () => {
           <div>
             <div className="mb-4">
             
-              <h2 className="text-3xl font-semibold text-center text-gray-800 mt-4 mb-2">What We Offer</h2>
+              <h2 className="text-3xl font-bold text-center text-gray-800 mt-4 mb-2">What We Offer</h2>
 <p className="text-lg text-center text-gray-600 mb-4">
   ShimServices provides professional cleaning services for homes and offices.
 </p>
@@ -156,12 +156,12 @@ const HouseCleaning = () => {
             </div>
             <hr></hr>
             <div className="mt-4">
-              <Reviews />
+              <Reviews serviceName={"House Cleaning"} />
             </div>
           </div>
         </div>
-        <div className="flex-6">
-          <DetailsHouseCleaning />
+        <div className="flex-6 mx-4 w-1/2">
+        <Details services={services} service_name={"House Cleaning"} />
         </div>
       </div>
     </>

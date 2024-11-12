@@ -4,16 +4,18 @@ import { useAuth } from "../context/AuthContext";
 import axios from "axios";
 import ServiceProviderOrders from "../Components/ServiceProviderOrders";
 import SalaryOfSP from "../Components/SalaryOfSP";
+import { Link } from "react-router-dom";
 
 const Profile = () => {
   const { currentUser } = useAuth();
   const isServiceProvider = currentUser?.is_SP === 1;
   const [services, setServices] = useState([]);
   const [city, setCity] = useState("");
-  const [mobile, setMobile] = useState("");
+  // const [mobile, setMobile] = useState("");
 
   const fullName = currentUser?.U_Name || "User";
   const email = currentUser?.U_Email || "user@example.com";
+  const mobile=currentUser?.U_Phone || "+91 1234567890"
 
   // Fetch services for the service provider
   useEffect(() => {
@@ -55,10 +57,12 @@ const Profile = () => {
           <p className="text-gray-500">{email}</p>
         </div>
         <div className="mt-6 space-y-4">
+          {city &&
           <div className="flex items-center">
             <i className="fas fa-map-marker-alt text-gray-600"></i>
             <p className="ml-2">{city}</p>
           </div>
+}
           <div className="flex items-center">
             <i className="fa-solid fa-phone-alt text-gray-600"></i>
             <p className="ml-2">{mobile}</p>
@@ -103,11 +107,13 @@ const Profile = () => {
           <img
             src="https://www.svgrepo.com/show/259579/search.svg"
             alt="Profile"
-            className="m-4 p-4 h-full w-96 mx-auto"
+            className=" h-full w-96 mx-auto"
           />
+          <Link to="/services">
           <button className="bg-green-600 text-white py-2 px-6 rounded-lg">
             Explore Services
           </button>
+          </Link>
         </div>
       )}
     </div>
