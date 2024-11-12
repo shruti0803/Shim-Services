@@ -1,17 +1,31 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';   
 import Order from '../Components/Order';
 import { useAuth } from '../context/AuthContext';
-import { FaTasks, FaCalendarCheck, FaCheckCircle } from 'react-icons/fa';
+import { FaTasks, FaCalendarCheck, FaCheckCircle, FaEllipsisV, FaStar, FaRegStar, FaStarHalfAlt } from 'react-icons/fa';
 import { useLocation } from 'react-router-dom';
 
 function Orders() {
   const [orders, setOrders] = useState([]);
   const [bills, setBills] = useState({});
-  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(null);  // Track the dropdown for a single order
+  const [selectedOrder, setSelectedOrder] = useState(null);
+  const [showRateForm, setShowRateForm] = useState(false);
+  const [showReportForm, setShowReportForm] = useState(false);
+  const [rating, setRating] = useState(0); // Store the rating as a float
+  const [feedback, setFeedback] = useState('');
+  const [reportDescription, setReportDescription] = useState('');
+  const [reportType, setReportType] = useState('');
   const { currentUser } = useAuth();
 
   const location = useLocation();
   const { selectedStatus } = location.state || {};
+
+  const reportTypes = [
+    'Service Delay',
+    'Quality Issue',
+    'Damage',
+    'Other',
+  ];
 
   useEffect(() => {
     const fetchData = async () => {
@@ -91,7 +105,118 @@ function Orders() {
     }
   };
 
-  const toggleDropdown = () => setDropdownOpen(!dropdownOpen);
+  const toggleDropdown = (orderId) => setDropdownOpen(dropdownOpen === orderId ? null : orderId);  // Toggle dropdown for specific order
+
+  const handleRateClick = (order) => {
+    setSelectedOrder(order);
+    setShowRateForm(true);
+  };
+
+  const handleReportClick = (order) => {
+    setSelectedOrder(order);
+    setShowReportForm(true);
+  };
+
+  const closeForm = () => {
+    setShowRateForm(false);
+    setShowReportForm(false);
+    setSelectedOrder(null);
+    setRating(0);
+    setFeedback('');
+    setReportDescription('');
+    setReportType('');
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!rating || !feedback) {
+      alert('Please provide a rating and feedback');
+      return;
+    }
+
+    try {
+      const response = await fetch('http://localhost:4002/api/insert-rating', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          Book_Id: selectedOrder?.Book_ID,
+          Rating: rating,
+          Review: feedback,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const result = await response.json();
+      console.log('Rating submitted:', result);
+
+      // Close the form on success
+      closeForm();
+    } catch (error) {
+      console.error('Error submitting rating:', error);
+      alert('There was an error submitting your rating. Please try again.');
+    }
+  };
+
+  const handleSubmitReport = async (e) => {
+    e.preventDefault();
+
+    if (!reportDescription || !reportType) {
+      alert('Please provide report description and type');
+      return;
+    }
+
+    try {
+      const response = await fetch('http://localhost:4002/api/insert-report', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          Book_Id: selectedOrder?.Book_ID,
+          Report_Description: reportDescription,
+          Report_Type: reportType,
+          Report_Status: 'Pending', // All reports are pending by default
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const result = await response.json();
+      console.log('Report submitted:', result);
+
+      // Close the form after successful submission
+      closeForm();
+    } catch (error) {
+      console.error('Error submitting report:', error);
+      alert('There was an error submitting your report. Please try again.');
+    }
+  };
+
+  // Render stars based on the rating state
+  const renderStars = () => {
+    const stars = [];
+    for (let i = 1; i <= 5; i++) {
+      stars.push(
+        <FaStar
+          key={i}
+          size={30}  // Increased size of the star
+          color={i <= rating ? '#FFD700' : '#e4e5e9'}  // Gold for selected, grey for unselected
+          onClick={() => setRating(i)}  // Set rating on click
+          style={{ cursor: 'pointer', marginRight: 5 }}  // Add space between stars
+        />
+      );
+    }
+    return stars;
+  };
+
 
   return (
     <div className="container mx-auto p-6">
@@ -120,20 +245,123 @@ function Orders() {
             orders
               .filter(order => order.status === selectedStatus)
               .map(order => (
-                <Order
-                  key={order.Book_ID}
-                  order={order}
-                  onCancel={handleCancel}
-                  onHelp={handleGetHelp}
-                  onPayNow={handlePayNow}
-                  payNow={bills[order.Book_ID]?.Bill_Mode === 'online'}
-                />
+                <div key={order.Book_ID} className="relative">
+                  <Order
+                    order={order}
+                    onCancel={handleCancel}
+                    onHelp={handleGetHelp}
+                    onPayNow={handlePayNow}
+                    payNow={bills[order.Book_ID]?.Bill_Mode === 'online'}
+                  />
+                  {order.status === 'Completed' && (
+                    <div className="absolute top-2 right-2">
+                      <FaEllipsisV onClick={() => toggleDropdown(order.Book_ID)} />
+                      {dropdownOpen === order.Book_ID && (
+                        <div className="absolute mt-2 p-2 bg-white border border-gray-300 shadow-lg z-10">
+                          <button
+                            className="block text-left p-2 w-40"
+                            onClick={() => handleRateClick(order)}
+                          >
+                            Rate
+                          </button>
+                          <button
+                            className="block text-left p-2 w-40"
+                            onClick={() => handleReportClick(order)}
+                          >
+                            Report
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
               ))
           )
         ) : (
-          <p>No orders in this category.</p>
+          <p>No orders found for the selected status.</p>
         )}
       </div>
+
+      {showRateForm && (
+        <div className="fixed inset-0 flex items-center justify-center z-50 bg-gray-800 bg-opacity-50">
+          <form
+            onSubmit={handleSubmit}
+            className="bg-white p-6 rounded-md shadow-md w-96"
+          >
+            <h2 className="text-2xl font-bold mb-4">Rate the Service</h2>
+            <div className="mb-4">
+              <div className="flex">{renderStars()}</div>
+            </div>
+            <div className="mb-4">
+              <textarea
+                value={feedback}
+                onChange={(e) => setFeedback(e.target.value)}
+                placeholder="Leave your feedback"
+                rows="4"
+                className="w-full p-2 border border-gray-300 rounded-md"
+              />
+            </div>
+            <div className="flex justify-between">
+              <button
+                type="button"
+                onClick={closeForm}
+                className="px-4 py-2 bg-gray-500 text-white rounded-md"
+              >
+                Cancel
+              </button>
+              <button type="submit" className="px-4 py-2 bg-green-500 text-white rounded-md">
+                Submit
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
+
+      {showReportForm && (
+        <div className="fixed inset-0 flex items-center justify-center z-50 bg-gray-800 bg-opacity-50">
+          <form
+            onSubmit={handleSubmitReport}
+            className="bg-white p-6 rounded-md shadow-md w-96"
+          >
+            <h2 className="text-2xl font-bold mb-4">Report an Issue</h2>
+            <div className="mb-4">
+              <select
+                value={reportType}
+                onChange={(e) => setReportType(e.target.value)}
+                className="w-full p-2 border border-gray-300 rounded-md"
+              >
+                <option value="">Select Report Type</option>
+                {reportTypes.map((type, index) => (
+                  <option key={index} value={type}>
+                    {type}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="mb-4">
+              <textarea
+                value={reportDescription}
+                onChange={(e) => setReportDescription(e.target.value)}
+                placeholder="Describe the issue"
+                rows="4"
+                className="w-full p-2 border border-gray-300 rounded-md"
+              />
+            </div>
+            <div className="flex justify-between">
+              <button
+                type="button"
+                onClick={closeForm}
+                className="px-4 py-2 bg-gray-500 text-white rounded-md"
+              >
+                Cancel
+              </button>
+              <button type="submit" className="px-4 py-2 bg-red-500 text-white rounded-md">
+                Submit
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
     </div>
   );
 }
