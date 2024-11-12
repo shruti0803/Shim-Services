@@ -2,11 +2,16 @@ import React, { useState, useEffect } from 'react';
 import Order from '../Components/Order';
 import { useAuth } from '../context/AuthContext';
 import { FaTasks, FaCalendarCheck, FaCheckCircle } from 'react-icons/fa';
+import { useLocation } from 'react-router-dom';
 
 function Orders() {
   const [orders, setOrders] = useState([]);
   const [bills, setBills] = useState({});
+  const [dropdownOpen, setDropdownOpen] = useState(false);
   const { currentUser } = useAuth();
+
+  const location = useLocation();
+  const { selectedStatus } = location.state || {};
 
   useEffect(() => {
     const fetchData = async () => {
@@ -24,7 +29,7 @@ function Orders() {
         const filteredOrders = data.filter(order => order.U_Email === currentUser.U_Email);
 
         const statusMap = {
-          'Pending': 'In Progress',
+          'Pending': 'Pending',
           'Confirmed': 'Scheduled',
           'Completed': 'Completed'
         };
@@ -34,13 +39,8 @@ function Orders() {
           status: statusMap[order.Book_Status] || order.Book_Status,
         }));
 
-        const sortedOrders = mappedOrders.sort((a, b) => {
-          const statusOrder = { 'In Progress': 1, 'Scheduled': 2, 'Completed': 3 };
-          return statusOrder[a.status] - statusOrder[b.status];
-        });
-
-        setOrders(sortedOrders);
-        await fetchBills(sortedOrders);
+        setOrders(mappedOrders);
+        await fetchBills(mappedOrders);
       } catch (error) {
         console.error('There was a problem with the fetch operation:', error);
       }
@@ -89,107 +89,48 @@ function Orders() {
     }
   };
 
+  const toggleDropdown = () => setDropdownOpen(!dropdownOpen);
+
   return (
     <div className="container mx-auto p-6">
-      <h1 className="text-4xl text-center font-bold mb-8">My Orders</h1>
-
-      <div className="mb-10">
-        <h2 className="text-3xl font-semibold mb-6 flex items-center">
-          <FaTasks className="mr-2 text-blue-600" /> In Progress
-         Orders</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {orders.filter(order => order.status === 'In Progress').length > 0 ? (
-            orders
-              .filter(order => order.status === 'In Progress')
-              .map(order => (
-                <div
-                  key={order.Book_ID}
-                  className="p-4 border rounded-lg shadow-md hover:shadow-lg hover:scale-105 transition-transform duration-300"
-                >
-                  <Order order={order} onCancel={handleCancel} onHelp={handleGetHelp} />
-                </div>
-              ))
-          ) : (
-            <p>No orders in progress.</p>
-          )}
-        </div>
-      </div>
-
-
-      {/* Scheduled Orders with "Pay Now" First */}
-      <div className="mb-6">
-        <h2 className="text-2xl font-semibold mb-4">Scheduled</h2>
-        {orders.filter(order => order.status === 'Scheduled').length > 0 ? (
-          orders
-            .filter(order => order.status === 'Scheduled')
-            .sort((a, b) => {
-              const hasOnlinePaymentA = bills[a.Book_ID]?.Bill_Mode === 'online' ? 0 : 1;
-              const hasOnlinePaymentB = bills[b.Book_ID]?.Bill_Mode === 'online' ? 0 : 1;
-              return hasOnlinePaymentA - hasOnlinePaymentB;
-            })
-            .map(order => (
-              <Order
-                key={order.Book_ID}
-                order={order}
-                onCancel={handleCancel}
-                onHelp={handleGetHelp}
-                onPayNow={handlePayNow}
-                payNow={bills[order.Book_ID]?.Bill_Mode === 'online'}
-              />
-            ))
-        ) : (
-          <p>No scheduled orders.</p>
-        )}
-
-      <div className="mb-10">
-        <h2 className="text-3xl font-semibold mb-6 flex items-center">
-          <FaCalendarCheck className="mr-2 text-green-600" /> Scheduled
-         Orders</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {orders.filter(order => order.status === 'Scheduled').length > 0 ? (
+      <h1 className="text-4xl text-center font-bold mb-8">{selectedStatus} Orders</h1>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {orders.filter(order => order.status === selectedStatus).length > 0 ? (
+          selectedStatus === 'Scheduled' ? (
             orders
               .filter(order => order.status === 'Scheduled')
+              .sort((a, b) => {
+                const hasOnlinePaymentA = bills[a.Book_ID]?.Bill_Mode === 'online' ? 0 : 1;
+                const hasOnlinePaymentB = bills[b.Book_ID]?.Bill_Mode === 'online' ? 0 : 1;
+                return hasOnlinePaymentA - hasOnlinePaymentB;
+              })
               .map(order => (
-                <div
+                <Order
                   key={order.Book_ID}
-                  className="p-4 border rounded-lg shadow-md hover:shadow-lg hover:scale-105 transition-transform duration-300"
-                >
-                  <Order
-                    order={order}
-                    onCancel={handleCancel}
-                    onHelp={handleGetHelp}
-                    onPayNow={handlePayNow}
-                    payNow={bills[order.Book_ID]?.Bill_Mode === 'online'}
-                  />
-                </div>
+                  order={order}
+                  onCancel={handleCancel}
+                  onHelp={handleGetHelp}
+                  onPayNow={handlePayNow}
+                  payNow={bills[order.Book_ID]?.Bill_Mode === 'online'}
+                />
               ))
           ) : (
-            <p>No scheduled orders.</p>
-          )}
-        </div>
-
-      </div>
-
-      <div className="mb-10">
-        <h2 className="text-3xl font-semibold mb-6 flex items-center">
-          <FaCheckCircle className="mr-2 text-gray-700" /> Past Orders
-        </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {orders.filter(order => order.status === 'Completed').length > 0 ? (
             orders
-              .filter(order => order.status === 'Completed')
+              .filter(order => order.status === selectedStatus)
               .map(order => (
-                <div
+                <Order
                   key={order.Book_ID}
-                  className="p-4 border rounded-lg shadow-md hover:shadow-lg hover:scale-105 transition-transform duration-300"
-                >
-                  <Order order={order} onCancel={handleCancel} onHelp={handleGetHelp} />
-                </div>
+                  order={order}
+                  onCancel={handleCancel}
+                  onHelp={handleGetHelp}
+                  onPayNow={handlePayNow}
+                  payNow={bills[order.Book_ID]?.Bill_Mode === 'online'}
+                />
               ))
-          ) : (
-            <p>No completed orders.</p>
-          )}
-        </div>
+          )
+        ) : (
+          <p>No orders in this category.</p>
+        )}
       </div>
     </div>
   );
