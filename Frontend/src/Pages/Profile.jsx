@@ -45,8 +45,8 @@ const Profile = () => {
   }, [isServiceProvider, email]);
 
   return (
-    <div className="flex justify-between p-6 bg-gray-100 min-h-screen">
-      <div className="w-1/2 bg-white p-6 rounded-lg shadow-md">
+    <div className="flex flex-col md:flex-row lg:flex-row justify-between p-6 bg-gray-100 min-h-screen">
+      <div className=" w-full md:w-1/3 lg:w-1/3 bg-white p-6 rounded-lg shadow-md">
         <div className="text-center">
           <div className="rounded-full w-32 h-32 bg-yellow-500 flex items-center justify-center mx-auto text-black font-bold text-4xl">
             {fullName.split(" ").map((word) => word[0]).join("") || "U"}
@@ -95,7 +95,7 @@ const Profile = () => {
       </div>
 
       {isServiceProvider ? (
-        <div className="w-2/3 bg-white p-6 rounded-lg shadow-md">
+        <div className="w-full md:w-2/3 lg:w-2/3  bg-white p-6 rounded-lg shadow-md">
           <ServiceProviderOrders SPEmail={email} SPCity={city} />
         </div>
       ) : (

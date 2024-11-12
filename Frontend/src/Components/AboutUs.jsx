@@ -1,6 +1,10 @@
 import React from "react";
 import { FaStar } from 'react-icons/fa';
-
+import manishka from '../assets/manishka.jpg';
+import shruti from '../assets/shruti2.jpg';
+import tardej from '../assets/tardej.jpg';
+import isha from '../assets/isha.jpg';
+import vishal from '../assets/vishal.jpg';
 const AboutUs = () => {
   return (
     <div className="min-h-screen">
@@ -16,12 +20,12 @@ const AboutUs = () => {
         />
         
         {/* Black Blur Overlay */}
-        <div className="absolute inset-0 bg-black opacity-70 blur-sm"></div>
+        <div className="absolute inset-0 bg-black opacity-40 "></div>
 
         {/* About Us Text */}
         <div className="absolute inset-0 flex flex-col items-start justify-center pl-20">
-          <h1 className="text-white text-4xl font-bold mb-2">About Us</h1>
-          <h3 className="text-gray-400 text-2xl opacity-80">Connecting Homes with Quality Service</h3>
+          <h1 className="text-white text-4xl font-extrabold mb-2">About Us</h1>
+          <h3 className="text-gray-400 font-bold text-2xl opacity-80">Connecting Homes with Quality Service</h3>
         </div>
       </div>
 
@@ -99,66 +103,66 @@ const AboutUs = () => {
       </div>
 
       {/* Meet Our Team Section */}
-      <div className="relative w-full h-[60vh] bg-cover bg-center" style={{ backgroundImage: "url('https://i.pinimg.com/564x/a9/14/05/a91405df5998c36ce59534faa7f09980.jpg')" }}>
-        <div className="absolute inset-0 bg-black opacity-50"></div>
+      <div className="relative w-full h-[60vh] bg-cover bg-center" style={{ backgroundImage: "url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRs1IlvzBOirv8peZRW0OU_48s708XWglYM1Q&s')" }}>
+        {/* <div className="absolute inset-0 bg-black opacity-50"></div> */}
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
           <h2 className="text-white text-4xl font-bold mb-6">Meet Our Team</h2>
           
           {/* Team Cards */}
-          <div className="flex gap-8">
+          <div className="flex gap-14">
             {/* Team Member 1 */}
             <div className="text-center">
               <img
-                src="https://randomuser.me/api/portraits/men/1.jpg"
+                src={manishka}
                 alt="Team Member 1"
-                className="w-24 h-24 rounded-full mb-4"
+                className="w-36 h-36 rounded-full mb-4"
               />
-              <p className="text-white font-semibold">John Doe</p>
-              <p className="text-white">Lead Engineer</p>
+              <p className="text-white text-xl font-bold">Manishka Gupta</p>
+              <p className="text-white font-semibold text-lg">Project Head</p>
             </div>
             
             {/* Team Member 2 */}
             <div className="text-center">
               <img
-                src="https://randomuser.me/api/portraits/women/1.jpg"
+                src={shruti}
                 alt="Team Member 2"
-                className="w-24 h-24 rounded-full mb-4"
+                className="w-36 h-36 rounded-full mb-4"
               />
-              <p className="text-white font-semibold">Jane Smith</p>
-              <p className="text-white">Project Manager</p>
+              <p className="text-white text-xl font-bold">Shruti Chaurasia</p>
+              <p className="text-white text-lg font-semibold">Backend Developer</p>
             </div>
             
             {/* Team Member 3 */}
             <div className="text-center">
               <img
-                src="https://randomuser.me/api/portraits/men/2.jpg"
+                src={tardej}
                 alt="Team Member 3"
-                className="w-24 h-24 rounded-full mb-4"
+                className="w-36 h-36 rounded-full mb-4"
               />
-              <p className="text-white font-semibold">Michael Brown</p>
-              <p className="text-white">Designer</p>
+              <p className="text-white text-xl font-bold">Tardej Tudu</p>
+              <p className="text-white text-lg font-semibold">Designer</p>
             </div>
             
             {/* Team Member 4 */}
             <div className="text-center">
               <img
-                src="https://randomuser.me/api/portraits/women/2.jpg"
+                src={isha}
                 alt="Team Member 4"
-                className="w-24 h-24 rounded-full mb-4"
+                className="w-36 h-36 rounded-full mb-4"
               />
-              <p className="text-white font-semibold">Emily Clark</p>
-              <p className="text-white">Marketing</p>
+              <p className="text-white text-xl font-bold">Isha Doifode</p>
+              <p className="text-white text-lg font-semibold">Frontend Developer</p>
             </div>
             
             {/* Team Member 5 */}
             <div className="text-center">
               <img
-                src="https://randomuser.me/api/portraits/men/3.jpg"
+                src={vishal}
                 alt="Team Member 5"
-                className="w-24 h-24 rounded-full mb-4"
+                className="w-36 h-36 rounded-full mb-4"
               />
-              <p className="text-white font-semibold">James Lee</p>
-              <p className="text-white">Developer</p>
+              <p className="text-white text-xl font-bold">Vishal Sahu</p>
+              <p className="text-white text-lg font-semibold">Database Designer</p>
             </div>
           </div>
         </div>
