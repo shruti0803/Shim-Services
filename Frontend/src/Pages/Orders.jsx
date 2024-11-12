@@ -368,11 +368,11 @@ function Orders() {
                 Submit
               </button>
             </div>
-            {successMessage && (
+            {/* {successMessage && (
         <div className="text-center text-green-500 font-semibold mb-4">
           {successMessage}
         </div>
-      )}
+      )} */}
           </form>
         </div>
       )}
