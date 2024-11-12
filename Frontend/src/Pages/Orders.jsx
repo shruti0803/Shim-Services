@@ -1,12 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react'; 
 import Order from '../Components/Order';
 import { useAuth } from '../context/AuthContext';
 import { FaTasks, FaCalendarCheck, FaCheckCircle } from 'react-icons/fa';
+import { useLocation } from 'react-router-dom';
 
 function Orders() {
   const [orders, setOrders] = useState([]);
   const [bills, setBills] = useState({});
+  // const [selectedStatus, setSelectedStatus] = useState('In Progress');
+  const [dropdownOpen, setDropdownOpen] = useState(false);
   const { currentUser } = useAuth();
+
+  const location = useLocation();
+    const { selectedStatus } = location.state || {};
 
   useEffect(() => {
     const fetchData = async () => {
@@ -24,7 +30,7 @@ function Orders() {
         const filteredOrders = data.filter(order => order.U_Email === currentUser.U_Email);
 
         const statusMap = {
-          'Pending': 'In Progress',
+          'Pending': 'Pending',
           'Confirmed': 'Scheduled',
           'Completed': 'Completed'
         };
@@ -34,13 +40,8 @@ function Orders() {
           status: statusMap[order.Book_Status] || order.Book_Status,
         }));
 
-        const sortedOrders = mappedOrders.sort((a, b) => {
-          const statusOrder = { 'In Progress': 1, 'Scheduled': 2, 'Completed': 3 };
-          return statusOrder[a.status] - statusOrder[b.status];
-        });
-
-        setOrders(sortedOrders);
-        await fetchBills(sortedOrders);
+        setOrders(mappedOrders);
+        await fetchBills(mappedOrders);
       } catch (error) {
         console.error('There was a problem with the fetch operation:', error);
       }
@@ -89,80 +90,56 @@ function Orders() {
     }
   };
 
+  const toggleDropdown = () => setDropdownOpen(!dropdownOpen);
+
   return (
     <div className="container mx-auto p-6">
-      <h1 className="text-4xl text-center font-bold mb-8">My Orders</h1>
+      {/* <h1 className="text-4xl text-center font-bold mb-8">My Orders</h1> */}
 
-      <div className="mb-10">
-        <h2 className="text-3xl font-semibold mb-6 flex items-center">
-          <FaTasks className="mr-2 text-blue-600" /> In Progress
-         Orders</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {orders.filter(order => order.status === 'In Progress').length > 0 ? (
-            orders
-              .filter(order => order.status === 'In Progress')
-              .map(order => (
-                <div
-                  key={order.Book_ID}
-                  className="p-4 border rounded-lg shadow-md hover:shadow-lg hover:scale-105 transition-transform duration-300"
-                >
-                  <Order order={order} onCancel={handleCancel} onHelp={handleGetHelp} />
-                </div>
-              ))
-          ) : (
-            <p>No orders in progress.</p>
-          )}
-        </div>
-      </div>
-
-      <div className="mb-10">
-        <h2 className="text-3xl font-semibold mb-6 flex items-center">
-          <FaCalendarCheck className="mr-2 text-green-600" /> Scheduled
-         Orders</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {orders.filter(order => order.status === 'Scheduled').length > 0 ? (
-            orders
-              .filter(order => order.status === 'Scheduled')
-              .map(order => (
-                <div
-                  key={order.Book_ID}
-                  className="p-4 border rounded-lg shadow-md hover:shadow-lg hover:scale-105 transition-transform duration-300"
-                >
-                  <Order
-                    order={order}
-                    onCancel={handleCancel}
-                    onHelp={handleGetHelp}
-                    onPayNow={handlePayNow}
-                    payNow={bills[order.Book_ID]?.Bill_Mode === 'online'}
-                  />
-                </div>
-              ))
-          ) : (
-            <p>No scheduled orders.</p>
-          )}
-        </div>
-      </div>
-
-      <div className="mb-10">
-        <h2 className="text-3xl font-semibold mb-6 flex items-center">
-          <FaCheckCircle className="mr-2 text-gray-700" /> Past Orders
-        </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {orders.filter(order => order.status === 'Completed').length > 0 ? (
-            orders
-              .filter(order => order.status === 'Completed')
-              .map(order => (
-                <div
-                  key={order.Book_ID}
-                  className="p-4 border rounded-lg shadow-md hover:shadow-lg hover:scale-105 transition-transform duration-300"
-                >
-                  <Order order={order} onCancel={handleCancel} onHelp={handleGetHelp} />
-                </div>
-              ))
-          ) : (
-            <p>No completed orders.</p>
-          )}
-        </div>
+      {/* Dropdown for order categories */}
+      {/* <div className="relative inline-block text-left mb-10">
+        <button
+          onClick={toggleDropdown}
+          className="flex items-center px-4 py-2 bg-gray-200 rounded-md shadow-md focus:outline-none"
+        >
+          <span>Orders: {selectedStatus}</span>
+        </button>
+        {dropdownOpen && (
+          <ul className="absolute left-0 mt-2 w-48 bg-white border rounded-md shadow-lg">
+            <li onClick={() => { setSelectedStatus('In Progress'); setDropdownOpen(false); }} className="px-4 py-2 cursor-pointer hover:bg-gray-100">
+              <FaTasks className="inline mr-2 text-blue-600" /> In Progress
+            </li>
+            <li onClick={() => { setSelectedStatus('Scheduled'); setDropdownOpen(false); }} className="px-4 py-2 cursor-pointer hover:bg-gray-100">
+              <FaCalendarCheck className="inline mr-2 text-green-600" /> Scheduled
+            </li>
+            <li onClick={() => { setSelectedStatus('Completed'); setDropdownOpen(false); }} className="px-4 py-2 cursor-pointer hover:bg-gray-100">
+              <FaCheckCircle className="inline mr-2 text-gray-700" /> Past Orders
+            </li>
+          </ul>
+        )}
+      </div> */}
+      <h1 className="text-4xl text-center font-bold mb-8">{selectedStatus} Orders</h1>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {orders.filter(order => order.status === selectedStatus).length > 0 ? (
+          orders
+            .filter(order => order.status === selectedStatus)
+            .map(order => (
+              <div
+                key={order.Book_ID}
+                className="p-4 border rounded-lg shadow-md hover:shadow-lg hover:scale-105 transition-transform duration-300"
+              >
+                <Order
+                  order={order}
+                  onCancel={handleCancel}
+                  onHelp={handleGetHelp}
+                  onPayNow={handlePayNow}
+                  payNow={bills[order.Book_ID]?.Bill_Mode === 'online'}
+                />
+              </div>
+            ))
+        ) : (
+          <p>No orders in this category.</p>
+        )}
       </div>
     </div>
   );
