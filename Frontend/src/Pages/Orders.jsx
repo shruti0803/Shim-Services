@@ -16,7 +16,7 @@ function Orders() {
   const [reportDescription, setReportDescription] = useState('');
   const [reportType, setReportType] = useState('');
   const { currentUser } = useAuth();
-
+  // const [successMessage, setSuccessMessage] = useState(''); // Success message state
   const location = useLocation();
   const { selectedStatus } = location.state || {};
 
@@ -156,7 +156,11 @@ function Orders() {
       console.log('Rating submitted:', result);
 
       // Close the form on success
+      // setSuccessMessage('Rating submitted successfully'); // Set success message
+      // setTimeout(() => setSuccessMessage(''), 3000); 
       closeForm();
+      setDropdownOpen(false);
+      
     } catch (error) {
       console.error('Error submitting rating:', error);
       alert('There was an error submitting your rating. Please try again.');
@@ -193,7 +197,11 @@ function Orders() {
       console.log('Report submitted:', result);
 
       // Close the form after successful submission
+      // setSuccessMessage('Report submitted successfully'); // Set success message
+      // setTimeout(() => setSuccessMessage(''), 3000);
       closeForm();
+      setDropdownOpen(false);
+      
     } catch (error) {
       console.error('Error submitting report:', error);
       alert('There was an error submitting your report. Please try again.');
@@ -257,7 +265,7 @@ function Orders() {
                     <div className="absolute top-2 right-2">
                       <FaEllipsisV onClick={() => toggleDropdown(order.Book_ID)} />
                       {dropdownOpen === order.Book_ID && (
-                        <div className="absolute mt-2 p-2 bg-white border border-gray-300 shadow-lg z-10">
+                        <div className="absolute  right-0 mt-1 p-2 bg-white border border-gray-300 shadow-lg z-10 transform -translate-x-1">
                           <button
                             className="block text-left p-2 w-40"
                             onClick={() => handleRateClick(order)}
@@ -360,6 +368,11 @@ function Orders() {
                 Submit
               </button>
             </div>
+            {successMessage && (
+        <div className="text-center text-green-500 font-semibold mb-4">
+          {successMessage}
+        </div>
+      )}
           </form>
         </div>
       )}

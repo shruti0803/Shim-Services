@@ -1,4 +1,4 @@
-import React, { useState } from 'react'; 
+import React, { useState } from 'react';  
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { FaRupeeSign } from 'react-icons/fa'; // Import rupee sign icon
@@ -6,13 +6,12 @@ import CancelModal from './CancelModal';
 
 function Order({ order, onHelp, onCancel, payNow }) {
   const navigate = useNavigate();
-
   const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
-  const [orderToCancel, setOrderToCancel] = useState(null);
-  console.log("Order:",order);
-  
+  // const [orderToCancel, setOrderToCancel] = useState(null);
+  // const [successMessage, setSuccessMessage] = useState(""); // Success message for this specific order
+
   const { 
-    Book_ID, SP_Email, U_Name, Book_Status, Service_Name, 
+    Book_ID, SP_Email, U_Email, Book_Status, Service_Name, 
     Service_Category, Appointment_Date, Book_HouseNo, Book_Area, Book_City, 
     Book_State 
   } = order;
@@ -38,6 +37,7 @@ function Order({ order, onHelp, onCancel, payNow }) {
       await axios.delete(`http://localhost:4002/bookings/${orderToCancel}`);
       setIsCancelModalOpen(false);
       onCancel(orderToCancel);
+      setSuccessMessage("Order canceled successfully!"); // Set success message for this order
     } catch (error) {
       console.error('Error canceling order:', error);
     }
@@ -50,19 +50,18 @@ function Order({ order, onHelp, onCancel, payNow }) {
   return (
     <>
       <div className="relative bg-gray-100 shadow-md rounded-lg p-6 mb-4 transform transition-all duration-500 hover:scale-105 hover:shadow-xl">
-        {/* Pay Now Pulsing Rupee Icon inside Circle */}
         {payNow && (
           <div className="absolute top-2 right-2 p-2 bg-green-500 rounded-full animate-pulse">
             <FaRupeeSign
               className="text-white"
               title="Pay Now"
-              style={{ fontSize: '2rem' }} // Increase icon size
+              style={{ fontSize: '2rem' }}
             />
           </div>
         )}
 
         <h3 className="text-lg font-semibold mb-2">Order ID: {Book_ID}</h3>
-        <p className="text-gray-700"><strong>Customer:</strong> {U_Name}</p>
+        <p className="text-gray-700"><strong>Customer:</strong> {U_Email}</p>
         <p className="text-gray-700"><strong>Service:</strong> {Service_Name}</p>
         <p className="text-gray-700"><strong>Category:</strong> {Service_Category}</p>
         <p className="text-gray-700"><strong>Address:</strong> {Book_HouseNo}, {Book_Area}, {Book_City}, {Book_State}</p>
@@ -73,6 +72,12 @@ function Order({ order, onHelp, onCancel, payNow }) {
         <p className={`font-bold ${statusColorClass}`}>
           Status: {Book_Status}
         </p>
+
+        {/* {successMessage && (
+          <div className="text-center text-green-500 font-semibold mb-4">
+            {successMessage}
+          </div>
+        )} */}
 
         {(Book_Status === 'Pending' || (Book_Status === 'Scheduled' && !payNow)) && (
           <button
@@ -93,7 +98,6 @@ function Order({ order, onHelp, onCancel, payNow }) {
         )}
       </div>
 
-      {/* Cancel Modal */}
       <CancelModal
         isOpen={isCancelModalOpen}
         onClose={() => setIsCancelModalOpen(false)}

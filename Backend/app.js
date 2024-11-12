@@ -146,7 +146,7 @@ app.get('/bookings', (req, res) => {
   });
 });
 
-app.post('/bookings', (req, res) => {
+app.post('/addbookings', (req, res) => {
   const newBooking = req.body;
 
   // Validate request data
@@ -751,6 +751,10 @@ app.get('/api/payment-mode/:bookId', async (req, res) => {
 
 
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 5b9008c05960cb9f508c61e39727b5febf019dcb
 
 
 //shruti 
@@ -793,6 +797,10 @@ app.post('/api/insert-report', (req, res) => {
   });
 });
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 5b9008c05960cb9f508c61e39727b5febf019dcb
 //Reviews API
 app.get('/reviews/:Service_Name', async (req, res) => {
   const { Service_Name } = req.params;
@@ -822,3 +830,7 @@ app.get('/reviews/:Service_Name', async (req, res) => {
     res.json({ reviews });
   });
 });
+<<<<<<< HEAD
+=======
+
+>>>>>>> 5b9008c05960cb9f508c61e39727b5febf019dcb
