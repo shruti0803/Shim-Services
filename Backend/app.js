@@ -6,7 +6,7 @@ import bodyParser from 'body-parser';// Load environment variables
 import { createServer } from 'http'; // Import to create HTTP server
 import { Server } from 'socket.io'; // Import socket.io
 
-
+import { insertRating, insertReport } from './models/review.js';
 import { getAllServiceProviders, addServiceProvider,getServiceNamesByServiceProvider, getCityAndMobileByEmail } from './models/serviceProvider.js';
 import { getAllCustomers, addCustomer, updateIsSP } from './models/customer.js'; // Added updateIsSP import
 import { getAllBookings,getBookingsByServiceProvider, addBooking, acceptBooking,cancelBooking, deleteBooking,getAvailableBookingsForService } from './models/booking.js';
@@ -747,3 +747,48 @@ app.get('/api/payment-mode/:bookId', async (req, res) => {
     res.status(500).json({ message: 'Server error, please try again later.' });
   }
 });
+
+
+
+
+
+//shruti 
+
+app.post('/api/insert-rating', (req, res) => {
+  const { Book_Id, Rating, Review } = req.body;
+
+  // Validate input data
+  if (!Book_Id || !Rating || !Review) {
+    return res.status(400).json({ error: 'All fields are required.' });
+  }
+
+  // Directly call insertRating, it will handle fetching Bill_Id and inserting the rating
+  insertRating({ Book_Id, Rating, Review }, (insertErr, insertResult) => {
+    if (insertErr) {
+      return res.status(500).json({ error: insertErr.message });
+    }
+    res.status(200).json({ message: 'Rating inserted successfully!', result: insertResult });
+  });
+});
+
+
+
+
+
+app.post('/api/insert-report', (req, res) => {
+  const { Book_Id, Report_Description, Report_Type, Report_Status } = req.body;
+
+  // Validate input data
+  if (!Book_Id || !Report_Description || !Report_Type || !Report_Status) {
+    return res.status(400).json({ error: 'All fields are required.' });
+  }
+
+  // Directly call insertReport, it will handle fetching U_Email, SP_Email, and inserting the report
+  insertReport({ Book_Id, Report_Description, Report_Type, Report_Status }, (insertErr, insertResult) => {
+    if (insertErr) {
+      return res.status(500).json({ error: insertErr.message });
+    }
+    res.status(200).json({ message: 'Report submitted successfully!', result: insertResult });
+  });
+});
+
