@@ -6,7 +6,7 @@ import bodyParser from 'body-parser';// Load environment variables
 import { createServer } from 'http'; // Import to create HTTP server
 import { Server } from 'socket.io'; // Import socket.io
 
-import { insertRating, insertReport } from './models/review.js';
+import { insertRating, insertReport } from './models/reviews.js';
 import { getAllServiceProviders, addServiceProvider,getServiceNamesByServiceProvider, getCityAndMobileByEmail } from './models/serviceProvider.js';
 import { getAllCustomers, addCustomer, updateIsSP } from './models/customer.js'; // Added updateIsSP import
 import { getAllBookings,getBookingsByServiceProvider, addBooking, acceptBooking,cancelBooking, deleteBooking,getAvailableBookingsForService } from './models/booking.js';
@@ -521,6 +521,7 @@ app.get('/sp_city_mobile/:spEmail', (req, res) => {
 //--------- Payment Integration ----------//
 import Razorpay from "razorpay";
 import { addSalary, fetchAmountToPayForSPByMonth, fetchSalaryForSPByMonth, fetchTotalCostForSP, fetchTotalCostForSPByMonth, updateAmountToPayForSPByMonth } from './models/salary.js';
+import { getReviewsByServiceName } from './models/reviews.js';
 
 //RAZORPAYX_API_KEY="rzp_test_iDWZYaECE3rES2"
 // RAZORPAYX_API_SECRET="5bx32uiT2GpnGJOurYwR2uSk"
@@ -750,6 +751,7 @@ app.get('/api/payment-mode/:bookId', async (req, res) => {
 
 
 
+<<<<<<< HEAD
 
 
 //shruti 
@@ -792,3 +794,34 @@ app.post('/api/insert-report', (req, res) => {
   });
 });
 
+=======
+//Reviews API
+app.get('/reviews/:Service_Name', async (req, res) => {
+  const { Service_Name } = req.params;
+
+  console.log(Service_Name);
+  
+
+  // Ensure Service_Name is provided in the URL
+  if (!Service_Name) {
+    return res.status(400).json({ error: 'Service_Name is required' });
+  }
+
+  // Get reviews by service name
+  getReviewsByServiceName(Service_Name, (err, reviews) => {
+    if (err) {
+      console.error('Error fetching reviews:', err);
+      return res.status(500).json({ error: "An error occurred while fetching reviews" });
+    }
+
+    if (reviews.length === 0) {
+      return res.status(404).json({ error: "No reviews found for this service" });
+    }
+
+    // Return reviews if found
+    console.log("Reviews:",reviews);
+    
+    res.json({ reviews });
+  });
+});
+>>>>>>> fb164ee7181eab118d17855c67901c2ba7de763f

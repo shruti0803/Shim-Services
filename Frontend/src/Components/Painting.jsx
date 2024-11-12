@@ -154,7 +154,7 @@ const Painting = () => {
       <div className="flex flex-col-reverse md:flex-row p-2.5 m-6">
         <div className="flex flex-col text-xl md:w-1/2">
           <hr />
-          <h2 className="text-3xl font-semibold text-center text-gray-800 mt-4 mb-2">What We Offer</h2>
+          <h2 className="text-3xl font-bold text-center text-gray-800 mt-4 mb-2">What We Offer</h2>
 <p className="text-lg text-center text-gray-600 mb-4">
   ShimServices provides professional Painting services for homes and offices.
 </p>
@@ -174,9 +174,9 @@ const Painting = () => {
   </li>
 </ul>
 
-          <Reviews />
+          <Reviews serviceName={"Painting"} />
         </div>
-        <div className="flex-6">
+        <div className="flex-6 mx-4 w-1/2">
           <Details services={services} service_name={"Painting"} />
         </div>
       </div>

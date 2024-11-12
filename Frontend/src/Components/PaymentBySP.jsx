@@ -99,7 +99,7 @@ function PaymentBySP({ amount, onClose, onPaymentSuccess }) {
     
         {/* Payment Button */}
         <button
-          className="bg-blue-600 text-white py-3 px-6 rounded-md w-full flex items-center justify-center space-x-2 hover:bg-green-600 transition duration-200"
+          className="bg-green-600 text-white py-3 px-6 rounded-md w-full flex items-center justify-center space-x-2 hover:bg-green-700 transition duration-200"
           onClick={() => createRazorpayOrder(amount)}
         >
           <i className="fas fa-money-check-alt"></i>

@@ -195,11 +195,11 @@ const cardItems = [
     <span className="font-medium text-lg">Geyser Repair</span>
   </li>
 </ul>
-
-          <Reviews />
+ 
+          <Reviews serviceName={"Plumbing"} />
         </div>
-        <div className="flex w-1/2">
-          <Details services={services} service_name={"Plumbing"} />
+        <div className="flex mx-4 w-1/2">
+          <Details services={services} service_name={"Plumbing Services"} />
         </div>
       </div>
       
