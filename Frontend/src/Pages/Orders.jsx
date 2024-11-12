@@ -16,11 +16,10 @@ function Orders() {
   const [reportDescription, setReportDescription] = useState('');
   const [reportType, setReportType] = useState('');
   const { currentUser } = useAuth();
-
+  // const [successMessage, setSuccessMessage] = useState(''); // Success message state
   const location = useLocation();
   const { selectedStatus } = location.state || {};
-  console.log("selected status",selectedStatus);
-  
+
   const reportTypes = [
     'Service Delay',
     'Quality Issue',
@@ -41,10 +40,8 @@ function Orders() {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
         const data = await response.json();
-        console.log("data",data);
-        
         const filteredOrders = data.filter(order => order.U_Email === currentUser.U_Email);
-        console.log("Filtered",filteredOrders);
+        console.log("Filtered",data);
         
 
         const statusMap = {
@@ -57,12 +54,8 @@ function Orders() {
           ...order,
           status: statusMap[order.Book_Status] || order.Book_Status,
         }));
-        
-        
 
         setOrders(mappedOrders);
-        console.log("orders",orders);
-        
         await fetchBills(mappedOrders);
       } catch (error) {
         console.error('There was a problem with the fetch operation:', error);
@@ -163,7 +156,11 @@ function Orders() {
       console.log('Rating submitted:', result);
 
       // Close the form on success
+      // setSuccessMessage('Rating submitted successfully'); // Set success message
+      // setTimeout(() => setSuccessMessage(''), 3000); 
       closeForm();
+      setDropdownOpen(false);
+      
     } catch (error) {
       console.error('Error submitting rating:', error);
       alert('There was an error submitting your rating. Please try again.');
@@ -200,7 +197,11 @@ function Orders() {
       console.log('Report submitted:', result);
 
       // Close the form after successful submission
+      // setSuccessMessage('Report submitted successfully'); // Set success message
+      // setTimeout(() => setSuccessMessage(''), 3000);
       closeForm();
+      setDropdownOpen(false);
+      
     } catch (error) {
       console.error('Error submitting report:', error);
       alert('There was an error submitting your report. Please try again.');
@@ -239,6 +240,19 @@ function Orders() {
                 return hasOnlinePaymentA - hasOnlinePaymentB;
               })
               .map(order => (
+                <Order
+                  key={order.Book_ID}
+                  order={order}
+                  onCancel={handleCancel}
+                  onHelp={handleGetHelp}
+                  onPayNow={handlePayNow}
+                  payNow={bills[order.Book_ID]?.Bill_Mode === 'online'}
+                />
+              ))
+          ) : (
+            orders
+              .filter(order => order.status === selectedStatus)
+              .map(order => (
                 <div key={order.Book_ID} className="relative">
                   <Order
                     order={order}
@@ -251,7 +265,7 @@ function Orders() {
                     <div className="absolute top-2 right-2">
                       <FaEllipsisV onClick={() => toggleDropdown(order.Book_ID)} />
                       {dropdownOpen === order.Book_ID && (
-                        <div className="absolute mt-2 p-2 bg-white border border-gray-300 shadow-lg z-10">
+                        <div className="absolute  right-0 mt-1 p-2 bg-white border border-gray-300 shadow-lg z-10 transform -translate-x-1">
                           <button
                             className="block text-left p-2 w-40"
                             onClick={() => handleRateClick(order)}
@@ -269,19 +283,6 @@ function Orders() {
                     </div>
                   )}
                 </div>
-              ))
-          ) : (
-            orders
-              .filter(order => order.status === selectedStatus)
-              .map(order => (
-                <Order
-                  key={order.Book_ID}
-                  order={order}
-                  onCancel={handleCancel}
-                  onHelp={handleGetHelp}
-                  onPayNow={handlePayNow}
-                  payNow={bills[order.Book_ID]?.Bill_Mode === 'online'}
-                />
               ))
           )
         ) : (
@@ -366,6 +367,11 @@ function Orders() {
                 Submit
               </button>
             </div>
+            {successMessage && (
+        <div className="text-center text-green-500 font-semibold mb-4">
+          {successMessage}
+        </div>
+      )}
           </form>
         </div>
       )}
