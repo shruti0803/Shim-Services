@@ -7,7 +7,7 @@ import CancelModal from './CancelModal';
 function Order({ order, onHelp, onCancel, payNow }) {
   const navigate = useNavigate();
   const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
-  // const [orderToCancel, setOrderToCancel] = useState(null);
+  const [orderToCancel, setOrderToCancel] = useState(null);
   // const [successMessage, setSuccessMessage] = useState(""); // Success message for this specific order
 
   const { 
