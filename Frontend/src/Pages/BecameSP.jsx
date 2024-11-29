@@ -207,8 +207,6 @@ const BecomeServiceProviderForm = () => {
 
     if(!validateFields())return;
 
-    currentUser.is_SP=1;
-
     console.log('Form data submitted:', formData);
     const formDataToSend = {
       SP_Email: formData.email,
@@ -254,8 +252,10 @@ const BecomeServiceProviderForm = () => {
 
   
       const result = await response.json();
-  
-      if (response.ok) {
+      if (!response.ok) {
+        console.error('Error adding service provider:', result);
+        return;
+      }
 
       console.log('Service provider added successfully:', result);
 
@@ -270,39 +270,41 @@ const BecomeServiceProviderForm = () => {
       });
 
       const serviceResult = await serviceResponse.json();
-
-      if (serviceResponse.ok) {
-        console.log('Service details added successfully:', serviceResult);
-        setIsPopupOpen(true);
-        //navigate('/');
-        if (setCurrentUser && currentUser) {
-          setCurrentUser({ ...currentUser, is_SP: 1 });
-          // /customers/:userId
-          const updateIsSP = async () => {
-            try {
-              const response = await axios.put(`http://localhost:4002/customers/${currentUser.U_Email}`, {
-                is_SP: 1
-              });
-              console.log('Update successful:', response.data);
-            } catch (error) {
-              console.error('Error updating is_SP:', error);
-            }
-          };
-          
-          // Call the function when you need to update
-          updateIsSP();
-          
-        }
-      } else {
+      if (!serviceResponse.ok) {
         console.error('Error adding service details:', serviceResult);
+        return;
       }
 
-    } else {
-      console.error('Error adding service provider:', result);
+      console.log('Service details added successfully:', serviceResult);
+       // Update is_SP field in customers table only after both API calls succeed
+       if (setCurrentUser && currentUser) {
+        setCurrentUser({ ...currentUser, is_SP: 1 });
+        
+      try {
+        const updateResponse = await fetch(`http://localhost:4002/customers/${currentUser.U_Email}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ is_SP: 1 }),
+        });
+
+          if (updateResponse.ok) {
+              const updateResult = await updateResponse.json();
+              console.log('is_SP updated successfully:', updateResult);
+              setIsPopupOpen(true);
+          } else {
+              console.error('Error updating is_SP:', await updateResponse.json());
+          }
+        } catch (updateError) {
+          console.error('Error updating is_SP:', updateError);
+        }
     }
-  } catch (error) {
-    console.error('Network error:', error);
-  }
+      } catch (error) {
+          console.error('Network error:', error);
+      }
+    
+      
 };
 
 const onClosePopup = () => {

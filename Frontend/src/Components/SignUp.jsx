@@ -82,7 +82,7 @@ const SignUp = ({ onSwitchToLogin, closeDialog }) => {
                     U_Name: fullname,
                     U_Password: password,
                     U_Phone: `+91${phone}`, // Phone number with prefix
-                    is_SP: isSP,
+                    is_SP: false,
                 }),
             });
 
@@ -94,7 +94,7 @@ const SignUp = ({ onSwitchToLogin, closeDialog }) => {
                     U_Name: fullname,
                     U_Password: password,
                     U_Phone: `+91${phone}`,
-                    is_SP: isSP ? 1 : 0,
+                    is_SP: false,
                 };
                 signup(user);
 
