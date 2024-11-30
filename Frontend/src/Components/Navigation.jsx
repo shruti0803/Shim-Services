@@ -13,8 +13,10 @@ const Navigation = () => {
     const { currentUser, logout } = useAuth();
     const dropdownRef = useRef(null);
     const ordersDropdownRef = useRef(null);
+    const loginDropdownRef = useRef(null);
     const location = useLocation();
     const navigate = useNavigate();
+    const [loginRole, setLoginRole] = useState({ isAdmin: false });
 
     // Toggle between login and signup form
     const toggleForm = () => setIsLoginFormOpen(!isLoginFormOpen);
@@ -38,6 +40,9 @@ const Navigation = () => {
             if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
                 setDropdownOpen(false);
             }
+            if (loginDropdownRef.current && !loginDropdownRef.current.contains(event.target)) {
+                setLoginDropdownOpen(false);
+            }
             if (ordersDropdownRef.current && !ordersDropdownRef.current.contains(event.target)) {
                 setOrdersDropdownOpen(false);
             }
@@ -50,6 +55,7 @@ const Navigation = () => {
     // Close dropdown on route change
     useEffect(() => {
         setDropdownOpen(false);
+        setLoginDropdownOpen(false);
         setOrdersDropdownOpen(false);
     }, [location]);
 
@@ -93,74 +99,70 @@ const Navigation = () => {
                         )}
                     </div>
                 ) : (
-                    <button onClick={() => setIsLoginFormOpen(true)} className='bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 ml-4'>
+                    <button onClick={() => setIsLoginForm(true)} className='bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 ml-4'>
                         Log In
                     </button>
                 )}
             </div>
 
             {/* Mobile menu dropdown */}
-           {/* Mobile menu dropdown */}
-{/* Mobile menu dropdown */}
-{isMobileMenuOpen && (
-    <div className='lg:hidden absolute top-0 left-0 right-0 bg-black text-white p-5 z-20'>
-        <ul className='list-none'>
-            <li className='p-3 hover:bg-gray-700'>
-                <Link to='/'>Home</Link>
-            </li>
-            <li className='p-3 hover:bg-gray-700'>
-                <Link to='/aboutUs'>About Us</Link>
-            </li>
-            <li className='p-3 hover:bg-gray-700'>
-                <Link to='/services'>Services</Link>
-            </li>
+            {isMobileMenuOpen && (
+                <div className='lg:hidden absolute top-0 left-0 right-0 bg-black text-white p-5 z-20'>
+                    <ul className='list-none'>
+                        <li className='p-3 hover:bg-gray-700'>
+                            <Link to='/'>Home</Link>
+                        </li>
+                        <li className='p-3 hover:bg-gray-700'>
+                            <Link to='/aboutUs'>About Us</Link>
+                        </li>
+                        <li className='p-3 hover:bg-gray-700'>
+                            <Link to='/services'>Services</Link>
+                        </li>
 
-            {currentUser ? (
-                <>
-                    {/* Orders Dropdown */}
-                    <li className='p-3 hover:bg-gray-700 relative'>
-                        <span onClick={() => setOrdersDropdownOpen(!ordersDropdownOpen)} className="cursor-pointer">
-                            Orders
-                        </span>
-                        {ordersDropdownOpen && (
-                            <div className="absolute mt-2 w-full bg-white text-black rounded-md shadow-lg">
-                                <ul className="list-none p-2">
-                                    <li className="p-2 hover:bg-gray-200 cursor-pointer" onClick={() => handleOrderSelect('Pending')}>
-                                        Pending
-                                    </li>
-                                    <li className="p-2 hover:bg-gray-200 cursor-pointer" onClick={() => handleOrderSelect('Scheduled')}>
-                                        Scheduled
-                                    </li>
-                                    <li className="p-2 hover:bg-gray-200 cursor-pointer" onClick={() => handleOrderSelect('Completed')}>
-                                        Completed
-                                    </li>
-                                </ul>
-                            </div>
+                        {currentUser ? (
+                            <>
+                                {/* Orders Dropdown */}
+                                <li className='p-3 hover:bg-gray-700 relative'>
+                                    <span onClick={() => setOrdersDropdownOpen(!ordersDropdownOpen)} className="cursor-pointer">
+                                        Orders
+                                    </span>
+                                    {ordersDropdownOpen && (
+                                        <div className="absolute mt-2 w-full bg-white text-black rounded-md shadow-lg">
+                                            <ul className="list-none p-2">
+                                                <li className="p-2 hover:bg-gray-200 cursor-pointer" onClick={() => handleOrderSelect('Pending')}>
+                                                    Pending
+                                                </li>
+                                                <li className="p-2 hover:bg-gray-200 cursor-pointer" onClick={() => handleOrderSelect('Scheduled')}>
+                                                    Scheduled
+                                                </li>
+                                                <li className="p-2 hover:bg-gray-200 cursor-pointer" onClick={() => handleOrderSelect('Completed')}>
+                                                    Completed
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    )}
+                                </li>
+
+                                <li className='p-3 hover:bg-gray-700'>
+                                    <Link to='/profile'>My Profile</Link>
+                                </li>
+                                <li className='p-3 hover:bg-gray-700'>
+                                    <Link to='/settings'>Settings</Link>
+                                </li>
+                                <li className='p-3 hover:bg-gray-700 cursor-pointer' onClick={handleLogout}>
+                                    Logout
+                                </li>
+                            </>
+                        ) : (
+                            <li className='p-3 hover:bg-gray-700'>
+                                <button onClick={() => setIsLoginForm(true)} className='text-white'>
+                                    Log In
+                                </button>
+                            </li>
                         )}
-                    </li>
-
-                    <li className='p-3 hover:bg-gray-700'>
-                        <Link to='/profile'>My Profile</Link>
-                    </li>
-                    <li className='p-3 hover:bg-gray-700'>
-                        <Link to='/settings'>Settings</Link>
-                    </li>
-                    <li className='p-3 hover:bg-gray-700 cursor-pointer' onClick={handleLogout}>
-                        Logout
-                    </li>
-                </>
-            ) : (
-                <li className='p-3 hover:bg-gray-700'>
-                    <button onClick={() => setIsLoginFormOpen(true)} className='text-white'>
-                        Log In
-                    </button>
-                </li>
+                    </ul>
+                </div>
             )}
-        </ul>
-    </div>
-)}
-
-
 
             {/* Desktop view */}
             <div className='hidden lg:flex items-center w-full'>
@@ -239,21 +241,15 @@ const Navigation = () => {
                             )}
                         </div>
                     ) : (
-                        <button onClick={() => setIsLoginFormOpen(true)} className='bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700'>
+                        <button
+                            onClick={() => setIsLoginForm(true)}
+                            className='bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700'
+                        >
                             Log In
                         </button>
                     )}
                 </div>
             </div>
-
-            {/* DialogBox for login */}
-            <DialogBox
-                isOpen={isLoginFormOpen}
-                closeDialog={closeDialog}
-                isLoginForm={isLoginFormOpen}
-                toggleForm={toggleForm}
-            />
-             {isLoginFormOpen && <DialogBox closeDialog={closeDialog} />}
         </div>
     );
 };

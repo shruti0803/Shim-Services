@@ -26,6 +26,14 @@ import Painting from './Components/Painting';
 import PestControl from './Components/PestControl';
 import NetworkServices from './Components/NetworkServices';
 import Electrical from './Components/Electrical';
+import { AdminProvider } from './context/AdminContext';
+import UserLayout from './Layout/UserLayout';
+import AdminLayout from './Layout/AdminLayout';
+import Admin from './Pages/Admin/Admin';
+import Sidebar from './Pages/Admin/Sidebar';
+import ManageUser from './Pages/Admin/ManageUser';
+
+
 
 
 
@@ -35,12 +43,19 @@ function App() {
 
   return (
 
+
+
     <Router>
       <AuthProvider>
-      <Navigation /> 
+      <AdminProvider>
+      {/* <Navigation />  */}
       <Routes>
 
-        <Route path="/" element={<Home/>} /> 
+        
+
+
+      <Route path="/" element={<UserLayout />}>
+      <Route index element={<Home />} />
         <Route path="/appliance" element={<Appliance />} /> 
         <Route path="/beauty" element={<Beauty/>} /> 
         <Route path="/housecleaning" element={<HouseCleaning/>} /> 
@@ -59,9 +74,20 @@ function App() {
         <Route path="/login" element={<Login/>} /> 
         <Route path="/payment" element={<Payment/>} /> 
         <Route path="/aboutUs" element={<AboutUs/>} />
+        </Route>
+
+        <Route path="/admin" element={<AdminLayout />}>
+        <Route index element={<Admin />}/>
+          <Route path="/admin/manageuser" element={<ManageUser/>}/>
+        
+      
+        </Route>
+        
         {/* <Route path="/profile" element={<ProfilePage/>} />  */}
       </Routes>
-      <Footer />
+      {/* <Footer /> */}
+      
+      </AdminProvider>
       </AuthProvider> 
     </Router>
   );
