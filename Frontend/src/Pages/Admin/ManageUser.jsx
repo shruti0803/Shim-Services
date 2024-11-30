@@ -52,7 +52,7 @@ function ManageUser() {
     {
       field: 'role',
       headerName: 'Role',
-      width: 180,
+      width: 250,
       renderCell: (params) => (
         <div className="flex items-center">
           {params.value === 'Service Provider' ? (
@@ -108,10 +108,13 @@ function ManageUser() {
   ];
 
   return (
-    <div style={{ width: '100%' }}>
+    <div className='w-full'>
       <h2 className="text-2xl font-semibold mb-4">Manage Users</h2>
-      {/* Filter section */}
-      <h1>Filter</h1>
+     
+      {/* Data table */}
+      <div style={{ height: 400 }}>
+         {/* Filter section */}
+      <h1 className='text-xl'>Filter</h1>
       <div className="mb-4 flex">
         
       <FormControl style={{ width: 150, marginRight: 10 }}>
@@ -145,8 +148,6 @@ function ManageUser() {
 </FormControl>
 
       </div>
-      {/* Data table */}
-      <div style={{ height: 400 }}>
         <DataGrid
           rows={filteredData}
           columns={columns}
@@ -163,10 +164,12 @@ function ManageUser() {
         keepMounted
       >
         <MenuItem onClick={() => handleAction('Edit')}>
-          <EditIcon /> Edit
+          {/* <EditIcon /> */}
+           Edit
         </MenuItem>
         <MenuItem onClick={() => handleAction('Suspend')}>
-          <PauseIcon /> Suspend
+          {/* <PauseIcon /> */}
+           Suspend
         </MenuItem>
       </Menu>
     </div>
