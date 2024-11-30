@@ -1,12 +1,12 @@
-import React, { useState, useEffect, useRef } from 'react'; 
+import React, { useState, useEffect, useRef } from 'react';  
 import BWlogo from '../assets/BWlogo.jpg';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import DialogBox from './DialogBox';
 import { useAuth } from '../context/AuthContext';
 
 const Navigation = () => {
-    const [isNavOpen, setIsNavOpen] = useState(false);
-    const [isLoginForm, setIsLoginForm] = useState(true);
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false); // For mobile menu visibility
+    const [isLoginFormOpen, setIsLoginFormOpen] = useState(false); // For login form visibility
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [ordersDropdownOpen, setOrdersDropdownOpen] = useState(false);
     const [selectedStatus, setSelectedStatus] = useState(null); // For selected dropdown option
@@ -17,8 +17,8 @@ const Navigation = () => {
     const navigate = useNavigate();
 
     // Toggle between login and signup form
-    const toggleForm = () => setIsLoginForm(!isLoginForm);
-    const closeDialog = () => setIsNavOpen(false);
+    const toggleForm = () => setIsLoginFormOpen(!isLoginFormOpen);
+    const closeDialog = () => setIsLoginFormOpen(false); // Close the login dialog
 
     const handleLogout = () => {
         logout();
@@ -57,9 +57,10 @@ const Navigation = () => {
 
     return (
         <div className='bg-black flex items-center h-24 md:h-20 lg:h-18 sticky top-0 z-10 px-3 text-lg text-white'>
+            {/* Mobile view */}
             <div className='lg:hidden flex items-center w-full'>
-                <div className='text-3xl cursor-pointer' onClick={() => setIsNavOpen(!isNavOpen)}>
-                    {isNavOpen ? <span>&times;</span> : <span>&#9776;</span>}
+                <div className='text-3xl cursor-pointer' onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+                    {isMobileMenuOpen ? <span>&times;</span> : <span>&#9776;</span>}
                 </div>
 
                 <div className='flex-1 flex ml-4'>
@@ -92,12 +93,76 @@ const Navigation = () => {
                         )}
                     </div>
                 ) : (
-                    <button onClick={() => setIsNavOpen(true)} className='bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 ml-4'>
+                    <button onClick={() => setIsLoginFormOpen(true)} className='bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 ml-4'>
                         Log In
                     </button>
                 )}
             </div>
 
+            {/* Mobile menu dropdown */}
+           {/* Mobile menu dropdown */}
+{/* Mobile menu dropdown */}
+{isMobileMenuOpen && (
+    <div className='lg:hidden absolute top-0 left-0 right-0 bg-black text-white p-5 z-20'>
+        <ul className='list-none'>
+            <li className='p-3 hover:bg-gray-700'>
+                <Link to='/'>Home</Link>
+            </li>
+            <li className='p-3 hover:bg-gray-700'>
+                <Link to='/aboutUs'>About Us</Link>
+            </li>
+            <li className='p-3 hover:bg-gray-700'>
+                <Link to='/services'>Services</Link>
+            </li>
+
+            {currentUser ? (
+                <>
+                    {/* Orders Dropdown */}
+                    <li className='p-3 hover:bg-gray-700 relative'>
+                        <span onClick={() => setOrdersDropdownOpen(!ordersDropdownOpen)} className="cursor-pointer">
+                            Orders
+                        </span>
+                        {ordersDropdownOpen && (
+                            <div className="absolute mt-2 w-full bg-white text-black rounded-md shadow-lg">
+                                <ul className="list-none p-2">
+                                    <li className="p-2 hover:bg-gray-200 cursor-pointer" onClick={() => handleOrderSelect('Pending')}>
+                                        Pending
+                                    </li>
+                                    <li className="p-2 hover:bg-gray-200 cursor-pointer" onClick={() => handleOrderSelect('Scheduled')}>
+                                        Scheduled
+                                    </li>
+                                    <li className="p-2 hover:bg-gray-200 cursor-pointer" onClick={() => handleOrderSelect('Completed')}>
+                                        Completed
+                                    </li>
+                                </ul>
+                            </div>
+                        )}
+                    </li>
+
+                    <li className='p-3 hover:bg-gray-700'>
+                        <Link to='/profile'>My Profile</Link>
+                    </li>
+                    <li className='p-3 hover:bg-gray-700'>
+                        <Link to='/settings'>Settings</Link>
+                    </li>
+                    <li className='p-3 hover:bg-gray-700 cursor-pointer' onClick={handleLogout}>
+                        Logout
+                    </li>
+                </>
+            ) : (
+                <li className='p-3 hover:bg-gray-700'>
+                    <button onClick={() => setIsLoginFormOpen(true)} className='text-white'>
+                        Log In
+                    </button>
+                </li>
+            )}
+        </ul>
+    </div>
+)}
+
+
+
+            {/* Desktop view */}
             <div className='hidden lg:flex items-center w-full'>
                 <div className='flex-shrink-0'>
                     <img src={BWlogo} alt="Logo" className='h-20' />
@@ -174,19 +239,21 @@ const Navigation = () => {
                             )}
                         </div>
                     ) : (
-                        <button onClick={() => setIsNavOpen(true)} className='bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700'>
+                        <button onClick={() => setIsLoginFormOpen(true)} className='bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700'>
                             Log In
                         </button>
                     )}
                 </div>
             </div>
 
+            {/* DialogBox for login */}
             <DialogBox
-                isOpen={isNavOpen}
+                isOpen={isLoginFormOpen}
                 closeDialog={closeDialog}
-                isLoginForm={isLoginForm}
+                isLoginForm={isLoginFormOpen}
                 toggleForm={toggleForm}
             />
+             {isLoginFormOpen && <DialogBox closeDialog={closeDialog} />}
         </div>
     );
 };
