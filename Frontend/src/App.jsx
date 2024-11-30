@@ -32,6 +32,8 @@ import AdminLayout from './Layout/AdminLayout';
 import Admin from './Pages/Admin/Admin';
 import Sidebar from './Pages/Admin/Sidebar';
 import ManageUser from './Pages/Admin/ManageUser';
+import ManageTeam from './Pages/Admin/ManageTeam';
+import InvoiceBalance from './Pages/Admin/InvoiceBalance';
 
 
 
@@ -79,6 +81,8 @@ function App() {
         <Route path="/admin" element={<AdminLayout />}>
         <Route index element={<Admin />}/>
           <Route path="/admin/manageuser" element={<ManageUser/>}/>
+          <Route path="/admin/manageteam" element={<ManageTeam/>}/>
+          <Route path="/admin/invoices" element={<InvoiceBalance/>}/>
         
       
         </Route>

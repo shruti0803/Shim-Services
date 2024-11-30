@@ -13,7 +13,11 @@ import {
   TimelineOutlined,
   MapOutlined,
   WavesOutlined,
-  GroupWorkOutlined
+  GroupWorkOutlined,
+  ManageAccounts,
+  HomeRepairService,
+  RateReview,
+  Report
 } from '@mui/icons-material';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 import logo from '../../assets/logo.jpg'; // Update this path with your actual logo file
@@ -38,7 +42,7 @@ const Sidebar = () => {
 
   return (
     <div
-      className={`fixed top-0 left-0 h-full ${collapsed ? 'w-16' : 'w-64'} bg-black text-white transition-width duration-300 overflow-y-scroll custom-scrollbar`}
+      className={`fixed top-0 left-0 h-full ${collapsed ? 'w-20' : 'w-64'} bg-black text-white transition-width duration-300 overflow-y-scroll custom-scrollbar`}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
@@ -54,9 +58,9 @@ const Sidebar = () => {
 
       <div className="flex flex-col w-full">
         {/* Header */}
-        <div className="items-center p-3 bg-black">
+        <div className=" p-3 bg-black">
           {collapsed ? (
-            <img src={logo} alt="Logo" className='h-12 w-20' />
+            <img src={logo} alt="Logo" className='h-14 w-16' />
           ) : (
             <img src={fulllogo} alt="Full Logo" className="h-16 w-36 ml-3" />
           )}
@@ -74,21 +78,22 @@ const Sidebar = () => {
         <nav className="flex flex-col mt-4">
           {/* Dashboard */}
           <Link
-            to="/"
+            to="/admin"
             className={`flex items-center p-3 m-1  rounded ${
-              activeLink === '/' ? 'bg-yellow-500' : 'hover:bg-gray-700 '
+              activeLink === '/admin' ? 'bg-yellow-500' : 'hover:bg-gray-700 '
             }`}
-            onClick={() => handleLinkClick('/')}
+            onClick={() => handleLinkClick('/admin')}
           >
             <DashboardOutlined className="h-6 w-6" />
             {!collapsed && <span className="ml-3">Dashboard</span>}
           </Link>
 
           {/* Data Section */}
-          {!collapsed && <h3 className="mt-4 text-gray-400 pl-4">Data</h3>}
+
+          <h3 className="mt-4 text-gray-400 pl-4">Data</h3>
           <Link
             to="/admin/manageuser"
-            className={`flex items-center p-3 rounded ${
+            className={`flex items-center p-3 m-1 rounded ${
               activeLink === '/admin/manageuser' ? 'bg-yellow-400' : 'hover:bg-gray-700'
             }`}
             onClick={() => handleLinkClick('/admin/manageuser')}
@@ -98,7 +103,7 @@ const Sidebar = () => {
           </Link>
           <Link
   to="/admin/manageteam"
-  className={`flex items-center p-3 rounded ${
+  className={`flex items-center p-3 m-1 rounded ${
     activeLink === '/admin/manageteam' ? 'bg-yellow-400' : 'hover:bg-gray-700'
   }`}
   onClick={() => handleLinkClick('/admin/manageteam')}
@@ -107,52 +112,72 @@ const Sidebar = () => {
   {!collapsed && <span className="ml-3">Manage Team</span>}
 </Link>
 
-          <Link
+          {/* <Link
             to="/contacts"
-            className={`flex items-center p-3 rounded ${
+            className={`flex items-center p-3 m-1 rounded ${
               activeLink === '/contacts' ? 'bg-yellow-500' : 'hover:bg-gray-700'
             }`}
             onClick={() => handleLinkClick('/contacts')}
           >
             <ContactsOutlined className="h-6 w-6" />
             {!collapsed && <span className="ml-3">Contacts Information</span>}
-          </Link>
+          </Link> */}
           <Link
-            to="/invoices"
-            className={`flex items-center p-3 rounded ${
-              activeLink === '/invoices' ? 'bg-yellow-500' : 'hover:bg-gray-700'
+            to="/admin/invoices"
+            className={`flex items-center p-3 m-1 rounded ${
+              activeLink === '/admin/invoices' ? 'bg-yellow-500' : 'hover:bg-gray-700'
             }`}
-            onClick={() => handleLinkClick('/invoices')}
+            onClick={() => handleLinkClick('/admin/invoices')}
           >
             <ReceiptOutlined className="h-6 w-6" />
             {!collapsed && <span className="ml-3">Invoices Balances</span>}
           </Link>
 
           {/* Pages Section */}
-          {!collapsed && <h3 className="mt-4 text-gray-400 pl-4">Pages</h3>}
-          <Link
+          <h3 className="mt-4 text-gray-400 pl-4">Pages</h3>
+          {/* <Link
             to="/form"
-            className={`flex items-center p-3 rounded ${
+            className={`flex items-center p-3 m-1 rounded ${
               activeLink === '/form' ? 'bg-yellow-500' : 'hover:bg-gray-700'
             }`}
             onClick={() => handleLinkClick('/form')}
           >
             <PersonOutlined className="h-6 w-6" />
             {!collapsed && <span className="ml-3">Profile Form</span>}
-          </Link>
+          </Link> */}
           <Link
             to="/role"
-            className={`flex items-center p-3 rounded ${
+            className={`flex items-center p-3 m-1 rounded ${
               activeLink === '/role' ? 'bg-yellow-500' : 'hover:bg-gray-700'
             }`}
             onClick={() => handleLinkClick('/role')}
           >
-            <PersonOutlined className="h-6 w-6" />
+            <HomeRepairService className="h-6 w-6" />
             {!collapsed && <span className="ml-3">Manage Service</span>}
           </Link>
           <Link
+            to="/role"
+            className={`flex items-center p-3 m-1 rounded ${
+              activeLink === '/role' ? 'bg-yellow-500' : 'hover:bg-gray-700'
+            }`}
+            onClick={() => handleLinkClick('/role')}
+          >
+            <RateReview className="h-6 w-6" />
+            {!collapsed && <span className="ml-3">Reviews</span>}
+          </Link>
+          <Link
+            to="/role"
+            className={`flex items-center p-3 m-1 rounded ${
+              activeLink === '/role' ? 'bg-yellow-500' : 'hover:bg-gray-700'
+            }`}
+            onClick={() => handleLinkClick('/role')}
+          >
+            <Report className="h-6 w-6" />
+            {!collapsed && <span className="ml-3">Reports</span>}
+          </Link>
+          <Link
             to="/calendar"
-            className={`flex items-center p-3 rounded ${
+            className={`flex items-center p-3 m-1 rounded ${
               activeLink === '/calendar' ? 'bg-yellow-500' : 'hover:bg-gray-700'
             }`}
             onClick={() => handleLinkClick('/calendar')}
@@ -162,7 +187,7 @@ const Sidebar = () => {
           </Link>
           <Link
             to="/faq"
-            className={`flex items-center p-3 rounded ${
+            className={`flex items-center p-3 m-1 rounded ${
               activeLink === '/faq' ? 'bg-yellow-500' : 'hover:bg-gray-700'
             }`}
             onClick={() => handleLinkClick('/faq')}
@@ -172,10 +197,10 @@ const Sidebar = () => {
           </Link>
 
           {/* Charts Section */}
-          {!collapsed && <h3 className="mt-4 text-gray-400 pl-4">Charts</h3>}
+          {/* <h3 className="mt-4 text-gray-400 pl-4">Charts</h3>
           <Link
             to="/bar"
-            className={`flex items-center p-3 rounded ${
+            className={`flex items-center p-3 m-1 rounded ${
               activeLink === '/bar' ? 'bg-yellow-500' : 'hover:bg-gray-700'
             }`}
             onClick={() => handleLinkClick('/bar')}
@@ -185,7 +210,7 @@ const Sidebar = () => {
           </Link>
           <Link
             to="/pie"
-            className={`flex items-center p-3 rounded ${
+            className={`flex items-center p-3 m-1 rounded ${
               activeLink === '/pie' ? 'bg-yellow-500' : 'hover:bg-gray-700'
             }`}
             onClick={() => handleLinkClick('/pie')}
@@ -195,7 +220,7 @@ const Sidebar = () => {
           </Link>
           <Link
             to="/line"
-            className={`flex items-center p-3 rounded ${
+            className={`flex items-center p-3 m-1 rounded ${
               activeLink === '/line' ? 'bg-yellow-500' : 'hover:bg-gray-700'
             }`}
             onClick={() => handleLinkClick('/line')}
@@ -205,7 +230,7 @@ const Sidebar = () => {
           </Link>
           <Link
             to="/geography"
-            className={`flex items-center p-3 rounded ${
+            className={`flex items-center p-3 m-1 rounded ${
               activeLink === '/geography' ? 'bg-yellow-500' : 'hover:bg-gray-700'
             }`}
             onClick={() => handleLinkClick('/geography')}
@@ -215,14 +240,14 @@ const Sidebar = () => {
           </Link>
           <Link
             to="/stream"
-            className={`flex items-center p-3 rounded ${
+            className={`flex items-center p-3 m-1 rounded ${
               activeLink === '/stream' ? 'bg-yellow-500' : 'hover:bg-gray-700'
             }`}
             onClick={() => handleLinkClick('/stream')}
           >
             <WavesOutlined className="h-6 w-6" />
             {!collapsed && <span className="ml-3">Stream Chart</span>}
-          </Link>
+          </Link> */}
         </nav>
       </div>
     </div>
