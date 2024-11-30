@@ -522,6 +522,7 @@ app.get('/sp_city_mobile/:spEmail', (req, res) => {
 import Razorpay from "razorpay";
 import { addSalary, fetchAmountToPayForSPByMonth, fetchSalaryForSPByMonth, fetchTotalCostForSP, fetchTotalCostForSPByMonth, updateAmountToPayForSPByMonth } from './models/salary.js';
 import { getReviewsByServiceName } from './models/reviews.js';
+import { getAllAdmin } from './models/adminlogin.js';
 
 //RAZORPAYX_API_KEY="rzp_test_iDWZYaECE3rES2"
 // RAZORPAYX_API_SECRET="5bx32uiT2GpnGJOurYwR2uSk"
@@ -825,3 +826,14 @@ app.get('/reviews/:Service_Name', async (req, res) => {
   });
 });
 
+// --------------------ADMIN---------------------------
+
+app.get('/admins', (req, res) => {
+  getAllAdmin((err, results) => {
+    if (err) {
+      console.error('Error retrieving customers:', err);
+      return res.status(500).json({ error: 'Failed to retrieve customers' });
+    }
+    res.json(results);
+  });
+});
