@@ -2,7 +2,8 @@ import React, { useRef, useEffect } from 'react';
 import Carousel from 'react-bootstrap/Carousel';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Reviews } from './Reviews';
-import DetailsHouseCleaning from './DetailsHouseCleaning';
+// import DetailsHouseCleaning from './DetailsHouseCleaning';
+import Details from './Details';
 
 const Card = ({ imageSrc, title }) => (
   <div className="m-4 p-1 text-center w-30 h-32 text-gray-900 transition-shadow duration-300 overflow-visible hover:shadow-lg">
@@ -161,6 +162,7 @@ const HouseCleaning = () => {
           </div>
         </div>
         <div className="flex-6 mx-4 w-1/2">
+       
         <Details services={services} service_name={"House Cleaning"} />
         </div>
       </div>

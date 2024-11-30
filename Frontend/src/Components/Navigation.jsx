@@ -10,11 +10,14 @@ const Navigation = () => {
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [ordersDropdownOpen, setOrdersDropdownOpen] = useState(false);
     const [selectedStatus, setSelectedStatus] = useState(null); // For selected dropdown option
+    const [loginDropdownOpen, setLoginDropdownOpen] = useState(false);
     const { currentUser, logout } = useAuth();
     const dropdownRef = useRef(null);
     const ordersDropdownRef = useRef(null);
+    const loginDropdownRef = useRef(null);
     const location = useLocation();
     const navigate = useNavigate();
+    const [loginRole, setLoginRole] = useState({ isAdmin: false });
 
     // Toggle between login and signup form
     const toggleForm = () => setIsLoginForm(!isLoginForm);
@@ -38,6 +41,9 @@ const Navigation = () => {
             if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
                 setDropdownOpen(false);
             }
+            if (loginDropdownRef.current && !loginDropdownRef.current.contains(event.target)) {
+                setLoginDropdownOpen(false);
+            }
             if (ordersDropdownRef.current && !ordersDropdownRef.current.contains(event.target)) {
                 setOrdersDropdownOpen(false);
             }
@@ -50,6 +56,7 @@ const Navigation = () => {
     // Close dropdown on route change
     useEffect(() => {
         setDropdownOpen(false);
+        setLoginDropdownOpen(false);
         setOrdersDropdownOpen(false);
     }, [location]);
 
@@ -174,9 +181,42 @@ const Navigation = () => {
                             )}
                         </div>
                     ) : (
-                        <button onClick={() => setIsNavOpen(true)} className='bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700'>
-                            Log In
-                        </button>
+                        <div className='relative'>
+                            <button
+                                onClick={() => setLoginDropdownOpen(!loginDropdownOpen)}
+                                className='bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 ml-4'
+                            >
+                                Log In
+                            </button>
+
+                            {loginDropdownOpen && (
+                                <div
+                                    className='absolute right-0 mt-2 w-48 bg-white text-black rounded-md shadow-lg'
+                                    ref={loginDropdownRef}
+                                >
+                                    <ul className='list-none p-2'>
+                                        <li
+                                            className='p-2 hover:bg-gray-200 cursor-pointer'
+                                            onClick={() => {
+                                                setLoginRole({ isAdmin: false });
+                                                setIsNavOpen(true);
+                                            }}
+                                        >
+                                            Login as User
+                                        </li>
+                                        <li
+                                            className='p-2 hover:bg-gray-200 cursor-pointer'
+                                            onClick={() => {
+                                                setLoginRole({ isAdmin: true });
+                                                setIsNavOpen(true);
+                                            }}
+                                        >
+                                            Login as Admin
+                                        </li>
+                                    </ul>
+                                </div>
+                            )}
+                        </div>
                     )}
                 </div>
             </div>
@@ -186,6 +226,7 @@ const Navigation = () => {
                 closeDialog={closeDialog}
                 isLoginForm={isLoginForm}
                 toggleForm={toggleForm}
+                loginRole={loginRole} // Pass loginRole to DialogBox
             />
         </div>
     );
