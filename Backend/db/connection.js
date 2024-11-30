@@ -5,6 +5,7 @@ const connection = mysql.createConnection({
   host: 'localhost',        // Replace with your database host
   user: 'root',             // Replace with your database user
 
+
   password: 'Manishka@28',     // Replace with your database password
 
   database: 'ProjectShimServices'   // Replace with your database name
