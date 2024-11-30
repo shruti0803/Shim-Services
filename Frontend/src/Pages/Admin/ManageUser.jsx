@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { DataGrid } from '@mui/x-data-grid';
-import { IconButton, Menu, MenuItem, Select, MenuItem as MuiMenuItem, FormControl, InputLabel } from '@mui/material';
+import { IconButton, Menu, MenuItem, Select, MenuItem as MuiMenuItem, FormControl, InputLabel, Box } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import DeleteIcon from '@mui/icons-material/Delete';
 import VisibilityIcon from '@mui/icons-material/Visibility';
@@ -109,13 +109,17 @@ function ManageUser() {
 
   return (
     <div className='w-full'>
-      <h2 className="text-2xl font-semibold mb-4">Manage Users</h2>
+      <h2 className="text-3xl font-extrabold mb-4">Manage Users</h2>
      
       {/* Data table */}
       <div style={{ height: 400 }}>
          {/* Filter section */}
-      <h1 className='text-xl'>Filter</h1>
-      <div className="mb-4 flex">
+      
+      
+      <Box  p={2} sx={{ border: '1px solid #ccc', borderRadius: 1, backgroundColor: '#f9f9f9' }}>
+      <h1 className='text-xl font-bold mb-2'>Filter</h1>
+      <div className=" flex">
+      
         
       <FormControl style={{ width: 150, marginRight: 10 }}>
   <Select
@@ -148,12 +152,28 @@ function ManageUser() {
 </FormControl>
 
       </div>
+      </Box>
+      
         <DataGrid
           rows={filteredData}
           columns={columns}
           pageSize={5}
           rowsPerPageOptions={[5, 10, 20]}
           disableSelectionOnClick
+          sx={{
+            '& .MuiDataGrid-columnHeaders': {
+              backgroundColor: '#3f51b5',
+              color: 'black',
+              fontWeight: 'bold',
+      fontSize: '16px',
+            },
+            '& .MuiDataGrid-cell:hover': {
+              backgroundColor: '#e3f2fd',
+            },
+            '& .MuiDataGrid-footerContainer': {
+              backgroundColor: '#e0e0e0',
+            },
+          }}
         />
       </div>
       {/* Menu for actions */}

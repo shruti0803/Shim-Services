@@ -117,13 +117,27 @@ function ManageTeam() {
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <h2 className="text-2xl font-semibold mb-4">Manage Team</h2>
+      <h2 className="text-3xl font-extrabold mb-4">Manage Team</h2>
       <DataGrid
         rows={usersData}
         columns={columns}
         pageSize={5}
         rowsPerPageOptions={[5, 10, 20]}
         disableSelectionOnClick
+        sx={{
+          '& .MuiDataGrid-columnHeaders': {
+            backgroundColor: '#3f51b5',
+            color: 'black',
+            fontWeight: 'bold',
+      fontSize: '16px',
+          },
+          '& .MuiDataGrid-cell:hover': {
+            backgroundColor: '#e3f2fd',
+          },
+          '& .MuiDataGrid-footerContainer': {
+            backgroundColor: '#e0e0e0',
+          },
+        }}
       />
       <Menu
         anchorEl={anchorEl}

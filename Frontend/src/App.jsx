@@ -34,6 +34,12 @@ import Sidebar from './Pages/Admin/Sidebar';
 import ManageUser from './Pages/Admin/ManageUser';
 import ManageTeam from './Pages/Admin/ManageTeam';
 import InvoiceBalance from './Pages/Admin/InvoiceBalance';
+import ManageService from './Pages/Admin/ManageService';
+import Rating from './Pages/Admin/Rating';
+import ManageSalary from './Pages/Admin/ManageSalary';
+import Report from './Pages/Admin/Report';
+import FAQ from './Pages/Admin/FAQ';
+import Calendar from './Pages/Admin/Calendar';
 
 
 
@@ -83,6 +89,12 @@ function App() {
           <Route path="/admin/manageuser" element={<ManageUser/>}/>
           <Route path="/admin/manageteam" element={<ManageTeam/>}/>
           <Route path="/admin/invoices" element={<InvoiceBalance/>}/>
+          <Route path="/admin/services" element={<ManageService/>}/>
+          <Route path="/admin/rating" element={<Rating/>}/>
+          <Route path="/admin/salary" element={<ManageSalary/>}/>
+          <Route path="/admin/report" element={<Report/>}/>
+          <Route path="/admin/faq" element={<FAQ/>}/>
+          <Route path="/admin/calendar" element={<Calendar/>}/>
         
       
         </Route>
