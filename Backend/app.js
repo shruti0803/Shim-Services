@@ -1196,3 +1196,69 @@ app.put('/update-report-user/:reportId/:adminEmail/:userEmail', async (req, res)
     res.status(500).json({ message: 'Error updating report and user status', error: error.message });
   }
 });
+
+
+
+//shruti 1 dec
+
+app.get("/adminDetails/:email", (req, res) => {
+  const email = req.params.email;
+
+  adminDetails(email, (err, results) => {
+    if (err) {
+      res.status(500).json({ error: "Internal Server Error" });
+    } else if (results.length === 0) {
+      res.status(404).json({ message: "User not found" });
+    } else {
+      res.status(200).json(results); 
+    }
+  });
+});
+
+
+app.get("/adminReportAction/:email", (req,res)=>{
+  const email=req.params.email;
+  adminReportAction(email,(err, results)=>{
+    if (err) {
+      res.status(500).json({ error: "Internal Server Error" });
+    } else if (results.length === 0) {
+      res.status(404).json({ message: "User not found" });
+    } else {
+      res.status(200).json(results); 
+    }
+  })
+})
+
+
+app.get("/invoiceBalance", (req, res)=>{
+  invoiceBalance((err, results)=>{
+    if (err) {
+      res.status(500).json({ error: "Internal Server Error" });
+    } else if (results.length === 0) {
+      res.status(404).json({ message: "User not found" });
+    } else {
+      res.status(200).json(results); 
+    }
+  })
+})
+
+
+
+
+
+app.get('/api/ratings', (req, res) => {
+  getAllRating((err, results) => {
+    if (err) {
+      console.error('Error fetching ratings:', err);
+      return res.status(500).json({
+        message: 'Error fetching ratings',
+        error: err.message,
+      });
+    }
+
+    res.status(200).json({
+      message: 'Ratings fetched successfully',
+      data: results,
+    });
+  });
+});
