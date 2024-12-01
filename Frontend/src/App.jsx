@@ -42,6 +42,7 @@ import ManageSalary from './Pages/Admin/ManageSalary';
 import Report from './Pages/Admin/Report';
 import FAQ from './Pages/Admin/FAQ';
 import Calendar from './Pages/Admin/Calendar';
+import ViewAdmin from './Pages/Admin/ViewAdmin';
 
 
 
@@ -102,6 +103,7 @@ function App() {
 
           <Route path="/admin/viewSp/:email" element={<ViewSp />} />
 <Route path="/admin/viewUser/:email" element={<ViewUser />} />
+<Route path="/admin/viewAdmin/:email" element={<ViewAdmin />} />
 
         </Route>
         

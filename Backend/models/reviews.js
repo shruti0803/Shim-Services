@@ -142,3 +142,20 @@ export const getRatingsByCategory = (category, callback) => {
 }
 
 
+//shruti admin dashboard rting
+export const getAllRating=(callback)=>{
+  const query=`SELECT * FROM 
+    Booking
+JOIN 
+    Bill ON Booking.Book_ID = Bill.Book_ID
+JOIN 
+    rating ON rating.Bill_ID = Bill.Bill_ID`;
+    connection.query(query, (err, results)=>{
+      if (err) {
+        console.error("Error fetching rating:", err);
+        callback(err, null);
+      } else {
+        callback(null, results);
+      }
+    })
+}

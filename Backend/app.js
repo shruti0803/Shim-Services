@@ -6,7 +6,7 @@ import bodyParser from 'body-parser';// Load environment variables
 import { createServer } from 'http'; // Import to create HTTP server
 import { Server } from 'socket.io'; // Import socket.io
 
-import { insertRating, insertReport, getRatingsByCategory } from './models/reviews.js';
+import { insertRating, insertReport, getRatingsByCategory, getAllRating } from './models/reviews.js';
 import { getAllServiceProviders, addServiceProvider,getServiceNamesByServiceProvider, getCityAndMobileByEmail ,getSPDetails, getSPServices } from './models/serviceProvider.js';
 import { getAllCustomers, addCustomer, updateIsSP, userDetails } from './models/customer.js'; // Added updateIsSP import
 import { getAllBookings,getBookingsByServiceProvider, addBooking, acceptBooking,cancelBooking, deleteBooking,getAvailableBookingsForService } from './models/booking.js';
@@ -16,6 +16,7 @@ import { getAllCities, addCity } from './models/city.js';
 import { addBookingPost } from './models/bookingPost.js';
 import { updateBookingStatus, updateBookingStatusAfterPayment, updateBookingStatusAfterCheckbox} from './models/updateBooking.js';
 import { addBill,getAllBills,getBillById,updateRazorpayPaymentId, cashPayment } from './models/bill.js';
+
 // Load environment variables
 dotenv.config();
 // console.log(process.env.R);
@@ -533,7 +534,7 @@ app.get('/sp_city_mobile/:spEmail', (req, res) => {
 import Razorpay from "razorpay";
 import { addSalary, fetchAmountToPayForSPByMonth, fetchSalaryForSPByMonth, fetchTotalCostForSP, fetchTotalCostForSPByMonth, updateAmountToPayForSPByMonth } from './models/salary.js';
 import { getReviewsByServiceName } from './models/reviews.js';
-import { getAllAdmin } from './models/adminlogin.js';
+import { adminDetails, adminReportAction, getAllAdmin, invoiceBalance } from './models/adminlogin.js';
 import { log } from 'console';
 import { getOrders } from './models/orders.js';
 
@@ -913,12 +914,11 @@ app.get('/SPServices/:email', (req, res) => {
     if (error) {
       return res.status(500).json({ message: 'Error fetching service provider services', error });
     }
-    if (data.length === 0) {
-      return res.status(404).json({ message: 'Service provider not found' });
-    }
-    return res.status(200).json(data); // Send the first result as the response
+    // Return an empty array if no data is found
+    return res.status(200).json(data.length ? data : []);
   });
 });
+
 
 
 
@@ -952,5 +952,70 @@ app.get("/userDetails/:email", (req, res) => {
     } else {
       res.status(200).json(results); // Send the first result if user is found
     }
+  });
+});
+
+
+//shruti 1 dec
+
+app.get("/adminDetails/:email", (req, res) => {
+  const email = req.params.email;
+
+  adminDetails(email, (err, results) => {
+    if (err) {
+      res.status(500).json({ error: "Internal Server Error" });
+    } else if (results.length === 0) {
+      res.status(404).json({ message: "User not found" });
+    } else {
+      res.status(200).json(results); 
+    }
+  });
+});
+
+
+app.get("/adminReportAction/:email", (req,res)=>{
+  const email=req.params.email;
+  adminReportAction(email,(err, results)=>{
+    if (err) {
+      res.status(500).json({ error: "Internal Server Error" });
+    } else if (results.length === 0) {
+      res.status(404).json({ message: "User not found" });
+    } else {
+      res.status(200).json(results); 
+    }
+  })
+})
+
+
+app.get("/invoiceBalance", (req, res)=>{
+  invoiceBalance((err, results)=>{
+    if (err) {
+      res.status(500).json({ error: "Internal Server Error" });
+    } else if (results.length === 0) {
+      res.status(404).json({ message: "User not found" });
+    } else {
+      res.status(200).json(results); 
+    }
+  })
+})
+
+
+
+
+
+app.get('/api/ratings', (req, res) => {
+  getAllRating((err, results) => {
+    if (err) {
+      console.error('Error fetching ratings:', err);
+      return res.status(500).json({
+        message: 'Error fetching ratings',
+        error: err.message,
+      });
+    }
+
+    res.status(200).json({
+      message: 'Ratings fetched successfully',
+      data: results,
+    });
   });
 });
