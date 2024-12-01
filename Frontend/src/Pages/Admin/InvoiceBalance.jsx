@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'; 
+import React, { useEffect, useState } from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import PaymentIcon from '@mui/icons-material/Payment';
 import WorkIcon from '@mui/icons-material/WorkOutline';
@@ -9,35 +9,40 @@ import axios from 'axios';
 function InvoiceBalance() {
   const [invoiceData, setInvoiceData] = useState([]);
 
-  // Fetch data from the API when the component mounts
   useEffect(() => {
-    axios
-      .get('http://localhost:4002/invoiceBalance')
-      .then((response) => {
-        const fetchedData = response.data.map((item) => ({
-          bookId: item.Book_ID || item.Bill_ID, // Fallback to Bill_ID if Book_ID is null
-          billId: item.Bill_ID,
+    const fetchData = async () => {
+      try {
+        const response = await axios.get('http://localhost:4002/invoiceBalance');
+        const fetchedData = response.data.map((item, index) => ({
+          id: index + 1, // Unique ID for each row
+          bookId: item.Book_ID || 'N/A',
+          billId: item.Bill_ID || 'N/A',
           billDate: item.Bill_Date ? new Date(item.Bill_Date).toLocaleDateString() : 'N/A',
           billMode: item.Bill_Mode || 'N/A',
-          totalCost: item.Total_Cost || 0, // Ensure that Total_Cost is fetched correctly
+          totalCost: item.Total_Cost ? parseFloat(item.Total_Cost).toFixed(2) : '0.00', // Ensure two decimal places
           paymentId: item.Payment_ID || 'N/A',
           spEmail: item.SP_Email || 'N/A',
           uEmail: item.U_Email || 'N/A',
           serviceName: item.Service_Name || 'N/A',
           serviceCategory: item.Service_Category || 'N/A',
-          address: `${item.Book_HouseNo || ''}, ${item.Book_Area || ''}, ${item.Book_City || ''}, ${item.Book_State || ''} - ${item.Book_City_PIN || ''}`,
+          address: [
+            item.Book_HouseNo,
+            item.Book_Area,
+            item.Book_City,
+            item.Book_State,
+            item.Book_City_PIN,
+          ]
+            .filter(Boolean) // Remove null or undefined values
+            .join(', '),
         }));
-
-        // Filter out rows where bookId is still null (in case Bill_ID wasn't a valid fallback)
-        const validRows = fetchedData.filter((row) => row.bookId !== null);
-
-        // Set data only once
-        setInvoiceData(validRows);
-      })
-      .catch((error) => {
+        setInvoiceData(fetchedData);
+      } catch (error) {
         console.error('Error fetching data:', error);
-      });
-  }, []); // Empty dependency array ensures it only runs once after mount
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const columns = [
     { field: 'bookId', headerName: 'Book ID', width: 120 },
@@ -58,7 +63,7 @@ function InvoiceBalance() {
       field: 'totalCost',
       headerName: 'Total Cost',
       width: 120,
-      renderCell: (params) => `$${params.value.toFixed(2)}`, // Optionally format as currency
+      renderCell: (params) => `₹${params.value}`, // Display cost with rupee symbol
     },
     { field: 'paymentId', headerName: 'Payment ID', width: 150 },
     {
@@ -107,21 +112,18 @@ function InvoiceBalance() {
         pageSize={5}
         rowsPerPageOptions={[5, 10, 20]}
         disableSelectionOnClick
-        getRowId={(row) => row.bookId}
         sx={{
           '& .MuiDataGrid-columnHeaders': {
-    backgroundColor: '#3f51b5',
-    color: 'black', // Adjust color if needed
-    fontWeight: 'bold',
-    fontSize: '16px', // Increase size for readability
-  },
-            '& .MuiDataGrid-cell:hover': {
-              backgroundColor: '#e3f2fd',
-            },
-            '& .MuiDataGrid-footerContainer': {
-              backgroundColor: '#e0e0e0',
-            },
-
+            backgroundColor: '#3f51b5',
+            color: 'black',
+            fontWeight: 'bold',
+          },
+          '& .MuiDataGrid-cell:hover': {
+            backgroundColor: '#e3f2fd',
+          },
+          '& .MuiDataGrid-footerContainer': {
+            backgroundColor: '#e0e0e0',
+          },
         }}
       />
     </div>
