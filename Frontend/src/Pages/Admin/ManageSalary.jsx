@@ -1,110 +1,72 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Typography, Button, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
+import axios from 'axios';
 
 const ManageSalary = () => {
-  // Sample data for the salary management table
-  const salaryData = [
-    {
-      id: 1,
-      spEmail: 'sp1@example.com',
-      accountNumber: '1234567890',
-      ifscCode: 'ABC1234',
-      bankName: 'XYZ Bank',
-      branchName: 'Downtown',
-      address: '123 Main St, City, State',
-      salary: 50000,
-      amountToPay: 30000,
-      month: 'November',
-      year: 2024,
-      serviceName: 'Plumbing Services',
-    },
-    {
-      id: 2,
-      spEmail: 'sp2@example.com',
-      accountNumber: '9876543210',
-      ifscCode: 'DEF5678',
-      bankName: 'LMN Bank',
-      branchName: 'Uptown',
-      address: '456 Elm St, City, State',
-      salary: 40000,
-      amountToPay: 40000,
-      month: 'November',
-      year: 2024,
-      serviceName: 'Electrical Repair',
-    },
-    {
-      id: 3,
-      spEmail: 'sp3@example.com',
-      accountNumber: '1122334455',
-      ifscCode: 'GHI9101',
-      bankName: 'PQR Bank',
-      branchName: 'Midtown',
-      address: '789 Oak St, City, State',
-      salary: 60000,
-      amountToPay: 50000,
-      month: 'October',
-      year: 2024,
-      serviceName: 'Carpentry',
-    },
-    // Add more data as needed
-  ];
-
-  // State for filters
+  const [salaryData, setSalaryData] = useState([]);
   const [selectedMonth, setSelectedMonth] = useState('');
   const [selectedYear, setSelectedYear] = useState('');
-  const [selectedService, setSelectedService] = useState('');
+  const [loading, setLoading] = useState(true);
+
+  // Fetch data from the API
+  useEffect(() => {
+    const fetchSalaryData = async () => {
+      try {
+        const response = await axios.get('http://localhost:4002/get-sp-salary');
+        const dataWithIds = response.data.data.map((item, index) => ({
+          id: index + 1, // Assign a unique index starting from 1
+          ...item,
+        }));
+        setSalaryData(dataWithIds);
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching salary data:', error);
+        setLoading(false);
+      }
+    };
+    fetchSalaryData();
+  }, []);
 
   // Unique values for the filters
   const months = [...new Set(salaryData.map((data) => data.month))];
   const years = [...new Set(salaryData.map((data) => data.year))];
-  const serviceNames = [...new Set(salaryData.map((data) => data.serviceName))];
 
   // Filtered data based on the selected filters
   const filteredData = salaryData.filter((data) => {
     return (
       (selectedMonth === '' || data.month === selectedMonth) &&
-      (selectedYear === '' || data.year === selectedYear) &&
-      (selectedService === '' || data.serviceName === selectedService)
+      (selectedYear === '' || data.year === selectedYear)
     );
   });
 
-  // useEffect to run when filters change
-  useEffect(() => {
-    console.log('Filters updated:', { selectedMonth, selectedYear, selectedService });
-  }, [selectedMonth, selectedYear, selectedService]);
-
-  // Define columns for the DataGrid with an added Index column
+  // Define columns for the DataGrid
   const columns = [
-    {
-      field: 'index',
-      headerName: 'Index',
-      width: 80,
-      renderCell: (params) => params.row.id,
-    },
-    { field: 'spEmail', headerName: 'SP Email', width: 180 },
-    { field: 'accountNumber', headerName: 'Account Number', width: 150 },
-    { field: 'ifscCode', headerName: 'IFSC Code', width: 130 },
-    { field: 'bankName', headerName: 'Bank Name', width: 150 },
-    { field: 'branchName', headerName: 'Branch Name', width: 150 },
-    { field: 'address', headerName: 'Address', width: 180 },
-    { field: 'serviceName', headerName: 'Service Name', width: 180 },
-    { field: 'salary', headerName: 'Salary', type: 'number', width: 120 },
-    { field: 'amountToPay', headerName: 'Amount to Pay', type: 'number', width: 150 },
+    { field: 'id', headerName: 'Index', width: 80 },
+    { field: 'SP_Email', headerName: 'SP Email', width: 180 },
+    { field: 'AccountNo', headerName: 'Account Number', width: 150 },
+    { field: 'IFSCcode', headerName: 'IFSC Code', width: 130 },
+    { field: 'Bank_Name', headerName: 'Bank Name', width: 150 },
+    { field: 'Branch_Name', headerName: 'Branch Name', width: 150 },
+    { field: 'CityName', headerName: 'City Name', width: 150 },
+    { field: 'State', headerName: 'State', width: 150 },
     { field: 'month', headerName: 'Month', width: 120 },
-    { field: 'year', headerName: 'Year', type: 'year', width: 100 },
+    { field: 'year', headerName: 'Year', width: 100 },
+    { field: 'Salary', headerName: 'Salary', type: 'number', width: 120 },
+    { field: 'amount_to_pay', headerName: 'Amount to Pay', type: 'number', width: 150 },
+    
     {
       field: 'action',
       headerName: 'Action',
       width: 150,
       renderCell: (params) => {
-        const { salary, amountToPay } = params.row;
-        return salary > amountToPay ? (
-          <Button variant="contained" color="primary">
+        const { Salary, amount_to_pay } = params.row;
+        return Salary > amount_to_pay ? (
+          <Button variant="contained" color="success">
             Pay Salary
           </Button>
         ) : (
-          <Typography color="textSecondary">Paid</Typography>
+          <Typography color="textSecondary"></Typography>
         );
       },
     },
@@ -143,25 +105,14 @@ const ManageSalary = () => {
             ))}
           </Select>
         </FormControl>
-
-        <FormControl variant="outlined" style={{ minWidth: 150 }}>
-          <InputLabel>Service</InputLabel>
-          <Select
-            value={selectedService}
-            onChange={(e) => setSelectedService(e.target.value)}
-            label="Service"
-          >
-            <MenuItem value="">All</MenuItem>
-            {serviceNames.map((service) => (
-              <MenuItem key={service} value={service}>{service}</MenuItem>
-            ))}
-          </Select>
-        </FormControl>
       </Box>
 
       {/* DataGrid for Salary Management */}
       <div style={{ height: 400, width: '100%' }}>
-        <DataGrid
+        {loading ? (
+          <Typography>Loading...</Typography>
+        ) : (
+          <DataGrid
           rows={filteredData}
           columns={columns}
           pageSize={5}
@@ -174,17 +125,15 @@ const ManageSalary = () => {
       fontWeight: 'bold',
       fontSize: '16px', // Increase size for readability
     },
-    // '& .MuiDataGrid-columnHeaderTitle': {
-    //   fontSize: '16px', // Ensure the column header title is larger
-    // },
-            '& .MuiDataGrid-cell:hover': {
-              backgroundColor: '#e3f2fd',
-            },
-            '& .MuiDataGrid-footerContainer': {
-              backgroundColor: '#e0e0e0',
-            },
-          }}
-        />
+              '& .MuiDataGrid-cell:hover': {
+                backgroundColor: '#e3f2fd',
+              },
+              '& .MuiDataGrid-footerContainer': {
+                backgroundColor: '#e0e0e0',
+              },
+            }}
+          />
+        )}
       </div>
     </Box>
   );

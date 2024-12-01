@@ -97,9 +97,12 @@ app.get('/customers', (req, res) => {
 
 app.post('/customers', (req, res) => {
   const newCustomer = req.body;
+  // console.log(newCustomer);
   if (!newCustomer.U_Email) {
     return res.status(400).json({ error: 'Missing required field: email' });
   }
+  
+  
   addCustomer(newCustomer, (err, result) => {
     if (err) {
       console.error('Error adding customer:', err);
@@ -536,6 +539,10 @@ import { getReviewsByServiceName } from './models/reviews.js';
 import { getAllAdmin } from './models/adminlogin.js';
 import { log } from 'console';
 import { getOrders } from './models/orders.js';
+import { getBookingCountByCity, getBookingCountByService, getDailyRevenue, getMonthlySales, getNewCustomersAndSPs, getTotalCost, getTotalCustomersAndSPs } from './models/analytics.js';
+import { addServiceByAdmin, deleteServiceByAdmin, getAllAdminServices } from './models/manageservice.js';
+import { getAllSPSalaryByAdmin } from './models/managesalary.js';
+import { getAllReportsByAdmin,  updateReportStatusToRejected, updateReportToResolvedAndUserStatus } from './models/managerating.js';
 
 //RAZORPAYX_API_KEY="rzp_test_iDWZYaECE3rES2"
 // RAZORPAYX_API_SECRET="5bx32uiT2GpnGJOurYwR2uSk"
@@ -891,7 +898,8 @@ app.get('/api/admin', (req, res) => {
 
 
 app.get('/serviceProviders/:email', (req, res) => {
-  const SP_Email = req.params.email; // Get the email from URL parameter
+  const SP_Email = req.params.email; 
+  // Get the email from URL parameter
 
   getSPDetails(SP_Email, (error, data) => {
     if (error) {
@@ -953,4 +961,238 @@ app.get("/userDetails/:email", (req, res) => {
       res.status(200).json(results); // Send the first result if user is found
     }
   });
+});
+
+
+//Analytics section 
+app.get('/sales', async (req, res) => {
+  try {
+    const { month, year } = req.query;
+    // console.log("month",month);
+    // console.log("year",year);
+    
+    
+
+    // Validate query parameters
+    if (!month || !year) {
+      return res.status(400).json({ error: 'Month and year are required' });
+    }
+
+    // Fetch the total sales
+    
+    const totalSales = await getMonthlySales(parseInt(month), parseInt(year));
+    res.status(200).json({ totalSales });
+  } catch (error) {
+    console.error('Error in /sales API:', error);
+    res.status(500).json({ error: 'Failed to fetch sales data' });
+  }
+});
+
+app.get('/new-customers-and-sps', (req, res) => {
+  const { month, year, isSP } = req.query;
+
+  // Validate the input
+  if (!month || !year || !isSP) {
+    return res.status(400).json({ error: 'Missing required query parameters: month, year, and isSP' });
+  }
+
+  // Convert `isSP` to a number if needed
+  const isSPInt = parseInt(isSP, 10);
+  if (isNaN(isSPInt)) {
+    return res.status(400).json({ error: 'Invalid value for isSP' });
+  }
+
+  getNewCustomersAndSPs(parseInt(month, 10), parseInt(year, 10), isSPInt, (err, data) => {
+    if (err) {
+      return res.status(500).json({ error: 'Failed to fetch data' });
+    }
+    res.status(200).json({ totalCount: data.totalCount });
+  });
+});
+app.get('/total-customers-and-sps', (req, res) => {
+  const { isSP } = req.query;
+
+  // Validate the input to ensure it is either 0 or 1
+  if (isSP === undefined) {
+    return res.status(400).json({ error: 'isSP query parameter is required' });
+  }
+
+  const isSPInt = parseInt(isSP, 10);
+
+  if (isNaN(isSPInt) || (isSPInt !== 0 && isSPInt !== 1)) {
+    return res.status(400).json({ error: 'Invalid value for isSP. Use "0" or "1".' });
+  }
+
+  // Call the function to get the total count
+  getTotalCustomersAndSPs(isSPInt, (err, data) => {
+    if (err) {
+      return res.status(500).json({ error: 'Internal server error', details: err });
+    }
+    res.status(200).json({ totalCount: data.totalCount });
+  });
+});
+
+app.get('/revenue-data', async (req, res) => {
+  const { month, year } = req.query;
+
+  if (!month || !year) {
+    return res.status(400).json({ error: 'Month and Year are required' });
+  }
+
+  try {
+    // Call getDailyRevenue with await since it now returns a Promise
+    const revenueData = await getDailyRevenue(parseInt(month), parseInt(year));
+    res.status(200).json(revenueData);
+  } catch (error) {
+    console.error('Error fetching revenue data:', error);
+    res.status(500).json({ error: 'An error occurred while fetching data' });
+  }
+});
+
+app.get('/total-cost', async (req, res) => {
+  try {
+    // Call the function and return the response
+    const totalCost = await getTotalCost(); // Pass any parameters if needed
+    res.json({ totalCost });
+  } catch (error) {
+    res.status(500).json({ error: 'Error fetching total cost' });
+  }
+});
+
+app.get('/booking-count-by-service', async (req, res) => {
+  try {
+
+    const serviceCounts = await getBookingCountByService();
+    res.json(serviceCounts);
+  } catch (error) {
+    res.status(500).json({ error: 'Error fetching booking counts' });
+  }
+});
+app.get('/booking-count-by-city', async (req, res) => {
+  try {
+
+    const serviceCounts = await getBookingCountByCity();
+    res.json(serviceCounts);
+  } catch (error) {
+    res.status(500).json({ error: 'Error fetching booking counts' });
+  }
+});
+app.get('/admin/services', async (req, res) => {
+  try {
+  
+    const services = await getAllAdminServices();
+    res.status(200).json({ services });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch services' });
+  }
+});
+
+app.post('/add-service-by-admin', async (req, res) => {
+  const { adminEmail, serviceName, serviceCategory, initialPrice } = req.body;
+
+  if (!adminEmail || !serviceName || !serviceCategory || !initialPrice) {
+    return res.status(400).json({ error: 'All fields are required' });
+  }
+
+  try {
+    // Call the function to insert data into the database
+    
+    
+    await addServiceByAdmin(adminEmail, serviceName, serviceCategory, initialPrice);
+    res.status(200).json({ message: 'Service added successfully' });
+  } catch (error) {
+    res.status(500).json({ error: 'Error adding service' });
+  }
+});
+
+app.delete('/delete-service', async (req, res) => {
+  const { serviceName, serviceCategory } = req.body;
+  console.log("servicename",serviceName);
+  console.log("servicecat",serviceCategory);
+  
+
+  try {
+    
+    await deleteServiceByAdmin(serviceName, serviceCategory);
+    res.status(200).send('Service deleted successfully.');
+  } catch (error) {
+    res.status(500).send('Failed to delete service.');
+  }
+});
+
+app.get('/get-sp-salary', async (req, res) => {
+  try {
+    
+    const data = await getAllSPSalaryByAdmin();
+
+    if (data.length > 0) {
+      res.status(200).json({
+        success: true,
+        message: 'SP Salary data fetched successfully.',
+        data,
+      });
+    } else {
+      res.status(404).json({
+        success: false,
+        message: 'No SP Salary data found.',
+      });
+    }
+  } catch (error) {
+    console.error('Error in /get-sp-salary API:', error);
+    res.status(500).json({
+      success: false,
+      message: 'An error occurred while fetching SP Salary data.',
+    });
+  }
+});
+
+app.get('/reports-by-admin', async (req, res) => {
+  try {
+    const reports = await getAllReportsByAdmin();
+    res.status(200).json({ data: reports });
+  } catch (error) {
+    console.error('Error in GET /api/reports:', error);
+    res.status(500).json({ error: 'An error occurred while fetching reports' });
+  }
+});
+
+app.put('/update-report-to-rejected/:reportId', async (req, res) => {
+  const { reportId } = req.params;
+  const { adminEmail } = req.body;
+  
+  if (!adminEmail) {
+    return res.status(400).json({ message: 'Admin email is required' });
+  }
+
+  try {
+    // Assuming `updateReportStatusToRejected` is a function you have defined
+    const result = await updateReportStatusToRejected(reportId, adminEmail);
+    console.log(result);
+    res.status(200).json(result);
+
+  } catch (error) {
+    console.log(result);
+    res.status(500).json({ message: 'Error updating report', error: error.message });
+  }
+});
+
+
+app.put('/update-report-user/:reportId/:adminEmail/:userEmail', async (req, res) => {
+  const { reportId, adminEmail, userEmail } = req.params;
+  console.log("reportid", reportId);
+  console.log("admin", adminEmail);
+  console.log("user", userEmail);
+  
+
+  try {
+    
+    const result = await updateReportToResolvedAndUserStatus(reportId, adminEmail, userEmail);
+    res.status(200).json(result);
+    
+    
+  } catch (error) {
+    console.log();
+    
+    res.status(500).json({ message: 'Error updating report and user status', error: error.message });
+  }
 });

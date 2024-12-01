@@ -16,17 +16,14 @@ import {
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-
-const servicesData = [
-  { id: 1, serviceName: 'Web Development', serviceCategory: 'IT & Software', initialPrice: 500 },
-  { id: 2, serviceName: 'Graphic Design', serviceCategory: 'Design', initialPrice: 300 },
-  { id: 3, serviceName: 'Digital Marketing', serviceCategory: 'Marketing', initialPrice: 400 },
-  { id: 4, serviceName: 'SEO Optimization', serviceCategory: 'Marketing', initialPrice: 200 },
-  { id: 5, serviceName: 'App Development', serviceCategory: 'IT & Software', initialPrice: 600 },
-];
+import axios from 'axios';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css'; // Import styles for the toast notifications
+import { useAuthAdmin } from '../../context/AdminContext';
 
 function ManageService() {
-  const [filteredData, setFilteredData] = useState(servicesData);
+  const [servicesData, setServicesData] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
   const [selectedServiceName, setSelectedServiceName] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -36,22 +33,32 @@ function ManageService() {
     initialPrice: '',
   });
 
-  const handleEdit = (id) => {
-    console.log(`Edit service with ID: ${id}`);
-  };
+  const {currentAdmin} = useAuthAdmin();
+  console.log("current",currentAdmin.A_Email);
+  
 
-  const handleDelete = (id) => {
-    console.log(`Delete service with ID: ${id}`);
-  };
-
-  // Filter logic using useEffect
   useEffect(() => {
-    if (!selectedServiceName) {
-      setSelectedCategory('');
-    }
+    const fetchServices = async () => {
+      try {
+        const response = await axios.get('http://localhost:4002/admin/services');
+        const data = response.data.services.map((service, index) => ({
+          id: index + 1,
+          serviceName: service.Service_Name,
+          serviceCategory: service.Service_Category,
+          initialPrice: service.Initial_Price,
+        }));
+        setServicesData(data);
+        setFilteredData(data);
+      } catch (error) {
+        console.error('Error fetching services:', error);
+      }
+    };
 
+    fetchServices();
+  }, [filteredData]);
+
+  useEffect(() => {
     let filtered = servicesData;
-
     if (selectedServiceName) {
       filtered = filtered.filter((service) => service.serviceName === selectedServiceName);
     }
@@ -61,21 +68,64 @@ function ManageService() {
     }
 
     setFilteredData(filtered);
-  }, [selectedServiceName, selectedCategory]);
+  }, [selectedServiceName, selectedCategory, servicesData]);
 
-  const handleAddService = () => {
-    const newId = Math.max(...servicesData.map((s) => s.id)) + 1;
-    const service = {
-      id: newId,
-      serviceName: newService.serviceName,
-      serviceCategory: newService.serviceCategory,
-      initialPrice: parseFloat(newService.initialPrice),
-    };
+  const handleAddService = async () => {
+    try {
+      const response = await axios.post('http://localhost:4002/add-service-by-admin', {
+        adminEmail: currentAdmin.A_Email,
+        serviceName: newService.serviceName,
+        serviceCategory: newService.serviceCategory,
+        initialPrice: parseFloat(newService.initialPrice),
+      });
 
-    setFilteredData((prev) => [...prev, service]);
-    setIsDialogOpen(false);
-    setNewService({ serviceName: '', serviceCategory: '', initialPrice: '' });
+      if (response.status === 200) {
+        toast.success('Service added successfully!');
+        const newId = Math.max(...servicesData.map((s) => s.id)) + 1;
+        const service = {
+          id: newId,
+          serviceName: newService.serviceName,
+          serviceCategory: newService.serviceCategory,
+          initialPrice: parseFloat(newService.initialPrice),
+        };
+        setFilteredData((prev) => [...prev, service]);
+        setIsDialogOpen(false);
+        setNewService({ serviceName: '', serviceCategory: '', initialPrice: '' });
+      }
+    } catch (error) {
+      console.error('Error adding service:', error);
+      toast.error('Failed to add service. Please try again.');
+    }
   };
+  const handleDelete = async (serviceId) => {
+    // Find the service to delete based on its ID
+    const serviceToDelete = servicesData.find((service) => service.id === serviceId);
+  
+    if (!serviceToDelete) {
+      toast.error('Service not found.');
+      return;
+    }
+  
+    try {
+      // Send a DELETE request to the backend
+      const response = await axios.delete('http://localhost:4002/delete-service', {
+        data: {
+          serviceName: serviceToDelete.serviceName,
+          serviceCategory: serviceToDelete.serviceCategory,
+        },
+      });
+  
+      // If the response is successful, update the UI and show a success toast
+      if (response.status === 200) {
+        toast.success(`Service "${serviceToDelete.serviceName}" deleted successfully!`);
+        setFilteredData((prev) => prev.filter((service) => service.id !== serviceId));
+      }
+    } catch (error) {
+      console.error('Error deleting service:', error);
+      toast.error('Failed to delete service. Please try again.');
+    }
+  };
+  
 
   const columns = [
     { field: 'serviceName', headerName: 'Service Name', width: 200 },
@@ -85,10 +135,10 @@ function ManageService() {
       headerName: 'Initial Price',
       width: 150,
       valueFormatter: (params) => {
-        if (!params || params.value === null || params.value === undefined) {
-          return '$0.00';
+        if (!params || params === null || params === undefined) {
+          return '₹0.00';
         }
-        return `$${params.value.toFixed(2)}`;
+        return `₹${params}`;
       },
     },
     {
@@ -113,63 +163,57 @@ function ManageService() {
           </IconButton>
         </div>
       ),
-    },
+    }
+    
   ];
 
   return (
     <div style={{ width: '100%' }}>
       <h2 className="text-3xl font-extrabold mb-4">Manage Services</h2>
-
-      {/* Filter Section */}
-      <Box  p={2} sx={{ border: '1px solid #ccc', borderRadius: 1, backgroundColor: '#f9f9f9' }}>
-      <div className="flex justify-between items-center">
-      
-        <div className="flex gap-4">
-          
-          <FormControl style={{ minWidth: 200 }}>
-            <InputLabel id="filter-service-name">Service Name</InputLabel>
-            <Select
-              labelId="filter-service-name"
-              value={selectedServiceName}
-              onChange={(e) => setSelectedServiceName(e.target.value)}
-            >
-              <MenuItem value="">All</MenuItem>
-              {Array.from(new Set(servicesData.map((service) => service.serviceName))).map((name) => (
-                <MenuItem key={name} value={name}>
-                  {name}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-
-          <FormControl style={{ minWidth: 200 }}>
-            <InputLabel id="filter-service-category">Service Category</InputLabel>
-            <Select
-              labelId="filter-service-category"
-              value={selectedCategory}
-              onChange={(e) => setSelectedCategory(e.target.value)}
-            >
-              <MenuItem value="">All</MenuItem>
-              {Array.from(new Set(servicesData.map((service) => service.serviceCategory))).map(
-                (category) => (
-                  <MenuItem key={category} value={category}>
-                    {category}
+      <Box p={2} sx={{ border: '1px solid #ccc', borderRadius: 1, backgroundColor: '#f9f9f9' }}>
+        <div className="flex justify-between items-center">
+          <div className="flex gap-4">
+            <FormControl style={{ minWidth: 200 }}>
+              <InputLabel id="filter-service-name">Service Name</InputLabel>
+              <Select
+                labelId="filter-service-name"
+                value={selectedServiceName}
+                onChange={(e) => setSelectedServiceName(e.target.value)}
+              >
+                <MenuItem value="">All</MenuItem>
+                {Array.from(new Set(servicesData.map((service) => service.serviceName))).map((name) => (
+                  <MenuItem key={name} value={name}>
+                    {name}
                   </MenuItem>
-                )
-              )}
-            </Select>
-          </FormControl>
+                ))}
+              </Select>
+            </FormControl>
+
+            <FormControl style={{ minWidth: 200 }}>
+              <InputLabel id="filter-service-category">Service Category</InputLabel>
+              <Select
+                labelId="filter-service-category"
+                value={selectedCategory}
+                onChange={(e) => setSelectedCategory(e.target.value)}
+              >
+                <MenuItem value="">All</MenuItem>
+                {Array.from(new Set(servicesData.map((service) => service.serviceCategory))).map(
+                  (category) => (
+                    <MenuItem key={category} value={category}>
+                      {category}
+                    </MenuItem>
+                  )
+                )}
+              </Select>
+            </FormControl>
+          </div>
+
+          <Button variant="contained" color="primary" sx={{ marginRight: 2 }} onClick={() => setIsDialogOpen(true)}>
+            Add Service
+          </Button>
         </div>
-        
-        <Button  variant="contained" color="primary" sx={{ marginRight: 2 }} onClick={() => setIsDialogOpen(true)}>
-          Add Service
-        </Button>
-      </div>
       </Box>
-      
 
-
-      {/* Data Grid */}
       <div style={{ height: 400, width: '100%' }}>
         <DataGrid
           rows={filteredData}
@@ -183,7 +227,7 @@ function ManageService() {
               backgroundColor: '#3f51b5',
               color: 'black',
               fontWeight: 'bold',
-      fontSize: '16px',
+              fontSize: '16px',
             },
             '& .MuiDataGrid-cell:hover': {
               backgroundColor: '#e3f2fd',
@@ -195,7 +239,6 @@ function ManageService() {
         />
       </div>
 
-      {/* Add Service Dialog */}
       <Dialog open={isDialogOpen} onClose={() => setIsDialogOpen(false)}>
         <DialogTitle>Add New Service</DialogTitle>
         <DialogContent>
@@ -231,6 +274,8 @@ function ManageService() {
           </Button>
         </DialogActions>
       </Dialog>
+
+      <ToastContainer />
     </div>
   );
 }

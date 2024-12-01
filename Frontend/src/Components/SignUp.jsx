@@ -15,6 +15,10 @@ const SignUp = ({ onSwitchToLogin, closeDialog }) => {
     const [successMessage, setSuccessMessage] = useState('');
     const navigate = useNavigate();
     const { signup } = useAuth();
+    const currentDate = new Date();
+
+  const padZero = (num) => num.toString().padStart(2, '0');
+  const formattedDate = `${currentDate.getFullYear()}-${padZero(currentDate.getMonth() + 1)}-${padZero(currentDate.getDate())} ${padZero(currentDate.getHours())}:${padZero(currentDate.getMinutes())}:${padZero(currentDate.getSeconds())}`;
 
     const handleInputChange = (e) => {
         const { name, value, type, checked } = e.target;
@@ -83,6 +87,7 @@ const SignUp = ({ onSwitchToLogin, closeDialog }) => {
                     U_Password: password,
                     U_Phone: `+91${phone}`, // Phone number with prefix
                     is_SP: false,
+                    joining_Date:formattedDate
                 }),
             });
 
