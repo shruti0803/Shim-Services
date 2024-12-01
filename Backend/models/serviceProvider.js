@@ -147,7 +147,12 @@ export const getCityAndMobileByEmail = (SP_Email, callback) => {
 
 //shruti - for view sp
 export const getSPDetails = (SP_Email, callback) => {
-  const query = `SELECT * FROM serviceprovider  WHERE SP_Email = ?`;
+  const query = `SELECT * 
+FROM sp_services s 
+JOIN serviceprovider sp 
+ON s.SP_Email = sp.SP_Email 
+WHERE s.SP_Email = ?;
+`;
   connection.query(query, [SP_Email], (error, results) => {
     if (error) {
       return callback(error, null); // Handle error
@@ -167,12 +172,23 @@ export const getSPServices = (SP_Email, callback) => {
 
     // Check if results are empty and return an appropriate message
     if (results.length == 0) {
-      return callback(null, { message: 'No services found for this service provider' });
+      console.log("no service provided yet")
+      return callback(null, []);
     }
 
     // Return all results (multiple bookings)
     return callback(null, results);
   });
 };
+
+
+
+
+
+
+
+
+
+
 
 
