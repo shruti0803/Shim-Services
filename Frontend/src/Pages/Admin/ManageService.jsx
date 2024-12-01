@@ -32,6 +32,7 @@ function ManageService() {
     serviceCategory: '',
     initialPrice: '',
   });
+  const [reload, setReload] = useState(false); 
 
   const {currentAdmin} = useAuthAdmin();
   console.log("current",currentAdmin.A_Email);
@@ -55,7 +56,7 @@ function ManageService() {
     };
 
     fetchServices();
-  }, [filteredData]);
+  }, [reload]);
 
   useEffect(() => {
     let filtered = servicesData;
@@ -91,6 +92,7 @@ function ManageService() {
         setFilteredData((prev) => [...prev, service]);
         setIsDialogOpen(false);
         setNewService({ serviceName: '', serviceCategory: '', initialPrice: '' });
+        setReload(!reload);
       }
     } catch (error) {
       console.error('Error adding service:', error);
@@ -119,6 +121,7 @@ function ManageService() {
       if (response.status === 200) {
         toast.success(`Service "${serviceToDelete.serviceName}" deleted successfully!`);
         setFilteredData((prev) => prev.filter((service) => service.id !== serviceId));
+        setReload(!reload);
       }
     } catch (error) {
       console.error('Error deleting service:', error);
