@@ -116,3 +116,29 @@ export const insertReport = (reportData, callback) => {
 
 
 
+
+
+//isha shruti 
+
+
+export const getRatingsByCategory = (category, callback) => {
+  const query = `
+    SELECT b.Service_Name, b.Service_Category, AVG(r.RATING) AS avg_rating, 
+    COUNT(*) AS total_reviews
+    FROM rating r
+    INNER JOIN bill bl ON r.Bill_ID = bl.Bill_ID
+    INNER JOIN booking b ON bl.Book_ID = b.Book_ID
+    WHERE b.Service_Name = ?
+    GROUP BY b.Service_Category;
+  `;
+
+  connection.query(query, [category], (err, results) => {
+    if(err){
+      console.error('Error fetching ratings', err);
+      return callback(err, null);
+    }
+    callback(null, results); // Ensure you pass results back to the callback
+  });
+}
+
+

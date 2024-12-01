@@ -34,6 +34,8 @@ import Sidebar from './Pages/Admin/Sidebar';
 import ManageUser from './Pages/Admin/ManageUser';
 import ManageTeam from './Pages/Admin/ManageTeam';
 import InvoiceBalance from './Pages/Admin/InvoiceBalance';
+import ViewSp from './Pages/Admin/ViewSp';
+import ViewUser from './Pages/Admin/ViewUser';
 import ManageService from './Pages/Admin/ManageService';
 import Rating from './Pages/Admin/Rating';
 import ManageSalary from './Pages/Admin/ManageSalary';
@@ -96,7 +98,11 @@ function App() {
           <Route path="/admin/faq" element={<FAQ/>}/>
           <Route path="/admin/calendar" element={<Calendar/>}/>
         
-      
+        
+
+          <Route path="/admin/viewSp/:email" element={<ViewSp />} />
+<Route path="/admin/viewUser/:email" element={<ViewUser />} />
+
         </Route>
         
         {/* <Route path="/profile" element={<ProfilePage/>} />  */}

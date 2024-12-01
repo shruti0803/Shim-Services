@@ -1,48 +1,52 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { IconButton, Menu, MenuItem, Select, FormControl } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import { IconButton, Menu, MenuItem, Select, MenuItem as MuiMenuItem, FormControl, InputLabel, Box } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import DeleteIcon from '@mui/icons-material/Delete';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import EditIcon from '@mui/icons-material/Edit';
-import PauseIcon from '@mui/icons-material/Pause';
-import PersonIcon from '@mui/icons-material/PersonOutlined'; // Outline version
-import WorkIcon from '@mui/icons-material/WorkOutline'; // Outline version
-
-const usersData = [
-  { id: 1, name: 'John Doe', email: 'john.doe@example.com', phone: '123-456-7890', role: 'User', status: 'Active' },
-  { id: 2, name: 'Jane Smith', email: 'jane.smith@example.com', phone: '987-654-3210', role: 'Service Provider', status: 'Inactive' },
-  // Add more user objects as needed
-];
+import DeleteIcon from '@mui/icons-material/Delete';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import PersonIcon from '@mui/icons-material/PersonOutlined';
+import WorkIcon from '@mui/icons-material/WorkOutline';
 
 function ManageUser() {
+  const [usersData, setUsersData] = useState([]);
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedUserId, setSelectedUserId] = useState(null);
   const [filteredRole, setFilteredRole] = useState('');
   const [filteredStatus, setFilteredStatus] = useState('');
 
-  const handleMenuClick = (event, userId) => {
-    setAnchorEl(event.currentTarget);
-    setSelectedUserId(userId);
+  const navigate = useNavigate();
+
+  const handleViewClick = (params) => {
+    // Check if the user is a service provider
+    if (params.row.role === 'Service Provider') {
+      navigate(`/admin/viewSp/${params.row.email}`); // Navigate to viewSp page
+    } else {
+      navigate(`/admin/viewUser/${params.row.email}`); // Navigate to viewUser page
+    }
   };
 
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-    setSelectedUserId(null);
-  };
-
-  const handleAction = (action) => {
-    console.log(`Action: ${action} on user with ID: ${selectedUserId}`);
-    handleMenuClose();
-  };
-
-  // Filter the data based on the selected role and status
-  const filteredData = usersData.filter(user => {
-    return (
-      (filteredRole === '' || user.role === filteredRole) &&
-      (filteredStatus === '' || user.status === filteredStatus)
-    );
-  });
+  useEffect(() => {
+    fetch('http://localhost:4002/customers')
+      .then((response) => response.json())
+      .then((data) => {
+        const formattedData = data.map((user, index) => ({
+          id: index + 1,
+          name: user.U_Name,
+          email: user.U_Email,
+          phone: user.U_Phone,
+          role: user.is_SP === 1 ? 'Service Provider' : 'User',
+          status: 'Active',
+        }));
+        setUsersData(formattedData);
+      })
+      .catch((error) => {
+        console.error('Error fetching users:', error);
+      });
+  }, []);
 
   const columns = [
     { field: 'id', headerName: 'ID', width: 90 },
@@ -93,13 +97,13 @@ function ManageUser() {
       width: 180,
       renderCell: (params) => (
         <div className="flex justify-around">
-          <IconButton style={{ color: 'blue' }} onClick={() => console.log(`Viewing user ${params.id}`)}>
+          <IconButton style={{ color: 'blue' }} onClick={() => handleViewClick(params)}>
             <VisibilityIcon />
           </IconButton>
-          <IconButton style={{ color: 'red' }} onClick={() => console.log(`Deleting user ${params.id}`)}>
+          <IconButton style={{ color: 'red' }} onClick={() => console.log(`Deleting user ${params.row.id}`)}>
             <DeleteIcon />
           </IconButton>
-          <IconButton onClick={(e) => handleMenuClick(e, params.id)}>
+          <IconButton onClick={(e) => setAnchorEl(e.currentTarget)}>
             <MoreVertIcon />
           </IconButton>
         </div>
@@ -108,10 +112,8 @@ function ManageUser() {
   ];
 
   return (
-    <div className='w-full'>
-      <h2 className="text-3xl font-extrabold mb-4">Manage Users</h2>
-     
-      {/* Data table */}
+    <div className="w-full">
+      <h2 className="text-2xl font-semibold mb-4">Manage Users</h2>
       <div style={{ height: 400 }}>
          {/* Filter section */}
       
@@ -155,7 +157,7 @@ function ManageUser() {
       </Box>
       
         <DataGrid
-          rows={filteredData}
+          rows={usersData}
           columns={columns}
           pageSize={5}
           rowsPerPageOptions={[5, 10, 20]}
@@ -176,22 +178,6 @@ function ManageUser() {
           }}
         />
       </div>
-      {/* Menu for actions */}
-      <Menu
-        anchorEl={anchorEl}
-        open={Boolean(anchorEl)}
-        onClose={handleMenuClose}
-        keepMounted
-      >
-        <MenuItem onClick={() => handleAction('Edit')}>
-          {/* <EditIcon /> */}
-           Edit
-        </MenuItem>
-        <MenuItem onClick={() => handleAction('Suspend')}>
-          {/* <PauseIcon /> */}
-           Suspend
-        </MenuItem>
-      </Menu>
     </div>
   );
 }

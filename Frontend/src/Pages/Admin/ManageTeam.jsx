@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react'; 
 import { DataGrid } from '@mui/x-data-grid';
 import { IconButton, Menu, MenuItem } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
@@ -10,18 +10,35 @@ import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings'; // 
 import SupervisorAccountIcon from '@mui/icons-material/SupervisorAccount'; // Service Manager
 import GroupIcon from '@mui/icons-material/Group'; // User Manager
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney'; // Billing & Payment Administrator
-
-const usersData = [
-  { id: 1, name: 'John Doe', email: 'john.doe@example.com', phone: '123-456-7890', role: 'Service Manager', status: 'Active' },
-  { id: 2, name: 'Jane Smith', email: 'jane.smith@example.com', phone: '987-654-3210', role: 'Super Admin', status: 'Inactive' },
-  { id: 3, name: 'Mark Johnson', email: 'mark.johnson@example.com', phone: '555-555-5555', role: 'User Manager', status: 'Active' },
-  { id: 4, name: 'Emily Davis', email: 'emily.davis@example.com', phone: '333-333-3333', role: 'Billing & Payment Administrator', status: 'Inactive' },
-  // Add more user objects as needed
-];
+import axios from 'axios';
 
 function ManageTeam() {
+  const [usersData, setUsersData] = useState([]); // State to hold fetched data
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [selectedUserId, setSelectedUserId] = React.useState(null);
+
+  // Fetch data from the API
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get('http://localhost:4002/api/admin');
+        setUsersData(
+          response.data.map((user, index) => ({
+            id: index + 1, // Assign an auto-increment ID
+            name: user.A_Name,
+            email: user.A_Email,
+            phone: user.A_Phone,
+            role: user.A_Role,
+            status: 'Active', // Default status, can be adjusted as needed
+          }))
+        );
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const handleMenuClick = (event, userId) => {
     setAnchorEl(event.currentTarget);
@@ -35,7 +52,6 @@ function ManageTeam() {
 
   const handleAction = (action) => {
     console.log(`Action: ${action} on user with ID: ${selectedUserId}`);
-    // Implement your action logic (e.g., edit, suspend, delete)
     handleMenuClose();
   };
 
@@ -85,10 +101,10 @@ function ManageTeam() {
         <div
           style={{
             color: params.value === 'Active' ? 'green' : 'gray',
-            fontWeight: 'bold', // Make the text bold
+            fontWeight: 'bold',
             padding: '5px 10px',
             textAlign: 'center',
-            borderRadius: '5px', // Optional, for rounded corners
+            borderRadius: '5px',
           }}
         >
           {params.value}
@@ -100,16 +116,16 @@ function ManageTeam() {
       headerName: 'Actions',
       width: 180,
       renderCell: (params) => (
-        <div className="flex justify-around">
+        <div className="flex ">
           <IconButton style={{ color: 'blue' }} onClick={() => console.log(`Viewing user ${params.id}`)}>
             <VisibilityIcon />
           </IconButton>
-          <IconButton style={{ color: 'red' }} onClick={() => console.log(`Deleting user ${params.id}`)}>
+          {/* <IconButton style={{ color: 'red' }} onClick={() => console.log(`Deleting user ${params.id}`)}>
             <DeleteIcon />
-          </IconButton>
-          <IconButton onClick={(e) => handleMenuClick(e, params.id)}>
+          </IconButton> */}
+          {/* <IconButton onClick={(e) => handleMenuClick(e, params.id)}>
             <MoreVertIcon />
-          </IconButton>
+          </IconButton> */}
         </div>
       ),
     },
