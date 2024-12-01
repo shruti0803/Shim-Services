@@ -39,7 +39,7 @@ function ManageUser() {
           email: user.U_Email,
           phone: user.U_Phone,
           role: user.is_SP === 1 ? 'Service Provider' : 'User',
-          status: 'Active',
+          status: user.Active==1?'Active': 'Not Active',
         }));
         setUsersData(formattedData);
       })
