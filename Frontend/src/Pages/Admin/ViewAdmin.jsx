@@ -18,6 +18,7 @@ const ViewAdmin = () => {
         // Fetch admin details and services
         const response = await fetch(`http://localhost:4002/adminDetails/${email}`);
         const data = await response.json();
+        console.log("show data", data);
         if (data.length > 0) {
           // Extract admin details from the first entry
           const { A_Name, A_Email, A_Phone, A_Role } = data[0];
@@ -96,7 +97,7 @@ const ViewAdmin = () => {
 
 
           <header className="flex justify-between items-center mb-6">
-  <h2 className="text-xl font-semibold">Service Provider Activity</h2>
+  <h2 className="text-xl font-semibold">Admin Activity</h2>
   <div className="flex items-center space-x-2">
     <span className={`text-sm font-medium ${showReports ? "text-green-500" : "text-gray-500"}`}>
       Services Added
@@ -109,7 +110,7 @@ const ViewAdmin = () => {
         className="sr-only peer"
       />
       <div className="w-10 h-5 bg-gray-300 rounded-full peer peer-checked:bg-green-500 transition-colors duration-300">
-        <div className="w-4 h-4 bg-white rounded-full transform transition-transform duration-300 peer-checked:translate-x-5"></div>
+        <div className="w-4   h-4 bg-white rounded-full transform transition-transform duration-300 peer-checked:translate-x-5"></div>
       </div>
     </label>
     <span className={`text-sm font-medium ${!showReports ? "text-green-500" : "text-gray-500"}`}>

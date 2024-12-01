@@ -12,7 +12,7 @@ export const getAllAdmin = (callback) => {
 };
 
 export const adminDetails = (A_Email, callback) => {
-  const query = `select * from admin a join add_services ad on a.A_Email=ad.A_Email where a.A_Email=?`;
+  const query = `select * from admin a left join add_services ad on a.A_Email=ad.A_Email where a.A_Email=?`;
   connection.query(query, [A_Email], (err, results) => {
     if (err) {
       console.error("Error fetching admin details:", err);
@@ -39,3 +39,15 @@ export const adminReportAction=(A_Email, callback)=>{
 }
 
 
+
+export const invoiceBalance=(callback)=>{
+  const query=`select * from booking b  join bill bl on b.Book_ID=bl.Book_ID`;
+  connection.query(query,(err, results)=>{
+    if (err) {
+      console.error("Error fetching admin report actions:", err);
+      callback(err, null);
+    } else {
+      callback(null, results);
+    }
+  })
+}
