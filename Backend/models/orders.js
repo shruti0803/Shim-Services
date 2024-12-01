@@ -1,5 +1,5 @@
 import connection from '../db/connection.js';
-import { io } from '../app.js';  // Import socket.io instance
+
 
 // Get bookings for a specific city and service
 export const getBookingsByServiceAndCity = (serviceName, city, callback) => {
@@ -48,3 +48,27 @@ export const cancelBooking = async (bookingId) => {
         throw new Error('Failed to cancel booking');
     }
 };
+
+
+
+
+
+//shruti view table
+export const getOrders=(U_Email, callback)=>{
+   
+        const query = `SELECT * FROM booking WHERE U_Email = ?`; // Correct query to fetch all bookings for the service provider
+        
+        connection.query(query, [U_Email], (error, results) => {
+          if (error) {
+            return callback(error, null); // Handle error
+          }
+      
+          // Check if results are empty and return an appropriate message
+          if (results.length == 0) {
+            return callback(null, { message: 'No services found for this service provider' });
+          }
+      
+          // Return all results (multiple bookings)
+          return callback(null, results);
+        });
+      };

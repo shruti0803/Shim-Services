@@ -34,6 +34,8 @@ import Sidebar from './Pages/Admin/Sidebar';
 import ManageUser from './Pages/Admin/ManageUser';
 import ManageTeam from './Pages/Admin/ManageTeam';
 import InvoiceBalance from './Pages/Admin/InvoiceBalance';
+import ViewSp from './Pages/Admin/ViewSp';
+import ViewUser from './Pages/Admin/ViewUser';
 
 
 
@@ -84,7 +86,11 @@ function App() {
           <Route path="/admin/manageteam" element={<ManageTeam/>}/>
           <Route path="/admin/invoices" element={<InvoiceBalance/>}/>
         
-      
+       
+
+          <Route path="/admin/viewSp/:email" element={<ViewSp />} />
+<Route path="/admin/viewUser/:email" element={<ViewUser />} />
+
         </Route>
         
         {/* <Route path="/profile" element={<ProfilePage/>} />  */}

@@ -7,8 +7,8 @@ import { createServer } from 'http'; // Import to create HTTP server
 import { Server } from 'socket.io'; // Import socket.io
 
 import { insertRating, insertReport, getRatingsByCategory } from './models/reviews.js';
-import { getAllServiceProviders, addServiceProvider,getServiceNamesByServiceProvider, getCityAndMobileByEmail } from './models/serviceProvider.js';
-import { getAllCustomers, addCustomer, updateIsSP } from './models/customer.js'; // Added updateIsSP import
+import { getAllServiceProviders, addServiceProvider,getServiceNamesByServiceProvider, getCityAndMobileByEmail ,getSPDetails, getSPServices } from './models/serviceProvider.js';
+import { getAllCustomers, addCustomer, updateIsSP, userDetails } from './models/customer.js'; // Added updateIsSP import
 import { getAllBookings,getBookingsByServiceProvider, addBooking, acceptBooking,cancelBooking, deleteBooking,getAvailableBookingsForService } from './models/booking.js';
 import { getAllServices, addService } from './models/service.js'; // Import service functions
 import { getAllServicesForProvider, addNewServiceForProvider } from './models/sp_services.js';
@@ -535,6 +535,7 @@ import { addSalary, fetchAmountToPayForSPByMonth, fetchSalaryForSPByMonth, fetch
 import { getReviewsByServiceName } from './models/reviews.js';
 import { getAllAdmin } from './models/adminlogin.js';
 import { log } from 'console';
+import { getOrders } from './models/orders.js';
 
 //RAZORPAYX_API_KEY="rzp_test_iDWZYaECE3rES2"
 // RAZORPAYX_API_SECRET="5bx32uiT2GpnGJOurYwR2uSk"
@@ -863,5 +864,93 @@ app.get('/api/ratings/:category', (req, res) => {
       return res.status(500).json({ error: 'Failed to fetch ratings' });
     }
     res.json(results);
+  });
+});
+
+
+
+
+
+
+//shruti
+
+
+// API Endpoint
+app.get('/api/admin', (req, res) => {
+  getAllAdmin((err, results) => {
+    if (err) {
+      return res.status(500).json({ error: 'Failed to fetch admin data.' });
+    }
+    res.json(results);
+  });
+});
+
+
+//shruti 
+
+
+
+app.get('/serviceProviders/:email', (req, res) => {
+  const SP_Email = req.params.email; // Get the email from URL parameter
+
+  getSPDetails(SP_Email, (error, data) => {
+    if (error) {
+      return res.status(500).json({ message: 'Error fetching service provider details', error });
+    }
+    if (data.length === 0) {
+      return res.status(404).json({ message: 'Service provider not found' });
+    }
+    return res.status(200).json(data[0]); // Send the first result as the response
+  });
+});
+
+
+
+app.get('/SPServices/:email', (req, res) => {
+  const SP_Email = req.params.email; // Get the email from URL parameter
+
+  getSPServices(SP_Email, (error, data) => {
+    if (error) {
+      return res.status(500).json({ message: 'Error fetching service provider services', error });
+    }
+    if (data.length === 0) {
+      return res.status(404).json({ message: 'Service provider not found' });
+    }
+    return res.status(200).json(data); // Send the first result as the response
+  });
+});
+
+
+
+app.get('/allOrders/:email', (req, res) => {
+  const U_Email = req.params.email; // Get the email from URL parameter
+
+  getOrders(U_Email, (error, data) => {
+    if (error) {
+      return res.status(500).json({ message: 'Error fetching orders', error });
+    }
+    if (data.length === 0) {
+      return res.status(404).json({ message: 'user not found' });
+    }
+    return res.status(200).json(data); // Send the first result as the response
+  });
+});
+
+
+
+
+
+
+app.get("/userDetails/:email", (req, res) => {
+  const email = req.params.email;
+
+  userDetails(email, (err, results) => {
+    if (err) {
+      res.status(500).json({ error: "Internal Server Error" });
+    } else if (results.length === 0) {
+      res.status(404).json({ message: "User not found" });
+    } else {
+      res.status(200).json(results); // Send the first result if user is found
+    }
   });
 });
