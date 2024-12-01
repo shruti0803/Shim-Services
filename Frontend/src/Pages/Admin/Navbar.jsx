@@ -1,23 +1,41 @@
-import React from "react";
+import React, { useState } from 'react';
 import {
   Box,
   IconButton,
   InputBase,
-} from "@mui/material";
+  Avatar,
+  Menu,
+  MenuItem,
+} from '@mui/material';
 import {
-  DarkModeOutlined,
-  LightModeOutlined,
   NotificationsOutlined,
-  PersonOutlined,
   SearchOutlined,
   SettingsOutlined,
-} from "@mui/icons-material";
-import { useAuthAdmin } from "../../context/AdminContext";
+} from '@mui/icons-material';
+import { useAuthAdmin } from '../../context/AdminContext';
+import { useNavigate } from 'react-router-dom';
 
-const Navbar = () => {
-  const {admin}=useAuthAdmin();
-  console.log( "admin navbar",admin);
-  
+const Navbar = ({ toggleForm, closeDialog, loginRole }) => {
+  const { currentAdmin, logoutAdmin } = useAuthAdmin();
+  const navigate = useNavigate();
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  // Function to handle avatar click and open the menu
+  const handleAvatarClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  // Function to handle menu item click
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleLogout = () => {
+    logoutAdmin(); // Call the logout function from the context
+    navigate('/'); // Redirect to the root path after logging out
+    setAnchorEl(null);
+  };
+
   return (
     <Box className="flex items-center justify-between py-4 w-full">
       <Box className="flex items-center gap-2 w-full">
@@ -31,10 +49,6 @@ const Navbar = () => {
       </Box>
 
       <Box className="flex items-center gap-2">
-        {/* Dark mode toggle */}
-        {/* <IconButton>
-          <LightModeOutlined />
-        </IconButton> */}
         {/* Notifications */}
         <IconButton>
           <NotificationsOutlined />
@@ -43,10 +57,24 @@ const Navbar = () => {
         <IconButton>
           <SettingsOutlined />
         </IconButton>
-        {/* Profile */}
-        <IconButton>
-          <PersonOutlined />
+        {/* Profile Avatar with Dropdown */}
+        <IconButton onClick={handleAvatarClick}>
+          {currentAdmin && currentAdmin.A_Name ? (
+            <Avatar sx={{ bgcolor: 'green', marginRight: '4px' }}>
+              {currentAdmin.A_Name[0].toUpperCase()}
+            </Avatar>
+          ) : (
+            <Avatar sx={{ bgcolor: 'grey.400' }}>A</Avatar> // Fallback
+          )}
         </IconButton>
+        <Menu
+          anchorEl={anchorEl}
+          open={Boolean(anchorEl)}
+          onClose={handleMenuClose}
+        >
+          <MenuItem onClick={handleMenuClose}>My Profile</MenuItem>
+          <MenuItem onClick={handleLogout}>Logout</MenuItem>
+        </Menu>
       </Box>
     </Box>
   );

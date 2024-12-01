@@ -17,7 +17,8 @@ import {
   ManageAccounts,
   HomeRepairService,
   RateReview,
-  Report
+  Report,
+  Payment
 } from '@mui/icons-material';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 import logo from '../../assets/logo.jpg'; // Update this path with your actual logo file
@@ -146,51 +147,61 @@ const Sidebar = () => {
             {!collapsed && <span className="ml-3">Profile Form</span>}
           </Link> */}
           <Link
-            to="/role"
+            to="/admin/services"
             className={`flex items-center p-3 m-1 rounded ${
-              activeLink === '/role' ? 'bg-yellow-500' : 'hover:bg-gray-700'
+              activeLink === '/admin/services' ? 'bg-yellow-500' : 'hover:bg-gray-700'
             }`}
-            onClick={() => handleLinkClick('/role')}
+            onClick={() => handleLinkClick('/admin/services')}
           >
             <HomeRepairService className="h-6 w-6" />
             {!collapsed && <span className="ml-3">Manage Service</span>}
           </Link>
           <Link
-            to="/role"
+            to="/admin/salary"
             className={`flex items-center p-3 m-1 rounded ${
-              activeLink === '/role' ? 'bg-yellow-500' : 'hover:bg-gray-700'
+              activeLink === '/admin/salary' ? 'bg-yellow-500' : 'hover:bg-gray-700'
             }`}
-            onClick={() => handleLinkClick('/role')}
+            onClick={() => handleLinkClick('/admin/salary')}
           >
-            <RateReview className="h-6 w-6" />
-            {!collapsed && <span className="ml-3">Reviews</span>}
+            <Payment className="h-6 w-6" />
+            {!collapsed && <span className="ml-3">Manage Salary</span>}
           </Link>
           <Link
-            to="/role"
+            to="/admin/rating"
             className={`flex items-center p-3 m-1 rounded ${
-              activeLink === '/role' ? 'bg-yellow-500' : 'hover:bg-gray-700'
+              activeLink === '/admin/rating' ? 'bg-yellow-500' : 'hover:bg-gray-700'
             }`}
-            onClick={() => handleLinkClick('/role')}
+            onClick={() => handleLinkClick('/admin/rating')}
+          >
+            <RateReview className="h-6 w-6" />
+            {!collapsed && <span className="ml-3">Rating & Reviews</span>}
+          </Link>
+          <Link
+            to="/admin/report"
+            className={`flex items-center p-3 m-1 rounded ${
+              activeLink === '/admin/report' ? 'bg-yellow-500' : 'hover:bg-gray-700'
+            }`}
+            onClick={() => handleLinkClick('/admin/report')}
           >
             <Report className="h-6 w-6" />
             {!collapsed && <span className="ml-3">Reports</span>}
           </Link>
           <Link
-            to="/calendar"
+            to="/admin/calendar"
             className={`flex items-center p-3 m-1 rounded ${
-              activeLink === '/calendar' ? 'bg-yellow-500' : 'hover:bg-gray-700'
+              activeLink === '/admin/calendar' ? 'bg-yellow-500' : 'hover:bg-gray-700'
             }`}
-            onClick={() => handleLinkClick('/calendar')}
+            onClick={() => handleLinkClick('/admin/calendar')}
           >
             <CalendarTodayOutlined className="h-6 w-6" />
             {!collapsed && <span className="ml-3">Calendar</span>}
           </Link>
           <Link
-            to="/faq"
+            to="/admin/faq"
             className={`flex items-center p-3 m-1 rounded ${
-              activeLink === '/faq' ? 'bg-yellow-500' : 'hover:bg-gray-700'
+              activeLink === '/admin/faq' ? 'bg-yellow-500' : 'hover:bg-gray-700'
             }`}
-            onClick={() => handleLinkClick('/faq')}
+            onClick={() => handleLinkClick('/admin/faq')}
           >
             <HelpOutlineOutlined className="h-6 w-6" />
             {!collapsed && <span className="ml-3">FAQ Page</span>}
