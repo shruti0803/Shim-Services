@@ -79,3 +79,19 @@ export const updateIsSP = (U_Email, is_SP, callback) => {
     callback(null, result);
   });
 };
+
+export const userDetails = (U_Email, callback) => {
+  const query = `SELECT * FROM USER WHERE U_Email = ?`;
+  connection.query(query, [U_Email], (err, results) => {
+    if (err) {
+      console.error("Error fetching user details:", err);
+      callback(err, null);
+    } else {
+      callback(null, results);
+    }
+  });
+};
+
+
+
+

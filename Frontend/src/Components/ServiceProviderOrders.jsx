@@ -2,6 +2,12 @@ import React, { useState, useEffect } from "react";
 import axios from 'axios';
 import BillModal from "./BillModal";
 
+import { io } from "socket.io-client";
+
+// Initialize Socket.IO connection
+const socket = io("http://localhost:4002"); // Use your backend server URL
+
+
 const ServiceProviderOrders = ({ SPEmail,SPCity }) => {
   const [incomingOrders, setIncomingOrders] = useState([]);
   const [acceptedOrders, setAcceptedOrders] = useState([]);
@@ -146,6 +152,12 @@ useEffect(() => {
   };
 
   fetchOrders();
+
+
+
+
+
+  
 }, [SPEmail,SPCity]);
 
 
@@ -168,12 +180,18 @@ useEffect(() => {
   const handleAccept = async (orderId) => {
     try {
       const orderToAccept = incomingOrders.find(order => order.Book_ID === orderId);
-
+      
+      // Check if the order already has an SP_Email
+      if (orderToAccept.SP_Email) {
+        alert("This order has already been accepted by another service provider.");
+        return;
+      }
+  
       const response = await axios.put(`http://localhost:4002/update-status/${orderId}`, {
         newStatus: 'Scheduled',
         SP_Email: SPEmail
       });
-
+  
       if (response.status === 200) {
         const updatedOrder = { ...orderToAccept, Book_Status: 'Scheduled', billGenerated: false, isCompleted: false };
         setAcceptedOrders(prevState => {
@@ -181,11 +199,16 @@ useEffect(() => {
           return [...prevState, updatedOrder];
         });
         setIncomingOrders(prevState => prevState.filter(order => order.Book_ID !== orderId));
+      } else {
+        throw new Error('Failed to update the order status');
       }
     } catch (error) {
       console.error("Error accepting order:", error);
+      alert("An error occurred while accepting the order. Please try again.");
     }
   };
+  
+  
 
   const handleDecline = (orderId) => {
     setIncomingOrders((prevState) => prevState.filter(order => order.Book_ID !== orderId));

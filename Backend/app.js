@@ -6,9 +6,9 @@ import bodyParser from 'body-parser';// Load environment variables
 import { createServer } from 'http'; // Import to create HTTP server
 import { Server } from 'socket.io'; // Import socket.io
 
-import { insertRating, insertReport } from './models/reviews.js';
-import { getAllServiceProviders, addServiceProvider,getServiceNamesByServiceProvider, getCityAndMobileByEmail } from './models/serviceProvider.js';
-import { getAllCustomers, addCustomer, updateIsSP } from './models/customer.js'; // Added updateIsSP import
+import { insertRating, insertReport, getRatingsByCategory } from './models/reviews.js';
+import { getAllServiceProviders, addServiceProvider,getServiceNamesByServiceProvider, getCityAndMobileByEmail ,getSPDetails, getSPServices } from './models/serviceProvider.js';
+import { getAllCustomers, addCustomer, updateIsSP, userDetails } from './models/customer.js'; // Added updateIsSP import
 import { getAllBookings,getBookingsByServiceProvider, addBooking, acceptBooking,cancelBooking, deleteBooking,getAvailableBookingsForService } from './models/booking.js';
 import { getAllServices, addService } from './models/service.js'; // Import service functions
 import { getAllServicesForProvider, addNewServiceForProvider } from './models/sp_services.js';
@@ -319,24 +319,35 @@ app.post('/bookings/accept-order/:bookId', async (req, res) => {
   const bookId = req.params.bookId;
   const spEmail = req.body.spEmail; // Ensure spEmail is sent in the request body
 
-  // if (isNaN(bookId)) {
-  //   return res.status(400).json({ error: 'Invalid bookId' });
-  // }
-
-  // if (!spEmail || typeof spEmail !== 'string') {
-  //   return res.status(400).json({ error: 'Invalid or missing spEmail' });
-  // }
+  
 
   try {
+    // Call your acceptBooking function (this should handle checking SP_Email existence)
     const result = await acceptBooking(bookId, spEmail);
-    res.json({ message: 'Booking accepted', result });
+
+    // Emit real-time event to all connected clients
+    io.emit('bookingAccepted', {
+      bookId,
+      spEmail,
+      message: 'Booking has been accepted by the service provider.',
+      
+    });
+console.log("emit ke niche");
+    // Respond to the client
+    res.json({ message: 'Booking accepted successfully', result });
   } catch (error) {
     if (error.error === 'Booking not found') {
       return res.status(404).json({ error: 'Booking not found' });
+    } else if (error.error === 'This order has already been accepted by another service provider') {
+      return res.status(400).json({ error: 'Booking already accepted by another service provider' });
     }
+
+    // Handle other unexpected errors
+    console.error('Error accepting booking:', error);
     res.status(500).json({ error: 'Error accepting booking', details: error.message });
   }
 });
+
 
 
 app.post('/bookings/cancel-order/:bookId', async (req, res) => {
@@ -522,6 +533,9 @@ app.get('/sp_city_mobile/:spEmail', (req, res) => {
 import Razorpay from "razorpay";
 import { addSalary, fetchAmountToPayForSPByMonth, fetchSalaryForSPByMonth, fetchTotalCostForSP, fetchTotalCostForSPByMonth, updateAmountToPayForSPByMonth } from './models/salary.js';
 import { getReviewsByServiceName } from './models/reviews.js';
+import { getAllAdmin } from './models/adminlogin.js';
+import { log } from 'console';
+import { getOrders } from './models/orders.js';
 
 //RAZORPAYX_API_KEY="rzp_test_iDWZYaECE3rES2"
 // RAZORPAYX_API_SECRET="5bx32uiT2GpnGJOurYwR2uSk"
@@ -825,3 +839,118 @@ app.get('/reviews/:Service_Name', async (req, res) => {
   });
 });
 
+// --------------------ADMIN---------------------------
+
+app.get('/admins', (req, res) => {
+  getAllAdmin((err, results) => {
+    if (err) {
+      console.error('Error retrieving customers:', err);
+      return res.status(500).json({ error: 'Failed to retrieve customers' });
+    }
+    res.json(results);
+  });
+});
+
+
+
+//isha shruti
+
+app.get('/api/ratings/:category', (req, res) => {
+  const category = req.params.category;
+
+  // Fetch ratings for the specified category
+  getRatingsByCategory(category, (err, results) => {
+    if (err) {
+      return res.status(500).json({ error: 'Failed to fetch ratings' });
+    }
+    res.json(results);
+  });
+});
+
+
+
+
+
+
+//shruti
+
+
+// API Endpoint
+app.get('/api/admin', (req, res) => {
+  getAllAdmin((err, results) => {
+    if (err) {
+      return res.status(500).json({ error: 'Failed to fetch admin data.' });
+    }
+    res.json(results);
+  });
+});
+
+
+//shruti 
+
+
+
+app.get('/serviceProviders/:email', (req, res) => {
+  const SP_Email = req.params.email; // Get the email from URL parameter
+
+  getSPDetails(SP_Email, (error, data) => {
+    if (error) {
+      return res.status(500).json({ message: 'Error fetching service provider details', error });
+    }
+    if (data.length === 0) {
+      return res.status(404).json({ message: 'Service provider not found' });
+    }
+    return res.status(200).json(data[0]); // Send the first result as the response
+  });
+});
+
+
+
+app.get('/SPServices/:email', (req, res) => {
+  const SP_Email = req.params.email; // Get the email from URL parameter
+
+  getSPServices(SP_Email, (error, data) => {
+    if (error) {
+      return res.status(500).json({ message: 'Error fetching service provider services', error });
+    }
+    if (data.length === 0) {
+      return res.status(404).json({ message: 'Service provider not found' });
+    }
+    return res.status(200).json(data); // Send the first result as the response
+  });
+});
+
+
+
+app.get('/allOrders/:email', (req, res) => {
+  const U_Email = req.params.email; // Get the email from URL parameter
+
+  getOrders(U_Email, (error, data) => {
+    if (error) {
+      return res.status(500).json({ message: 'Error fetching orders', error });
+    }
+    if (data.length === 0) {
+      return res.status(404).json({ message: 'user not found' });
+    }
+    return res.status(200).json(data); // Send the first result as the response
+  });
+});
+
+
+
+
+
+
+app.get("/userDetails/:email", (req, res) => {
+  const email = req.params.email;
+
+  userDetails(email, (err, results) => {
+    if (err) {
+      res.status(500).json({ error: "Internal Server Error" });
+    } else if (results.length === 0) {
+      res.status(404).json({ message: "User not found" });
+    } else {
+      res.status(200).json(results); // Send the first result if user is found
+    }
+  });
+});

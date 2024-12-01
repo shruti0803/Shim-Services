@@ -143,3 +143,36 @@ export const getCityAndMobileByEmail = (SP_Email, callback) => {
     });
   });
 };
+
+
+//shruti - for view sp
+export const getSPDetails = (SP_Email, callback) => {
+  const query = `SELECT * FROM serviceprovider  WHERE SP_Email = ?`;
+  connection.query(query, [SP_Email], (error, results) => {
+    if (error) {
+      return callback(error, null); // Handle error
+    }
+    return callback(null, results); // Return results
+  });
+};
+
+
+export const getSPServices = (SP_Email, callback) => {
+  const query = `SELECT * FROM booking WHERE SP_Email = ?`; // Correct query to fetch all bookings for the service provider
+  
+  connection.query(query, [SP_Email], (error, results) => {
+    if (error) {
+      return callback(error, null); // Handle error
+    }
+
+    // Check if results are empty and return an appropriate message
+    if (results.length == 0) {
+      return callback(null, { message: 'No services found for this service provider' });
+    }
+
+    // Return all results (multiple bookings)
+    return callback(null, results);
+  });
+};
+
+
