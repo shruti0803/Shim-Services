@@ -99,7 +99,7 @@ const Sidebar = () => {
             }`}
             onClick={() => handleLinkClick('/admin/manageuser')}
           >
-            <PeopleAltOutlined className="h-6 w-6" />
+            <PeopleAltOutlined className="h-6 w-6 " />
             {!collapsed && <span className="ml-3">Manage User</span>}
           </Link>
           <Link

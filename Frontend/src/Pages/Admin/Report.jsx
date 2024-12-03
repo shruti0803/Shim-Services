@@ -1,53 +1,46 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Typography, FormControl, InputLabel, Select, MenuItem, Button } from '@mui/material';
+import { Box, Typography, FormControl, InputLabel, Select, MenuItem, Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
+import axios from 'axios';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { useAuthAdmin } from '../../context/AdminContext';
 
 const Report = () => {
-  const reportData = [
-    {
-      id: 1,
-      reportId: 'R001',
-      userEmail: 'user1@example.com',
-      spEmail: 'sp1@example.com',
-      billId: 'B001',
-      reportDate: '2024-11-01',
-      reportDescription: 'Issue with the service quality.',
-      reportType: 'Service',
-      reportStatus: 'Pending',
-    },
-    {
-      id: 2,
-      reportId: 'R002',
-      userEmail: 'user2@example.com',
-      spEmail: 'sp2@example.com',
-      billId: 'B002',
-      reportDate: '2024-11-02',
-      reportDescription: 'Incorrect billing details.',
-      reportType: 'Billing',
-      reportStatus: 'Resolved',
-    },
-    {
-      id: 3,
-      reportId: 'R003',
-      userEmail: 'user3@example.com',
-      spEmail: 'sp3@example.com',
-      billId: 'B003',
-      reportDate: '2024-11-03',
-      reportDescription: 'Delay in service delivery.',
-      reportType: 'Service',
-      reportStatus: 'In Progress',
-    },
-  ];
-
+  const [reportData, setReportData] = useState([]);
   const [selectedReportType, setSelectedReportType] = useState('');
   const [selectedReportStatus, setSelectedReportStatus] = useState('');
-  const [filteredData, setFilteredData] = useState(reportData);
-
-  const reportTypes = [...new Set(reportData.map((data) => data.reportType))];
-  const reportStatuses = [...new Set(reportData.map((data) => data.reportStatus))];
+  const [filteredData, setFilteredData] = useState([]);
+  const [openDialog, setOpenDialog] = useState(false);
+  const [selectedReport, setSelectedReport] = useState(null);
+  const { currentAdmin } = useAuthAdmin();
 
   useEffect(() => {
-    // Update filtered data when filters change
+    const fetchReports = async () => {
+      try {
+        const response = await axios.get('http://localhost:4002/reports-by-admin');
+        const data = response.data.data.map((report, index) => ({
+          id: index + 1,
+          reportId: report.Report_ID,
+          userEmail: report.U_Email,
+          spEmail: report.SP_Email,
+          billId: report.Bill_ID,
+          reportDate: new Date(report.Report_Date).toLocaleDateString(), // Format date as needed
+          reportDescription: report.Report_Description,
+          reportType: report.Report_Type,
+          reportStatus: report.Report_Status,
+        }));
+        setReportData(data);
+        setFilteredData(data);
+      } catch (error) {
+        console.error('Error fetching reports:', error);
+      }
+    };
+
+    fetchReports();
+  }, [filteredData]);
+
+  useEffect(() => {
     const filtered = reportData.filter((data) => {
       return (
         (selectedReportType === '' || data.reportType === selectedReportType) &&
@@ -55,16 +48,85 @@ const Report = () => {
       );
     });
     setFilteredData(filtered);
-  }, [selectedReportType, selectedReportStatus]); // Dependencies to trigger re-filtering
+  }, [selectedReportType, selectedReportStatus, reportData]);
 
-  const handleResolve = (id) => {
-    alert(`Resolved report with ID: ${id}`);
-    // Add your logic for resolving the report here
+  const handleResolve = async (id) => {
+    try {
+      const adminEmail = currentAdmin.A_Email;
+      const report = filteredData.find((report) => report.reportId === id);
+      if (!report) {
+        console.error('Report not found');
+        return;
+      }
+      const userEmail = report.spEmail;
+
+      const response = await axios.put(
+        `http://localhost:4002/update-report-user/${report.reportId}/${adminEmail}/${userEmail}`
+      );
+
+      if (response.status === 200) {
+        toast.success('Report resolved successfully', {
+          position: 'top-right',
+          autoClose: 3000,
+        });
+
+        setFilteredData((prevData) => 
+          prevData.map((reportItem) =>
+            reportItem.id === id
+              ? { ...reportItem, reportStatus: 'Resolved' }
+              : reportItem
+          )
+        );
+      }
+    } catch (error) {
+      console.error('Error updating report status:', error);
+      toast.error('Failed to resolve report', {
+        position: 'top-right',
+        autoClose: 3000,
+      });
+    }
   };
 
-  const handleDelete = (id) => {
-    alert(`Deleted report with ID: ${id}`);
-    // Add your logic for deleting the report here
+  const handleDelete = async (reportId) => {
+    try {
+      const adminEmail = currentAdmin.A_Email;
+
+      const response = await axios.put(`http://localhost:4002/update-report-to-rejected/${reportId}`, { adminEmail });
+
+      if (response.status === 200) {
+        toast.success('Report marked as rejected successfully', {
+          position: 'top-right',
+          autoClose: 3000,
+        });
+
+        setFilteredData((prevData) => 
+          prevData.map((report) =>
+            report.reportId === reportId
+              ? { ...report, reportStatus: 'Rejected' }
+              : report
+          )
+        );
+      }
+    } catch (error) {
+      console.error('Error updating report status:', error);
+      toast.error('Failed to update report status', {
+        position: 'top-right',
+        autoClose: 3000,
+      });
+    }
+  };
+
+  const handleView = (reportId) => {
+    const report = filteredData.find((report) => report.reportId === reportId);
+    if (report) {
+      setSelectedReport(report);
+      setOpenDialog(true);
+    }
+  };
+
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+    setSelectedReport(null);
   };
 
   const columns = [
@@ -80,27 +142,42 @@ const Report = () => {
       field: 'actions',
       headerName: 'Actions',
       width: 200,
-      renderCell: (params) => (
-        <Box>
-          <Button
-            variant="contained"
-            color="success"
-            size="small"
-            onClick={() => handleResolve(params.row.id)}
-            style={{ marginRight: '10px' }}
-          >
-            Resolve
-          </Button>
-          <Button
-            variant="contained"
-            color="error"
-            size="small"
-            onClick={() => handleDelete(params.row.id)}
-          >
-            Delete
-          </Button>
-        </Box>
-      ),
+      renderCell: (params) => {
+        if (params.row.reportStatus === 'Pending') {
+          return (
+            <Box>
+              <Button
+                variant="contained"
+                color="success"
+                size="small"
+                onClick={() => handleResolve(params.row.reportId)}
+                style={{ marginRight: '10px' }}
+              >
+                Resolve
+              </Button>
+              <Button
+                variant="contained"
+                color="error"
+                size="small"
+                onClick={() => handleDelete(params.row.reportId)}
+              >
+                Reject
+              </Button>
+            </Box>
+          );
+        } else {
+          return (
+            <Button
+              variant="contained"
+              color="primary"
+              size="small"
+              onClick={() => handleView(params.row.reportId)}
+            >
+              View
+            </Button>
+          );
+        }
+      },
     },
   ];
 
@@ -120,7 +197,7 @@ const Report = () => {
             label="Report Type"
           >
             <MenuItem value="">All</MenuItem>
-            {reportTypes.map((type) => (
+            {Array.from(new Set(reportData.map((data) => data.reportType))).map((type) => (
               <MenuItem key={type} value={type}>
                 {type}
               </MenuItem>
@@ -136,7 +213,7 @@ const Report = () => {
             label="Report Status"
           >
             <MenuItem value="">All</MenuItem>
-            {reportStatuses.map((status) => (
+            {Array.from(new Set(reportData.map((data) => data.reportStatus))).map((status) => (
               <MenuItem key={status} value={status}>
                 {status}
               </MenuItem>
@@ -169,6 +246,36 @@ const Report = () => {
           }}
         />
       </div>
+
+      {/* Dialog for Viewing Report Details */}
+      <Dialog open={openDialog} onClose={handleCloseDialog} maxWidth="md" fullWidth>
+        <DialogTitle>Report Details</DialogTitle>
+        <DialogContent>
+          {selectedReport ? (
+            <Box>
+              <Typography variant="h6">Report ID: {selectedReport.reportId}</Typography>
+              <Typography variant="subtitle1" color="textSecondary">User Email: {selectedReport.userEmail}</Typography>
+              <Typography variant="subtitle1" color="textSecondary">SP Email: {selectedReport.spEmail}</Typography>
+              <Typography variant="subtitle1" color="textSecondary">Bill ID: {selectedReport.billId}</Typography>
+              <Typography variant="subtitle1" color="textSecondary">Date: {selectedReport.reportDate}</Typography>
+              <Typography variant="subtitle1" color="textSecondary">Description: {selectedReport.reportDescription}</Typography>
+              <Typography variant="subtitle1" color="textSecondary">Type: {selectedReport.reportType}</Typography>
+              <Typography variant="subtitle1" color="textSecondary">Status: {selectedReport.reportStatus}</Typography>
+              <Divider style={{ margin: '20px 0' }} />
+              <Typography variant="subtitle1" color="textSecondary">Resolved By: {currentAdmin?.A_Email || 'N/A'}</Typography>
+            </Box>
+          ) : (
+            <Typography>No report selected</Typography>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDialog} color="primary">
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <ToastContainer />
     </Box>
   );
 };

@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+// import { IconButton, Menu, MenuItem, Select, FormControl } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import { IconButton, Menu, MenuItem, Select, MenuItem as MuiMenuItem, FormControl, InputLabel, Box } from '@mui/material';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-import DeleteIcon from '@mui/icons-material/Delete';
+// import MoreVertIcon from '@mui/icons-material/MoreVert';
+// import DeleteIcon from '@mui/icons-material/Delete';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import PersonIcon from '@mui/icons-material/PersonOutlined';
 import WorkIcon from '@mui/icons-material/WorkOutline';
@@ -36,7 +37,7 @@ function ManageUser() {
           email: user.U_Email,
           phone: user.U_Phone,
           role: user.is_SP === 1 ? 'Service Provider' : 'User',
-          status: 'Active',
+          status: user.Active==1?'Active': 'Not Active',
         }));
         setUsersData(formattedData);
       })

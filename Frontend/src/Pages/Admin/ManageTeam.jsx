@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'; 
+import { useNavigate } from 'react-router-dom';
 import { DataGrid } from '@mui/x-data-grid';
 import { IconButton, Menu, MenuItem } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
@@ -54,6 +55,14 @@ function ManageTeam() {
     console.log(`Action: ${action} on user with ID: ${selectedUserId}`);
     handleMenuClose();
   };
+  const navigate = useNavigate();
+
+  const handleViewClick = (params) => {
+    // Access the email through params.row.email
+    const email = params.row.email;
+    navigate(`/admin/viewAdmin/${email}`); // Navigate to the viewAdmin page
+  };
+  
 
   const columns = [
     { field: 'id', headerName: 'ID', width: 90 },
@@ -117,7 +126,7 @@ function ManageTeam() {
       width: 180,
       renderCell: (params) => (
         <div className="flex ">
-          <IconButton style={{ color: 'blue' }} onClick={() => console.log(`Viewing user ${params.id}`)}>
+          <IconButton style={{ color: 'blue' }}  onClick={() => handleViewClick(params)}>
             <VisibilityIcon />
           </IconButton>
           {/* <IconButton style={{ color: 'red' }} onClick={() => console.log(`Deleting user ${params.id}`)}>

@@ -6,6 +6,7 @@ const ViewSp = () => {
   const [serviceProviderData, setServiceProviderData] = useState(null); // State to store Service Provider data
   const [orders, setOrders] = useState([]); // State to store Orders data
   const { email } = useParams(); // Extract 'email' from the URL
+  const [service, setServices]=useState([]);
 
   // Fetch Service Provider Data
   useEffect(() => {
@@ -24,19 +25,36 @@ const ViewSp = () => {
 
   // Fetch Orders and Services Data
   useEffect(() => {
-    const fetchOrdersAndServices = async () => {
+    const fetchOrders = async () => {
       try {
-        // Fetch Orders
         const ordersResponse = await fetch(`http://localhost:4002/allOrders/${email}`);
         const ordersData = await ordersResponse.json();
+        console.log("Orders Data:", ordersData); // Debug log
         setOrders(ordersData); // Store Orders Data
       } catch (error) {
         console.error("Error fetching orders/services data:", error);
       }
     };
 
-    fetchOrdersAndServices();
+    fetchOrders();
   }, [email]);
+
+
+  useEffect(() => {
+    const fetchServices = async () => {
+      try {
+        // Fetch Orders
+        const serviceResponse = await fetch(`http://localhost:4002/SPServices/${email}`);
+        const serviceData = await serviceResponse.json();
+        setServices(serviceData); 
+      } catch (error) {
+        console.error("Error fetching orders/services data:", error);
+      }
+    };
+
+    fetchServices();
+  }, [email]);
+
 
   if (!serviceProviderData) {
     return <div>Loading...</div>; // Show loading while data is being fetched
@@ -61,12 +79,17 @@ const ViewSp = () => {
           </div>
           <h2 className="mt-4 text-2xl font-semibold">{serviceProviderData.SP_Email}</h2>
           <span className="text-m text-gray-500">Service Provider</span>
+          <div>{serviceProviderData.Service_Name || "No data available"}</div>
+
         </div>
-        <div className="mt-8 space-y-4">
+        <div className="mt-8 space-y-2">
           <div className="flex items-center justify-between">
-            <i className="fas fa-language text-xl  text-gray-500"></i>
+           <p>Language Spoken</p> <i className="fas fa-language text-xl  text-gray-500"></i>
+
             <span className="font-semibold">{serviceProviderData.LanguageSpoken}</span>
+           
           </div>
+          <div>experience: {serviceProviderData.Service_Experience}</div>
         </div>
         <div className="mt-8">
           <h3 className="font-semibold mb-4">Details</h3>
@@ -136,6 +159,7 @@ const ViewSp = () => {
               <tbody>
                 {orders.length > 0 ? (
                   orders.map((order, index) => (
+                    
                     <tr
                       key={order.Book_ID}
                       className={`${index % 2 === 0 ? "bg-slate-200" : "bg-white"} border-t`}
@@ -174,7 +198,8 @@ const ViewSp = () => {
                 </tr>
               </thead>
               <tbody>
-                {orders.map((service, index) => (
+                {service.length>0?( 
+                service.map((service, index) => (
                   <tr
                     key={service.Book_ID}
                     className={`${index % 2 === 0 ? "bg-slate-200" : "bg-white"} border-t`}
@@ -187,7 +212,15 @@ const ViewSp = () => {
                       <td className="px-2">{service.Book_Status}</td>
                       <td className="px-2">{service.Customer_Phone}</td>
                   </tr>
-                ))}
+                ))
+              ):(  
+                <tr>
+                <td colSpan="5" className="text-center py-4">
+                  No Services provided available
+                </td>
+              </tr> 
+              )
+                }
               </tbody>
             </table>
           </div>
@@ -198,3 +231,22 @@ const ViewSp = () => {
 };
 
 export default ViewSp;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
