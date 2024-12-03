@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 // import { IconButton, Menu, MenuItem, Select, FormControl } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
-import { IconButton, Menu, MenuItem, Select, MenuItem as MuiMenuItem, FormControl, InputLabel, Box } from '@mui/material';
+import { IconButton, Menu, MenuItem, Select, MenuItem as MuiMenuItem, FormControl, InputLabel, Box, Typography } from '@mui/material';
 // import MoreVertIcon from '@mui/icons-material/MoreVert';
 // import DeleteIcon from '@mui/icons-material/Delete';
 import VisibilityIcon from '@mui/icons-material/Visibility';
@@ -113,7 +113,10 @@ function ManageUser() {
 
   return (
     <div className="w-full">
-      <h2 className="text-2xl font-semibold mb-4">Manage Users</h2>
+      
+      <Typography variant="h4" gutterBottom>
+        Manage Users
+      </Typography>
       <div style={{ height: 400 }}>
          {/* Filter section */}
       

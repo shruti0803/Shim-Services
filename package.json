@@ -25,7 +25,7 @@
   },
   "type": "module",
   "devDependencies": {
-    "dotenv": "^16.4.5",
+    "dotenv": "^16.4.6",
     "nodemon": "^3.1.4"
   }
 }

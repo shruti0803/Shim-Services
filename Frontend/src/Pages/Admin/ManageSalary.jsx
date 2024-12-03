@@ -74,7 +74,10 @@ const ManageSalary = () => {
 
   return (
     <Box p={3}>
-      <h2 className="text-3xl font-extrabold mb-4">Manage Salary</h2>
+      
+      <Typography variant="h4" gutterBottom>
+        Manage Salary
+      </Typography>
 
       {/* Filter Options */}
       <Box display="flex" gap={2} mb={2} p={2} sx={{ border: '1px solid #ccc', borderRadius: 1, backgroundColor: '#f9f9f9' }}>

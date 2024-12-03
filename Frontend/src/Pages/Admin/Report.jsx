@@ -14,6 +14,7 @@ const Report = () => {
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedReport, setSelectedReport] = useState(null);
   const { currentAdmin } = useAuthAdmin();
+  const [reload, setReload] = useState(false);
 
   useEffect(() => {
     const fetchReports = async () => {
@@ -38,7 +39,7 @@ const Report = () => {
     };
 
     fetchReports();
-  }, [filteredData]);
+  }, [reload]);
 
   useEffect(() => {
     const filtered = reportData.filter((data) => {
@@ -77,6 +78,7 @@ const Report = () => {
               : reportItem
           )
         );
+        setReload(!reload);
       }
     } catch (error) {
       console.error('Error updating report status:', error);
@@ -106,6 +108,7 @@ const Report = () => {
               : report
           )
         );
+        setReload(!reload);
       }
     } catch (error) {
       console.error('Error updating report status:', error);
@@ -183,7 +186,8 @@ const Report = () => {
 
   return (
     <Box p={3}>
-      <Typography variant="h5" gutterBottom>
+    
+      <Typography variant="h4" gutterBottom>
         Report Management
       </Typography>
 

@@ -5,6 +5,7 @@ import WorkIcon from '@mui/icons-material/WorkOutline';
 import PersonIcon from '@mui/icons-material/PersonOutlined';
 import HomeIcon from '@mui/icons-material/Home';
 import axios from 'axios';
+import { Typography } from '@mui/material';
 
 function InvoiceBalance() {
   const [invoiceData, setInvoiceData] = useState([]);
@@ -105,7 +106,10 @@ function InvoiceBalance() {
 
   return (
     <div style={{ height: 500, width: '100%' }}>
-      <h2 className="text-3xl font-extrabold mb-4">Invoice Balance</h2>
+      
+      <Typography variant="h4" gutterBottom>
+        Invoice Balance
+      </Typography>
       <DataGrid
         rows={invoiceData}
         columns={columns}

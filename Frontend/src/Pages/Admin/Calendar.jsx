@@ -78,9 +78,7 @@ const Calendar = () => {
       <Typography variant="h4" gutterBottom>
         Calendar
       </Typography>
-      <Typography variant="subtitle1" gutterBottom>
-        Full Calendar Interactive Page
-      </Typography>
+      
       <Box display="flex" justifyContent="space-between" gap={2}>
         {/* CALENDAR SIDEBAR */}
         <Box

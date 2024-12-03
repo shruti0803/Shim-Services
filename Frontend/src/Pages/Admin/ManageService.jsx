@@ -13,6 +13,7 @@ import {
   DialogActions,
   TextField,
   Box,
+  Typography,
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -172,7 +173,10 @@ function ManageService() {
 
   return (
     <div style={{ width: '100%' }}>
-      <h2 className="text-3xl font-extrabold mb-4">Manage Services</h2>
+      
+      <Typography variant="h4" gutterBottom>
+        Manage Services
+      </Typography>
       <Box p={2} sx={{ border: '1px solid #ccc', borderRadius: 1, backgroundColor: '#f9f9f9' }}>
         <div className="flex justify-between items-center">
           <div className="flex gap-4">
