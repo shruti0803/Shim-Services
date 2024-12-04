@@ -55,7 +55,7 @@ ShimServices is user-friendly and easy to navigate:
 4 **Manage Your Profile**: Update your details, payment methods, and service preferences.
 
 5. **Leave Reviews**: Provide feedback on services to help others make informed decisions.
-6. 
+
 6 **Report**: Users can report issues or provide feedback regarding service providers or the platform. This helps maintain the quality of service and ensures user satisfaction.
 
 
@@ -63,34 +63,34 @@ ShimServices is user-friendly and easy to navigate:
 
 ShimServices offers a range of features for both customers and service providers:
 
-User Authentication: Secure sign-up and login for both customers and providers.
+1 **User Authentication**: Secure sign-up and login for both customers and providers.
 
-Profile Management: Users can manage their profiles, contact information, and preferences.
+2 **Profile Management**: Users can manage their profiles, contact information, and preferences.
 
-Ratings and Reviews: Customers can leave reviews and ratings for services received.
+3 **Ratings and Reviews**: Customers can leave reviews and ratings for services received.
 
-Payment Integration: Secure payments through RazorPay for hassle-free transactions.
+4 **Payment Integration**: Secure payments through RazorPay for hassle-free transactions.
 
-Service Provider Dashboard: Manage availability, accept bookings, and track earnings.
+5 **Service Provider Dashboard**: Manage availability, accept bookings, and track earnings.
 
-Admin Dashboard: Manage and monitor user activities, service listings, reports, and platform analytics. Ensure smooth operations and handle platform-level settings and updates.
+6 **Admin Dashboard**: Manage and monitor user activities, service listings, reports, and platform analytics. Ensure smooth operations and handle platform-level settings and updates.
 
 ## Technologies Used
 ShimServices leverages modern technologies to ensure smooth performance and scalability:
 
-Frontend: React, Material-UI, Tailwind CSS for a responsive and intuitive interface.
+**Frontend**: React, Material-UI, Tailwind CSS for a responsive and intuitive interface.
 
-Backend: Node.js, Express.js to handle server-side logic and API interactions.
+**Backend**: Node.js, Express.js to handle server-side logic and API interactions.
 
-Database: MySQL for structured, relational data storage and management.
+**Database**: MySQL for structured, relational data storage and management.
 
-Password Hashing: Passwords are hashed using bcrypt to ensure user data security.
+**Password Hashing**: Passwords are hashed using bcrypt to ensure user data security.
 
-Payment Integration: RazorPay for secure and efficient payment processing.
+**Payment Integration**: RazorPay for secure and efficient payment processing.
 
-Deployment: Netlify and Railway for hosting and cloud accessibility.
+**Deployment**: Netlify for frontend hosting and Railway for backend and database hosting .
 
-Version Control: Git and GitHub for source code management.
+**Version Control**: Git and GitHub for source code management.
 
 ##Contributing
 We appreciate contributions from developers and community members who wish to enhance ShimServices:
