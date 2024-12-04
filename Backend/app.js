@@ -6,7 +6,7 @@ import bodyParser from 'body-parser';// Load environment variables
 import { createServer } from 'http'; // Import to create HTTP server
 import { Server } from 'socket.io'; // Import socket.io
 
-import { insertRating, insertReport, getRatingsByCategory, getAllRating } from './models/reviews.js';
+import { insertRating, insertReport, getRatingsByCategory, getAllRating, getServiceProviderRatings } from './models/reviews.js';
 import { getAllServiceProviders, addServiceProvider,getServiceNamesByServiceProvider, getCityAndMobileByEmail ,getSPDetails, getSPServices } from './models/serviceProvider.js';
 import { getAllCustomers, addCustomer, updateIsSP, userDetails } from './models/customer.js'; // Added updateIsSP import
 import { getAllBookings,getBookingsByServiceProvider, addBooking, acceptBooking,cancelBooking, deleteBooking,getAvailableBookingsForService } from './models/booking.js';
@@ -1261,5 +1261,33 @@ app.get('/api/ratings', (req, res) => {
       message: 'Ratings fetched successfully',
       data: results,
     });
+  });
+});
+
+
+
+
+////rating by service provider/// Manishka
+
+app.get('/ratings-for-sp/:Service_Name',  (req, res) => {
+  const { Service_Name } = req.params;
+  console.log("service name",Service_Name);
+  
+
+  if (!Service_Name) {
+    return res.status(400).json({ error: 'Service name is required.' });
+  }
+
+  getServiceProviderRatings(Service_Name, (err, results) => {
+    if (err) {
+      console.error('Error fetching service provider ratings:', err);
+      return res.status(500).json({ error: 'An error occurred while fetching ratings.' });
+    }
+
+    if (!results || results.length === 0) {
+      return res.status(404).json({ message: 'No ratings found for the specified service.' });
+    }
+
+    res.status(200).json({ ratings: results });
   });
 });

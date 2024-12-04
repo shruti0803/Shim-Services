@@ -159,3 +159,42 @@ JOIN
       }
     })
 }
+
+
+
+//reviews by sp  Manishka
+export const getServiceProviderRatings = (serviceName, callback) => {
+  console.log("service name in model",serviceName);
+  
+  const query = `
+    SELECT 
+    bk.SP_Email,
+    u1.U_Email,
+    u1.U_Name AS User_Name,  -- Name of the user who left the review
+    u2.U_Name AS SP_Name,    -- Name of the service provider
+    r.Rating,
+    r.Review,
+    r.Rate_Date,
+    AVG(r.Rating) OVER (PARTITION BY bk.SP_Email) AS Avg_Rating,
+    bk.Service_Category
+FROM rating r
+JOIN bill b ON r.Bill_ID = b.Bill_ID
+JOIN bookings bk ON bk.Book_ID = b.Book_ID
+JOIN user u1 ON bk.U_Email = u1.U_Email  -- User who left the review
+JOIN user u2 ON bk.SP_Email = u2.U_Email  -- Service provider
+WHERE bk.Service_Name = ?
+ORDER BY bk.SP_Email, r.Rate_Date;
+
+  `;
+
+  connection.query(query, [serviceName], (err, results) => {
+    if (err) {
+      console.log("Error fetching service provider ratings:", err);
+      return callback(err, null);
+    }
+    if (results.length === 0) {
+      return callback({ message: "No ratings found for the specified service" }, null);
+    }
+    callback(null, results);
+  });
+};
