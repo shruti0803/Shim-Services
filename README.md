@@ -27,19 +27,21 @@ npm -v
 1. **Clone the repository**:
    ```bash
    git clone https://github.com/your-username/shimservices.git
-Navigate into the project directory:
+   ```
 
 2.**Navigate into the project directory:**
    ```bash
    cd shimservices
+   ```
 3. **Install project dependencies:**
    ```bash
    npm install
+   ```
 
 4. **Start the development server:**
   ```bash
   npm run dev
-```
+  ```
 
 ##Usage
 ShimServices is user-friendly and easy to navigate:
@@ -81,18 +83,21 @@ We appreciate contributions from developers and community members who wish to en
 2. **Clone your fork**:
    ```bash
    git clone https://github.com/manishka28/Shim-Services.git
+   ```
 3. **Create a new branch**:
    ```bash
    git checkout -b feature/your-feature
+   ```
 4. **Make your changes and commit them**:
    ```bash
-   Copy code
    git add .
    git commit -m 'Add a description of your changes'
+   ```
 5. **Push to your branch**:
    ```bash
-   Copy code
+   Copy Code
    git push origin feature/your-feature
+   ```
 6. *Create a pull request and describe the changes you made.*
    
 
