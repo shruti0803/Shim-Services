@@ -74,6 +74,8 @@ function Orders() {
           if (billResponse.ok) {
             const bill = await billResponse.json();
             billData[order.Book_ID] = bill;
+            console.log(bill);
+            
           } else if (billResponse.status === 404) {
             console.warn(`Bill not found for Book_ID: ${order.Book_ID}`);
           } else {

@@ -316,6 +316,16 @@ app.post('/bookingPost', (req, res) => {
       return res.status(400).json({ message: `Missing required field: ${field}` });
     }
   }
+  addBookingPost(bookingData, (err, result) => {
+    if (err) {
+      console.error('Error adding booking:', err);
+      return res.status(500).json({ message: err.message });
+    }
+
+    res.status(201).json({ message: 'Booking created successfully', bookingId: bookingData.Book_ID });
+  });
+});
+
 
 //---Shruti
 
@@ -372,15 +382,6 @@ app.post('/bookings/cancel-order/:bookId', async (req, res) => {
 
 //--Shruti end
 
-  addBookingPost(bookingData, (err, result) => {
-    if (err) {
-      console.error('Error adding booking:', err);
-      return res.status(500).json({ message: err.message });
-    }
-
-    res.status(201).json({ message: 'Booking created successfully', bookingId: bookingData.Book_ID });
-  });
-});
 
   
   // Add booking to the database

@@ -216,7 +216,7 @@ const BillModal = ({ order, onClose, onBillGenerated }) => {
                 <option value="">Select Payment Method</option>
                 <option value="Cash">Cash</option>
                 
-                <option value="UPI">UPI</option>
+                <option value="online">Online</option>
               </select>
             </div>
 
