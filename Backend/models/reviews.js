@@ -7,7 +7,7 @@ export const getReviewsByServiceName = (Service_Name, callback) => {
     JOIN bill B ON R.Bill_ID = B.Bill_ID
     JOIN Booking BK ON B.Book_ID = BK.Book_ID
     join user U on
-U.U_Email=BK.U_Email
+    U.U_Email=BK.U_Email
     WHERE Service_Name = ?;
   `;
   
