@@ -9,9 +9,7 @@ ShimServices is a platform designed to bridge the gap between local service prov
 - [Features](#features)
 - [Technologies Used](#technologies-used)
 - [Contributing](#contributing)
-- [License](#license)
-- [Contact](#contact)
-- [Acknowledgments](#acknowledgments)
+
 
 ## Installation
 To set up ShimServices locally on your machine, follow these steps:
@@ -92,7 +90,9 @@ ShimServices leverages modern technologies to ensure smooth performance and scal
 
 **Version Control**: Git and GitHub for source code management.
 
-##Contributing
+
+## Contributing
+
 We appreciate contributions from developers and community members who wish to enhance ShimServices:
 
 1. **Fork the repository.**
