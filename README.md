@@ -21,6 +21,7 @@ Ensure that you have Node.js and npm installed. Check their installation by runn
 ```bash
 node -v
 npm -v
+```
 
 ## Steps to Install
 1. **Clone the repository**:
@@ -79,7 +80,7 @@ We appreciate contributions from developers and community members who wish to en
 
 2. **Clone your fork**:
    ```bash
-   git clone https://github.com/your-username/shimservices.git
+   git clone https://github.com/manishka28/Shim-Services.git
 3. **Create a new branch**:
    ```bash
    git checkout -b feature/your-feature
