@@ -5,6 +5,7 @@ import shruti from '../assets/shruti2.jpg';
 import tardej from '../assets/tardej.jpg';
 import isha from '../assets/isha.jpg';
 import vishal from '../assets/vishal.jpg';
+import Contact from "./Contact";
 const AboutUs = () => {
   return (
     <div className="min-h-screen">
@@ -140,7 +141,7 @@ const AboutUs = () => {
                 className="w-36 h-36 rounded-full mb-4"
               />
               <p className="text-white text-xl font-bold">Tardej Tudu</p>
-              <p className="text-white text-lg font-semibold">Designer</p>
+              <p className="text-white text-lg font-semibold">UI Designer</p>
             </div>
             
             {/* Team Member 4 */}
@@ -167,6 +168,7 @@ const AboutUs = () => {
           </div>
         </div>
       </div>
+      <Contact/>
     </div>
   );
 };

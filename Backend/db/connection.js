@@ -1,6 +1,11 @@
 import mysql from 'mysql2';
 import dotenv from 'dotenv'; 
-dotenv.config({ path: 'C:\\Users\\HP\\OneDrive\\Desktop\\SHIM\\Shim-Services\\Backend\\.env' });
+import path from 'path';
+
+
+dotenv.config({ path: path.resolve('./.env') });
+
+
 console.log('DB_HOST:', process.env.DB_HOST);
 console.log('DB_USER:', process.env.DB_USER);
 console.log('DB_PASSWORD:', process.env.DB_PASSWORD);

@@ -57,10 +57,12 @@ const BillModal = ({ order, onClose, onBillGenerated }) => {
       Service_Charge: serviceCharge,  // Include service charge in the bill
       Total: totalCost + serviceCharge  // Add service charge to total
     };
+    // console.log(newBillData);
+    
 
     try {
       const response = await axios.post('http://localhost:4002/bills', newBillData);
-      console.log(response);
+      // console.log(response);
       
       // Set the new billData with response values
       setBillData({
@@ -214,7 +216,7 @@ const BillModal = ({ order, onClose, onBillGenerated }) => {
                 className="border px-2 py-1"
               >
                 <option value="">Select Payment Method</option>
-                <option value="Cash">Cash</option>
+                <option value="cash">Cash</option>
                 
                 <option value="online">Online</option>
               </select>

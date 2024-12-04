@@ -1,6 +1,7 @@
 import React from 'react';
 import { FaFacebook, FaInstagram, FaEnvelope, FaPhoneAlt, FaChevronRight } from 'react-icons/fa';
 import img from '../assets/BWlogo.jpg'
+import Contact from './Contact';
 const Footer = () => {
   return (
     <footer className="bg-black text-white py-10">
@@ -62,6 +63,7 @@ const Footer = () => {
             </div>
           </div>
         </div>
+        {/* <Contact/> */}
       </div>
     </footer>
   );

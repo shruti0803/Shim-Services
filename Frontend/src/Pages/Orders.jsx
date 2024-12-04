@@ -3,7 +3,8 @@ import Order from '../Components/Order';
 import { useAuth } from '../context/AuthContext';
 import { FaTasks, FaCalendarCheck, FaCheckCircle, FaEllipsisV, FaStar, FaRegStar, FaStarHalfAlt } from 'react-icons/fa';
 import { useLocation } from 'react-router-dom';
-
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 function Orders() {
   const [orders, setOrders] = useState([]);
   const [bills, setBills] = useState({});
@@ -74,7 +75,7 @@ function Orders() {
           if (billResponse.ok) {
             const bill = await billResponse.json();
             billData[order.Book_ID] = bill;
-            console.log(bill);
+            // console.log(bill);
             
           } else if (billResponse.status === 404) {
             console.warn(`Bill not found for Book_ID: ${order.Book_ID}`);
@@ -133,11 +134,13 @@ function Orders() {
     e.preventDefault();
 
     if (!rating || !feedback) {
-      alert('Please provide a rating and feedback');
+      toast.error('Please provide a rating and feedback', { position: "top-center" });
       return;
     }
 
     try {
+      // console.log("rate",selectedOrder?.Book_ID);
+      
       const response = await fetch('http://localhost:4002/api/insert-rating', {
         method: 'POST',
         headers: {
@@ -155,17 +158,14 @@ function Orders() {
       }
 
       const result = await response.json();
-      console.log('Rating submitted:', result);
+      // console.log('Rating submitted:', result);
 
-      // Close the form on success
-      // setSuccessMessage('Rating submitted successfully'); // Set success message
-      // setTimeout(() => setSuccessMessage(''), 3000); 
+      toast.success('Rating submitted successfully', { position: "top-center" });
       closeForm();
       setDropdownOpen(false);
-      
     } catch (error) {
       console.error('Error submitting rating:', error);
-      alert('There was an error submitting your rating. Please try again.');
+      toast.error('There was an error submitting your rating. Please try again.', { position: "top-center" });
     }
   };
 
@@ -173,7 +173,7 @@ function Orders() {
     e.preventDefault();
 
     if (!reportDescription || !reportType) {
-      alert('Please provide report description and type');
+      toast.error('Please provide a report description and type', { position: "top-center" });
       return;
     }
 
@@ -187,7 +187,7 @@ function Orders() {
           Book_Id: selectedOrder?.Book_ID,
           Report_Description: reportDescription,
           Report_Type: reportType,
-          Report_Status: 'Pending', // All reports are pending by default
+          Report_Status: 'Pending',
         }),
       });
 
@@ -196,19 +196,57 @@ function Orders() {
       }
 
       const result = await response.json();
-      console.log('Report submitted:', result);
+      // console.log('Report submitted:', result);
 
-      // Close the form after successful submission
-      // setSuccessMessage('Report submitted successfully'); // Set success message
-      // setTimeout(() => setSuccessMessage(''), 3000);
+      toast.success('Report submitted successfully', { position: "top-center" });
       closeForm();
       setDropdownOpen(false);
-      
     } catch (error) {
       console.error('Error submitting report:', error);
-      alert('There was an error submitting your report. Please try again.');
+      toast.error('There was an error submitting your report. Please try again.', { position: "top-center" });
     }
   };
+
+  // const handleSubmitReport = async (e) => {
+  //   e.preventDefault();
+
+  //   if (!reportDescription || !reportType) {
+  //     toast.error('Please provide a report description and type');
+  //     return;
+  //   }
+
+  //   try {
+  //     const response = await fetch('http://localhost:4002/api/insert-report', {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify({
+  //         Book_Id: selectedOrder?.Book_ID,
+  //         Report_Description: reportDescription,
+  //         Report_Type: reportType,
+  //         Report_Status: 'Pending', // All reports are pending by default
+  //       }),
+  //     });
+
+  //     if (!response.ok) {
+  //       throw new Error(`HTTP error! Status: ${response.status}`);
+  //     }
+
+  //     const result = await response.json();
+  //     console.log('Report submitted:', result);
+
+  //     // Close the form after successful submission
+  //     // setSuccessMessage('Report submitted successfully'); // Set success message
+  //     // setTimeout(() => setSuccessMessage(''), 3000);
+  //     closeForm();
+  //     setDropdownOpen(false);
+      
+  //   } catch (error) {
+  //     console.error('Error submitting report:', error);
+  //     alert('There was an error submitting your report. Please try again.');
+  //   }
+  // };
 
   // Render stars based on the rating state
   const renderStars = () => {
@@ -230,6 +268,7 @@ function Orders() {
 
   return (
     <div className="container mx-auto p-6">
+     <ToastContainer position="top-center" autoClose={3000}  />
       <h1 className="text-4xl text-center font-bold mb-8">{selectedStatus} Orders</h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {orders.filter(order => order.status === selectedStatus).length > 0 ? (
@@ -274,6 +313,7 @@ function Orders() {
                           >
                             Rate
                           </button>
+                          
                           <button
                             className="block text-left p-2 w-40"
                             onClick={() => handleReportClick(order)}

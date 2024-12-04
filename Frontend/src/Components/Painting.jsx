@@ -174,10 +174,10 @@ const Painting = () => {
   </li>
 </ul>
 
-          <Reviews serviceName={"Painting"} />
+          <Reviews serviceName={"Painting Services"} />
         </div>
         <div className="flex-6 mx-4 w-1/2">
-          <Details services={services} service_name={"Painting"} />
+          <Details services={services} service_name={"Painting Services"} />
         </div>
       </div>
       
