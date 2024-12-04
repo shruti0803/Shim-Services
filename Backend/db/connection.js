@@ -1,5 +1,7 @@
 import mysql from 'mysql2';
-
+import dotenv from 'dotenv'; 
+dotenv.config({ path: 'C:\\Users\\HP\\OneDrive\\Desktop\\SHIM\\Shim-Services\\Backend\\.env' });
+console.log(process.env.DB_PASSWORD);
 
 const connection = mysql.createConnection({
   host: 'localhost',        // Replace with your database host

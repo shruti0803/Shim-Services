@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { DataGrid } from '@mui/x-data-grid';
-import { Box, Typography } from '@mui/material';
+import { Box, Typography, MenuItem, Select, FormControl, InputLabel } from '@mui/material';
 import { Bar } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
@@ -18,6 +18,7 @@ import { Star } from '@mui/icons-material';
 const Rating = () => {
   const [reviewData, setReviewData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedRating, setSelectedRating] = useState('All'); 
 
   useEffect(() => {
     // Fetch data from API
@@ -25,7 +26,11 @@ const Rating = () => {
       try {
         const response = await fetch('http://localhost:4002/api/ratings');
         const data = await response.json();
-        setReviewData(data.data); // Assuming the data is in `data.data`
+        // console.log("data",data.data);
+        
+        setReviewData(data.data);
+        console.log("Review Data",reviewData);
+         // Assuming the data is in `data.data`
         setLoading(false);
       } catch (error) {
         console.error('Error fetching ratings:', error);
@@ -43,12 +48,18 @@ const Rating = () => {
   const reviewCount = reviewData.length;
   const starRatings = [5, 4, 3, 2, 1];
   const starCounts = starRatings.map((star) =>
-    reviewData.filter((review) => review.rating === star).length
+    reviewData.filter((review) => review.Rating === star).length
   );
 
   const averageRating = (
-    reviewData.reduce((sum, review) => sum + review.rating, 0) / reviewCount
+    reviewData.reduce((sum, review) => sum + review.Rating, 0) / reviewCount
   ).toFixed(1);
+  console.log("average ",averageRating);
+
+  const filteredData =
+    selectedRating === 'All'
+      ? reviewData
+      : reviewData.filter((review) => review.Rating === parseInt(selectedRating));
 
   const reviewAnalyticsData = {
     labels: starRatings.map((star) => `${star} Star`),
@@ -75,7 +86,7 @@ const Rating = () => {
     { field: 'Service_Name', headerName: 'Service Name', width: 180 },
     { field: 'Service_Category', headerName: 'Service Category', width: 180 },
     { field: 'SP_Email', headerName: 'SP Email', width: 180 },
-    { field: 'rating', headerName: 'Rating', width: 100 },
+    { field: 'Rating', headerName: 'Rating', width: 100 },
     { field: 'Review', headerName: 'Review', width: 300 },
   ];
   
@@ -93,8 +104,14 @@ const Rating = () => {
   };
 
   return (
+    
     <Box p={3}>
+      
+      <Typography variant="h4" gutterBottom>
+        Customer Reviews
+      </Typography>
       <div className="flex flex-row">
+        {/* review analytics  */}
         <div className="w-1/2 flex flex-row bg-yellow-500 text-black p-6 rounded-lg shadow-lg">
           <div>
             <Typography variant="h6" gutterBottom>
@@ -126,6 +143,9 @@ const Rating = () => {
             </div>
           </div>
         </div>
+        
+
+        {/* review statistics  */}
 
         <div className="mx-5 w-1/2 items-end">
           <Typography variant="h5" gutterBottom>
@@ -147,35 +167,54 @@ const Rating = () => {
           </div>
         </div>
       </div>
+      {/* Filter Dropdown */}
+      
+      <Box display="flex" gap={2} mt={2} mb={2} p={2} sx={{ border: '1px solid #ccc', borderRadius: 1, backgroundColor: '#f9f9f9' }}>
+      <FormControl style={{  width: '200px' }}>
+        <InputLabel id="rating-filter-label" style={{fontSize:'25px'}}>Filter by Rating</InputLabel>
+        <Select
+          labelId="rating-filter-label"
+          value={selectedRating}
+          onChange={(e) => setSelectedRating(e.target.value)}
+          style={{marginTop:'20px'}}
+        >
+          <MenuItem value="All">All</MenuItem>
+          {starRatings.map((rating) => (
+            <MenuItem key={rating} value={rating}>
+              {rating} Star
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+      </Box>
 
-      <Typography variant="h5" gutterBottom mt={3}>
-        Customer Reviews
-      </Typography>
+      {/* Display DataGrid */}
+      
       <div style={{ height: 400, width: '100%' }}>
-      <DataGrid
-  rows={reviewData.map((review, index) => ({ ...review, id: index }))}
-  columns={columns}
-  pageSize={5}
-  rowsPerPageOptions={[5, 10, 15]}
-  sx={{
-    '& .MuiDataGrid-columnHeaders': {
-backgroundColor: '#3f51b5',
-color: 'black', // Adjust color if needed
-fontWeight: 'bold',
-fontSize: '16px', // Increase size for readability
-},
-      '& .MuiDataGrid-cell:hover': {
-        backgroundColor: '#e3f2fd',
-      },
-      '& .MuiDataGrid-footerContainer': {
-        backgroundColor: '#e0e0e0',
-      },
-
-  }}
-/>
-
+        <DataGrid
+          rows={filteredData.map((review, index) => ({ ...review, id: index }))}
+          columns={columns}
+          pageSize={5}
+          rowsPerPageOptions={[5, 10, 15]}
+          sx={{
+            '& .MuiDataGrid-columnHeaders': {
+              backgroundColor: '#3f51b5',
+              color: 'black',
+              fontWeight: 'bold',
+              fontSize: '16px',
+            },
+            '& .MuiDataGrid-cell:hover': {
+              backgroundColor: '#e3f2fd',
+            },
+            '& .MuiDataGrid-footerContainer': {
+              backgroundColor: '#e0e0e0',
+            },
+          }}
+        />
       </div>
+      
     </Box>
+    
   );
 };
 

@@ -7,8 +7,10 @@ const Details = ({services,service_name}) => {
   const [isBookingDialogOpen, setIsBookingDialogOpen] = useState(false);
   const [isLoginDialogOpen, setIsLoginDialogOpen] = useState(false);
   const [selectedService, setSelectedService] = useState(null);
-  const [isLoginForm, setIsLoginForm] = useState(true); // Track whether to show login form
+  const [isLoginForm, setIsLoginForm] = useState(true); 
+  // Track whether to show login form
   const { currentUser, logout } = useAuth();
+  const [loginRole, setLoginRole] = useState({ isAdmin: false });
 
   // const services = [
   //   {
@@ -139,7 +141,7 @@ const Details = ({services,service_name}) => {
       )}
 
       {isLoginDialogOpen && (
-        <DialogBox isOpen={isLoginDialogOpen} closeDialog={closeLoginDialog} isLoginForm={isLoginForm} toggleForm={toggleForm} />
+        <DialogBox isOpen={isLoginDialogOpen} closeDialog={closeLoginDialog} isLoginForm={isLoginForm} toggleForm={toggleForm} loginRole={loginRole} />
       )}
     </div>
   );

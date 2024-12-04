@@ -87,7 +87,8 @@ const SignUp = ({ onSwitchToLogin, closeDialog }) => {
                     U_Password: password,
                     U_Phone: `+91${phone}`, // Phone number with prefix
                     is_SP: false,
-                    joining_Date:formattedDate
+                    joining_Date:formattedDate,
+                    Active:1
                 }),
             });
 

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'; 
 import { useNavigate } from 'react-router-dom';
 import { DataGrid } from '@mui/x-data-grid';
-import { IconButton, Menu, MenuItem } from '@mui/material';
+import { IconButton, Menu, MenuItem, Typography } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import DeleteIcon from '@mui/icons-material/Delete';
 import VisibilityIcon from '@mui/icons-material/Visibility';
@@ -142,7 +142,10 @@ function ManageTeam() {
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <h2 className="text-3xl font-extrabold mb-4">Manage Team</h2>
+      
+      <Typography variant="h4" gutterBottom>
+        Manage Team
+      </Typography>
       <DataGrid
         rows={usersData}
         columns={columns}
