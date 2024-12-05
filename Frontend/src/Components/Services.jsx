@@ -9,7 +9,7 @@ function Services() {
           <h2 className="text-3xl mt-8 mb-5 font-bold italic">Discover Services</h2>
         </div>
 
-        <div className="flex justify-center pt-4">
+        {/* <div className="flex justify-center pt-4">
           <input
             type="text"
             placeholder="Search..."
@@ -18,7 +18,7 @@ function Services() {
           <button className="ml-2 p-2 bg-green-600 hover:bg-green-700 text-white rounded-md">
             Search
           </button>
-        </div>
+        </div> */}
 
         {/*grid layout here */}
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 p-8">
