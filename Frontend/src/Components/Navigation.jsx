@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'; 
+import React, { useState, useEffect, useRef } from 'react';
 import BWlogo from '../assets/BWlogo.jpg';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import DialogBox from './DialogBox';
@@ -6,10 +6,11 @@ import { useAuth } from '../context/AuthContext';
 
 const Navigation = () => {
     const [isNavOpen, setIsNavOpen] = useState(false);
+    const [isLoginOpen, setIsLoginOpen] = useState(false); // Renamed for login-specific state
     const [isLoginForm, setIsLoginForm] = useState(true);
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [ordersDropdownOpen, setOrdersDropdownOpen] = useState(false);
-    const [selectedStatus, setSelectedStatus] = useState(null); // For selected dropdown option
+    const [selectedStatus, setSelectedStatus] = useState(null);
     const [loginDropdownOpen, setLoginDropdownOpen] = useState(false);
     const { currentUser, logout } = useAuth();
     const dropdownRef = useRef(null);
@@ -35,7 +36,6 @@ const Navigation = () => {
         setOrdersDropdownOpen(false);
     };
 
-    // Close dropdowns if clicked outside
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -53,7 +53,6 @@ const Navigation = () => {
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, []);
 
-    // Close dropdown on route change
     useEffect(() => {
         setDropdownOpen(false);
         setLoginDropdownOpen(false);
@@ -99,9 +98,42 @@ const Navigation = () => {
                         )}
                     </div>
                 ) : (
-                    <button onClick={() => setIsNavOpen(true)} className='bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 ml-4'>
-                        Log In
-                    </button>
+                    <div className='relative'>
+                            <button
+                                onClick={() => setLoginDropdownOpen(!loginDropdownOpen)}
+                                className='bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 ml-4'
+                            >
+                                Log In
+                            </button>
+
+                            {loginDropdownOpen && (
+                                <div
+                                    className='absolute right-0 mt-2 w-48 bg-white text-black rounded-md shadow-lg'
+                                    ref={loginDropdownRef}
+                                >
+                                    <ul className='list-none p-2'>
+                                        <li
+                                            className='p-2 hover:bg-gray-200 cursor-pointer'
+                                            onClick={() => {
+                                                setLoginRole({ isAdmin: false });
+                                                setIsLoginOpen(true); // Only set login state here
+                                            }}
+                                        >
+                                            Login as User
+                                        </li>
+                                        <li
+                                            className='p-2 hover:bg-gray-200 cursor-pointer'
+                                            onClick={() => {
+                                                setLoginRole({ isAdmin: true });
+                                                setIsLoginOpen(true); // Only set login state here
+                                            }}
+                                        >
+                                            Login as Admin
+                                        </li>
+                                    </ul>
+                                </div>
+                            )}
+                        </div>
                 )}
             </div>
 
@@ -199,7 +231,7 @@ const Navigation = () => {
                                             className='p-2 hover:bg-gray-200 cursor-pointer'
                                             onClick={() => {
                                                 setLoginRole({ isAdmin: false });
-                                                setIsNavOpen(true);
+                                                setIsLoginOpen(true); // Only set login state here
                                             }}
                                         >
                                             Login as User
@@ -208,7 +240,7 @@ const Navigation = () => {
                                             className='p-2 hover:bg-gray-200 cursor-pointer'
                                             onClick={() => {
                                                 setLoginRole({ isAdmin: true });
-                                                setIsNavOpen(true);
+                                                setIsLoginOpen(true); // Only set login state here
                                             }}
                                         >
                                             Login as Admin
@@ -222,11 +254,11 @@ const Navigation = () => {
             </div>
 
             <DialogBox
-                isOpen={isNavOpen}
-                closeDialog={closeDialog}
+                isOpen={isLoginOpen} // Pass isLoginOpen state to DialogBox
+                closeDialog={() => setIsLoginOpen(false)} // Close the dialog only for login
                 isLoginForm={isLoginForm}
                 toggleForm={toggleForm}
-                loginRole={loginRole} // Pass loginRole to DialogBox
+                loginRole={loginRole}
             />
         </div>
     );

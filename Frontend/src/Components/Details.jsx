@@ -139,7 +139,7 @@ const Details = ({services,service_name}) => {
             {/* Description */}
             <p className="text-sm text-gray-600 mb-2 text-center">{service.description[0]}</p>
             {/* Price */}
-            <p className="font-semibold text-black-500 text-sm mb-3">
+            <p className="font-bold text-green-600 text-sm mb-3">
               Starts from ₹{service.price}
             </p>
             {/* <p className="font-bold text-green-600">Initial Price: ₹{service.price}</p> */}

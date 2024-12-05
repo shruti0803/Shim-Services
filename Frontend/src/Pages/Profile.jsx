@@ -12,7 +12,7 @@ const socket = io("http://localhost:4002");
 
 const Profile = () => {
   const { currentUser } = useAuth();
-  console.log("current ",currentUser);
+  // console.log("current ",currentUser);
   
   const isServiceProvider = currentUser?.is_SP === 1;
   const [services, setServices] = useState([]);

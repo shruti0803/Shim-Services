@@ -36,7 +36,7 @@ function ManageService() {
   const [reload, setReload] = useState(false); 
 
   const {currentAdmin} = useAuthAdmin();
-  console.log("current",currentAdmin.A_Email);
+  // console.log("current",currentAdmin.A_Email);
   
 
   useEffect(() => {

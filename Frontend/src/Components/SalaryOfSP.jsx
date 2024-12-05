@@ -137,7 +137,7 @@ const SalaryOfSP = ({ SP_Email }) => {
 
   const handlePayNowClick = (amount, selectedMonth, selectedYear) => {
     // Check if the amount is valid
-    console.log("amount:", amount,selectedMonth,selectedYear);
+    // console.log("amount:", amount,selectedMonth,selectedYear);
     
     if (amount > 0) {
       // Save the amount and selected month/year for payment processing

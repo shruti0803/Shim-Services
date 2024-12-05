@@ -42,7 +42,7 @@ function Orders() {
         }
         const data = await response.json();
         const filteredOrders = data.filter(order => order.U_Email === currentUser.U_Email);
-        console.log("Filtered",data);
+        // console.log("Filtered",data);
         
 
         const statusMap = {

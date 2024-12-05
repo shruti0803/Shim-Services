@@ -9,7 +9,7 @@ function Order({ order, onHelp, onCancel, payNow }) {
   const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
   const [orderToCancel, setOrderToCancel] = useState(null);
   // const [successMessage, setSuccessMessage] = useState(""); // Success message for this specific order
-  console.log("order",order);
+  // console.log("order",order);
   
 
   const { 
@@ -17,7 +17,7 @@ function Order({ order, onHelp, onCancel, payNow }) {
     Service_Category, Appointment_Date, Book_HouseNo, Book_Area, Book_City, 
     Book_State ,User_Name,SP_Name
   } = order;
-  console.log("user",User_Name);
+  // console.log("user",User_Name);
   
 
   let statusColorClass = 'text-gray-500';

@@ -29,7 +29,7 @@ const Login = ({ onSwitchToSignUp, closeDialog, isAdmin }) => {
                 // Fetch customers
                 const customerResponse = await fetch('http://localhost:4002/customers');
                 const customers = await customerResponse.json();
-                console.log('Customers:', customers);
+                // console.log('Customers:', customers);
 
                 // Find matching customer
                 const customer = customers.find(c => c.U_Email === loginValues.email);
@@ -61,11 +61,11 @@ const Login = ({ onSwitchToSignUp, closeDialog, isAdmin }) => {
                 // Fetch admins
                 const adminResponse = await fetch('http://localhost:4002/admins');
                 const admins = await adminResponse.json();
-                console.log('Admins:', admins);
+                // console.log('Admins:', admins);
 
                 // Find matching admin
                 const admin = admins.find(c => c.A_Email === loginValues.email);
-                console.log('Admin found:', admin);
+                // console.log('Admin found:', admin);
 
                 if (!admin) {
                     setErrorMessage('Invalid email or password');
@@ -75,7 +75,7 @@ const Login = ({ onSwitchToSignUp, closeDialog, isAdmin }) => {
 
                 if (loginValues.password === admin.A_Password) {
                     loginAdmin(admin);
-                    console.log('Admin login successful');
+                    // console.log('Admin login successful');
                     setSuccessMessage('Admin Login Successful!');
                     setErrorMessage('');
                     closeDialog();

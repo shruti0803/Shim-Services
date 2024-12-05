@@ -50,7 +50,7 @@ const Landing = () => {
         const response = await axios.get(`http://localhost:4002/sales?month=${currentMonth}&year=${currentYear}`);
 
         setTotalSales(response.data.totalSales);
-        console.log("totalSales", totalSales);
+        // console.log("totalSales", totalSales);
       } catch (error) {
         console.error('Error fetching sales data:', error);
       }
@@ -246,7 +246,7 @@ const Landing = () => {
     // Fetch new customers data
     axios.get('http://localhost:4002/new-customers-and-sps?month=12&year=2024&isSP=0')
       .then(response => {
-        console.log("response new customer",response);
+        // console.log("response new customer",response);
         setNewCustomers(response.data.totalCount); // Assuming response.data is the number of new customers
       })
       .catch(error => console.error('Error fetching new customers:', error));
@@ -254,7 +254,7 @@ const Landing = () => {
     // Fetch new service providers data
     axios.get('http://localhost:4002/new-customers-and-sps?month=12&year=2024&isSP=1')
       .then(response => {
-        console.log("response new sp",response);
+        // console.log("response new sp",response);
         
         setNewServiceProviders(response.data.totalCount); // Assuming response.data is the number of new service providers
       })

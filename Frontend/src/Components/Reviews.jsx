@@ -56,11 +56,11 @@ export const Reviews = ({ serviceName }) => {
         
         // Fetch data from the API
         const response = await axios.get(responseURL);
-        console.log(responseURL); // Log the URL to verify it's correct
-        console.log("Response for rating:", response.data); // Log the full response for debugging
+        // console.log(responseURL); // Log the URL to verify it's correct
+        // console.log("Response for rating:", response.data); // Log the full response for debugging
         
         const reviewsData = response.data.ratings;
-        console.log("reviews data",reviewsData);
+        // console.log("reviews data",reviewsData);
         
 
         if (reviewsData) {

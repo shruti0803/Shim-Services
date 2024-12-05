@@ -4,7 +4,7 @@ import SignUp from './SignUp';
 
 const DialogBox = ({ isOpen, closeDialog, isLoginForm, toggleForm,loginRole }) => {
     if (!isOpen) return null; // Do not render if dialog is not open
-    console.log(loginRole.isAdmin);
+    // console.log(loginRole.isAdmin);
     
 
     return (

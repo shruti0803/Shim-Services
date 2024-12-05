@@ -16,7 +16,7 @@ const ServiceProviderOrders = ({ SPEmail,SPCity }) => {
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [isCannotGenerateBillModalOpen, setIsCannotGenerateBillModalOpen] = useState(false);
   const [shouldFetch, setShouldFetch] = useState(true);
-  console.log("SP City",SPCity);
+  // console.log("SP City",SPCity);
   
 
   const fetchPaymentMode = async (bookId) => {
@@ -113,15 +113,15 @@ useEffect(() => {
       // Attempt to fetch incoming orders
       try {
         const response = await axios.get(`http://localhost:4002/available-bookings/${serviceName}`);
-        console.log(response);
+        // console.log(response);
         
         const incoming = response.data.filter(order => order.Book_Status === 'Pending' && order.Book_City===SPCity && order.U_Email!==SPEmail );
-        console.log();
+        // console.log();
         
         setIncomingOrders(incoming);
       } catch (incomingError) {
         if (incomingError.response && incomingError.response.status === 404) {
-          console.log("No incoming orders.");
+          // console.log("No incoming orders.");
           setIncomingOrders([]);
         } else {
           console.error("Error fetching incoming orders:", incomingError);
