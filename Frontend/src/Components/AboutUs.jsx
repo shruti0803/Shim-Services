@@ -117,8 +117,8 @@ const AboutUs = () => {
                 alt={member.name}
                 className="w-36 h-36 rounded-full mb-4 shadow-lg"
               />
-              <p className="text-white text-xl font-bold">{member.name}</p>
-              <p className="text-white text-lg font-semibold">{member.role}</p>
+              <p className="text-white text-xl font-extrabold">{member.name}</p>
+              <p className="text-white text-lg font-bold">{member.role}</p>
             </div>
           ))}
         </div>

@@ -19,7 +19,6 @@ const Navigation = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const [loginRole, setLoginRole] = useState({ isAdmin: false });
-    const navRef = useRef(null);
 
     // Toggle between login and signup form
     const toggleForm = () => setIsLoginForm(!isLoginForm);
@@ -55,7 +54,7 @@ const Navigation = () => {
     }, []);
 
     useEffect(() => {
-        setIsNavOpen(!isNavOpen);
+        setIsNavOpen(false);
         setDropdownOpen(false);
         setLoginDropdownOpen(false);
         setOrdersDropdownOpen(false);
@@ -70,22 +69,7 @@ const Navigation = () => {
         { text: 'Services', to: '/services' }
     ];
     // Close navigation menu when clicking outside
-    useEffect(() => {
-        const handleClickOutside = (event) => {
-            if (navRef.current && !navRef.current.contains(event.target)) {
-                setIsNavOpen(false);
-            }
-        };
-
-        document.addEventListener('mousedown', handleClickOutside);
-        document.addEventListener('touchstart', handleClickOutside); // For mobile touch
-
-        return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
-            document.removeEventListener('touchstart', handleClickOutside);
-        };
-    }, []);
-
+    
     return (
         <div className='bg-black flex items-center h-24 md:h-20 lg:h-18 sticky top-0 z-10 px-3 text-lg text-white'>
             {/* Mobile View  */}
@@ -179,7 +163,7 @@ const Navigation = () => {
             <div 
                 className='flex items-center justify-center w-8 h-8 bg-green-600 text-white rounded-full cursor-pointer' 
                 onClick={() => {
-                    console.log("Profile icon touched");
+                    // console.log("Profile icon touched");
                     setDropdownOpen(!dropdownOpen);
                 }}
                 ref={dropdownRef}
@@ -190,12 +174,12 @@ const Navigation = () => {
                 <div className='absolute right-2 top-6 mt-2 w-48 bg-white text-black rounded-md shadow-lg' ref={dropdownRef}>
                     <ul className='list-none p-2'>
                         <li className='p-2 hover:bg-gray-200'>
-                            <button onTouchStart={()=> navigate('/profile')}>
+                            <button onTouchStart={()=> {navigate('/profile')}}>
                                 My Profile
                             </button>
                         </li>
                         <li className='p-2 hover:bg-gray-200'>
-                            <Link to='/settings' onTouchStart={() => console.log("Navigating to settings")}>
+                            <Link to='/settings'>
                                 Settings
                             </Link>
                         </li>
@@ -210,7 +194,7 @@ const Navigation = () => {
         <div className='relative'>
             <button
                 onClick={() => {
-                    console.log("Login touched");
+                    // console.log("Login touched");
                     setLoginDropdownOpen(!loginDropdownOpen);
                 }}
                 className='bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 ml-4 '
@@ -230,7 +214,7 @@ const Navigation = () => {
                                 className='w-full p-2 text-left hover:bg-gray-200 cursor-pointer'
                                 onTouchStart={(e) => {
                                     e.stopPropagation();
-                                    console.log("Login as User touched");
+                                    // console.log("Login as User touched");
                                     setLoginRole({ isAdmin: false });
                                     setIsLoginOpen(true);
                                 }}
@@ -242,7 +226,7 @@ const Navigation = () => {
                             <button
                                 className='w-full p-2 text-left hover:bg-gray-200 cursor-pointer'
                                 onTouchStart={() => {
-                                    console.log("Login as Admin touched");
+                                    // console.log("Login as Admin touched");
                                     setLoginRole({ isAdmin: true });
                                     setIsLoginOpen(true);
                                 }}
@@ -353,7 +337,7 @@ const Navigation = () => {
                                         <li
                                             className='p-2 hover:bg-gray-200 cursor-pointer'
                                             onClick={() => {
-                                                console.log("Login as User clicked");
+                                                // console.log("Login as User clicked");
                                                 setLoginRole({ isAdmin: false });
                                                 setIsLoginOpen(true); // Only set login state here
                                             }}

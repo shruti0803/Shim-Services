@@ -33,7 +33,7 @@ const Login = ({ onSwitchToSignUp, closeDialog, isAdmin }) => {
 
                 // Find matching customer
                 const customer = customers.find(c => c.U_Email === loginValues.email);
-                console.log('Customer found:', customer);
+                // console.log('Customer found:', customer);
 
                 if (!customer) {
                     setErrorMessage('Invalid email or password');
