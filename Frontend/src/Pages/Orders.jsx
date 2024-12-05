@@ -296,6 +296,7 @@ function Orders() {
               .map(order => (
                 <div key={order.Book_ID} className="relative">
                   <Order
+                    key={order.Book_ID}
                     order={order}
                     onCancel={handleCancel}
                     onHelp={handleGetHelp}

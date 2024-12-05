@@ -164,7 +164,7 @@ JOIN
 
 //reviews by sp  Manishka
 export const getServiceProviderRatings = (serviceName, callback) => {
-  console.log("service name in model",serviceName);
+  // console.log("service name in model",serviceName);
   
   const query = `
     SELECT 
@@ -189,7 +189,7 @@ ORDER BY bk.SP_Email, r.Rate_Date;
 
   connection.query(query, [serviceName], (err, results) => {
     if (err) {
-      console.log("Error fetching service provider ratings:", err);
+      // console.log("Error fetching service provider ratings:", err);
       return callback(err, null);
     }
     if (results.length === 0) {

@@ -56,23 +56,44 @@ function Payment() {
   };
 
   // Function to create a Razorpay order
-  const createRazorpayOrder = () => {
+  // Function to create a Razorpay order or update book status directly if cost is zero
+const createRazorpayOrder = async () => {
+  if (billDetails.Total_Cost === 0) {
+    try {
+      // Directly update book status to 'Completed'
+      console.log("Total cost is zero. Skipping payment process.");
+      
+      const updateBookStatusResponse = await axios.put(
+        `http://localhost:4002/bookStatusAfterPayment/${billDetails.Book_ID}`,  // Update status endpoint
+        { newStatus: 'Completed' }
+      );
+      
+      console.log("Book status updated to completed (Total Cost = 0):", updateBookStatusResponse.data);
+
+      // Navigate to a confirmation or success page if needed
+      navigate('/orders');
+    } catch (error) {
+      console.error("Error updating book status for zero cost:", error);
+    }
+  } else {
+    // Proceed with Razorpay order creation if cost is non-zero
     const data = JSON.stringify({ amount: billDetails.Total_Cost * 100, currency: "INR" });
     const config = {
       method: "post",
-      url: "http://localhost:4002/orders",  // Your backend URL to handle the order
+      url: "http://localhost:4002/orders", // Your backend URL to handle the order
       headers: { 'Content-type': 'application/json' },
       data: data,
     };
 
-    axios.request(config)
-      .then((response) => {
-        handleRazorPayScreen(response.data.amount);
-      })
-      .catch((error) => {
-        console.error("Error creating order:", error);
-      });
-  };
+    try {
+      const response = await axios.request(config);
+      handleRazorPayScreen(response.data.amount);
+    } catch (error) {
+      console.error("Error creating order:", error);
+    }
+  }
+};
+
 
   // Function to handle Razorpay screen for payment
   // Function to handle Razorpay screen for payment

@@ -42,7 +42,7 @@ export const updateBookingStatus = (bookingId, newStatus, SP_Email, callback) =>
       const user = userResult[0];  // Assuming there's only one user per booking
 
       if (!user) {
-        console.log('User not found');
+        // console.log('User not found');
         return callback({ error: 'User not found', message: 'No user found with this booking ID' }, null);
       }
 
@@ -106,7 +106,7 @@ export const updateBookingStatus = (bookingId, newStatus, SP_Email, callback) =>
           from: '+16672132408', // Your Twilio number
           to: phoneNumber
         });
-        console.log('SMS sent successfully!');
+        // console.log('SMS sent successfully!');
       } catch (smsError) {
         console.error('Error sending SMS:', smsError);
       }

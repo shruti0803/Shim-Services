@@ -227,8 +227,11 @@ const Appliance = () => {
 
           <Reviews serviceName={"Appliance%20Repair"} />
         </div>
-        <div className="flex-6 mx-4 w-1/2">
+        <div className="flex flex-col mx-4 md:w-1/2">
+        <h2 className='font-bold text-center mt-4 mb-2 text-3xl text-gray-800'>Schedule Your Service Today!</h2>
+        <div className="flex-6 ">
           <Details services={services} service_name={"Appliance Repair"} />
+        </div>
         </div>
       </div>
       

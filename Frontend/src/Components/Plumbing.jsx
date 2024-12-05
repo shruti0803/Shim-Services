@@ -166,8 +166,9 @@ const cardItems = [
 
       {/* Additional Section */}
       <div className="flex flex-col-reverse md:flex-row p-2.5 m-6">
-        <div className="flex flex-col text-xl w-1/2">
+        <div className=" flex flex-col text-xl md:w-1/2">
           <hr />
+          
           <h2 className='font-bold text-center mt-4 text-3xl text-gray-800'>What We Offer</h2>
 <p className="text-center text-lg text-gray-600 mb-4">
   ShimServices provides reliable Plumbing services.
@@ -195,11 +196,16 @@ const cardItems = [
     <span className="font-medium text-lg">Geyser Repair</span>
   </li>
 </ul>
+
  
           <Reviews serviceName={"Plumbing"} />
         </div>
-        <div className="flex mx-4 w-1/2">
+        <div className="flex flex-col mx-4 md:w-1/2">
+        <h2 className='font-bold text-center mt-4 mb-2 text-3xl text-gray-800'>Schedule Your Service Today!</h2>
+        <div className="flex">
+        
           <Details services={services} service_name={"Plumbing Services"} />
+        </div>
         </div>
       </div>
       

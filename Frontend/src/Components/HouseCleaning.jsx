@@ -13,6 +13,74 @@ const Card = ({ imageSrc, title }) => (
 );
 
 const HouseCleaning = () => {
+  const services = [
+    {
+      id: 1,
+      imgSrc: 'https://tse4.mm.bing.net/th?id=OIP.29Xa0yXmjpfzJn1hPoplVAHaE8&pid=Api&P=0&h=180',
+      title: 'Kitchen Cleaning',
+      description: [
+        'Dusting & Vacuuming',
+        'Mopping & Sanitizing',
+        'Kitchen & Bathroom Cleaning'
+      ],
+      price: 60
+    },
+    {
+      id: 2,
+      imgSrc: 'https://media.istockphoto.com/id/1393767111/photo/young-female-cleaner-in-workwear-using-mop-while-cleaning-floor-in-office.jpg?s=612x612&w=0&k=20&c=T8ZAIpzwVSVLmegTR4l2cSDcs9hVktkmS5CDWlf52M4=',
+      title: 'Deep Cleaning',
+      description: [
+        'Desk & Floor Cleaning',
+        'Trash Removal',
+        'Disinfecting Workspaces'
+      ],
+      price: 100
+    },
+    {
+      id: 3,
+      imgSrc: 'https://media.istockphoto.com/id/1167411789/photo/person-cleaning-stain-on-carpet.jpg?s=612x612&w=0&k=20&c=Nhf9uDH5VoW0-3j5KJ_sfBlr7TgQfhI3FCuEtpWzEg4=',
+      title: 'Carpet Cleaning',
+      description: [
+        'Stain Removal',
+        'Deep Cleaning',
+        'Odor Elimination'
+      ],
+      price: 70
+    },
+    {
+      id: 4,
+      imgSrc: 'https://media.istockphoto.com/id/2164840232/photo/beautiful-smiling-young-woman-cleaning-window-with-window-cleaner.jpg?s=612x612&w=0&k=20&c=6eqocDJF9QImCO3PaEEtxXx64GJ5oeR1mziT0XQIOCU=',
+      title: 'Window Cleaning',
+      description: [
+        'Interior Cleaning',
+        'Exterior Washing',
+        'Streak-Free Shine'
+      ],
+      price: 55
+    },
+    {
+      id: 5,
+      imgSrc: 'https://media.istockphoto.com/id/1789004313/photo/a-young-man-vacuums-the-landing-in-a-repair-room.jpg?s=612x612&w=0&k=20&c=PZONQhDiTZqyDzsu1PI7PQKmw1eG25cWzx955DS8Xno=',
+      title: 'Post-Construction Cleaning',
+      description: [
+        'Debris Removal',
+        'Dusting & Mopping',
+        'Detailed Finishing'
+      ],
+      price: 75
+    },
+    {
+      id: 6,
+      imgSrc: 'https://tse1.mm.bing.net/th?id=OIP.DtFkNLe6S082oS9-TML9lgHaDw&pid=Api&P=0&h=180',
+      title: 'Bathroom Cleaning',
+      description: [
+        'Full House Cleaning',
+        'Trash Removal',
+        'Deep Cleaning All Rooms'
+      ],
+      price: 65
+    }
+  ];
   const cardItems = [
     { id: 1, imageSrc: 'https://cdn.pixabay.com/photo/2024/01/16/07/51/ai-generated-8511571_1280.jpg', title: 'Home Cleaning' },
     { id: 2, imageSrc: 'https://cdn.pixabay.com/photo/2021/07/19/04/35/workers-6477163_1280.jpg', title: 'Office Cleaning' },
@@ -161,9 +229,12 @@ const HouseCleaning = () => {
             </div>
           </div>
         </div>
-        <div className="flex-6 mx-4 w-1/2">
+        <div className="flex flex-col mx-4 md:w-1/2">
+        <h2 className='font-bold text-center mt-4 mb-2 text-3xl text-gray-800'>Schedule Your Service Today!</h2>
+        <div className="flex-6">
        
         <Details services={services} service_name={"House Cleaning"} />
+        </div>
         </div>
       </div>
     </>

@@ -18,7 +18,7 @@ export const addBookingPost = (bookingData, callback) => {
     Customer_Phone,
     Book_Date
   } = bookingData;
-console.log("booking data bookingPost",bookingData);
+// console.log("booking data bookingPost",bookingData);
   // Insert query for adding new booking
 
   const currentDate2 = new Date().toISOString().slice(0, 10);
