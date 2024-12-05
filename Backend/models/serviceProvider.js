@@ -172,7 +172,7 @@ export const getSPServices = (SP_Email, callback) => {
 
     // Check if results are empty and return an appropriate message
     if (results.length == 0) {
-      console.log("no service provided yet")
+      // console.log("no service provided yet")
       return callback(null, []);
     }
 

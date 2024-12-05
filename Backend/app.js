@@ -45,17 +45,17 @@ app.use(cors({
 
 // Socket.io connection event
 io.on('connection', (socket) => {
-  console.log(`User connected: ${socket.id}`);
+  // console.log(`User connected: ${socket.id}`);
 
   // Example event: notify when a new service provider is added
   socket.on('newServiceProvider', (data) => {
-    console.log('New service provider added:', data);
+    // console.log('New service provider added:', data);
     io.emit('updateServiceProviders', data); // Broadcast the update
   });
 
   // Additional events can be added here as needed
   socket.on('disconnect', () => {
-    console.log(`User disconnected: ${socket.id}`);
+    // console.log(`User disconnected: ${socket.id}`);
   });
 });     
 // app.use('/api', router); //prefix the routes with '/api'
@@ -346,7 +346,7 @@ app.post('/bookings/accept-order/:bookId', async (req, res) => {
       message: 'Booking has been accepted by the service provider.',
       
     });
-console.log("emit ke niche");
+// console.log("emit ke niche");
     // Respond to the client
     res.json({ message: 'Booking accepted successfully', result });
   } catch (error) {
@@ -564,16 +564,22 @@ app.get('/', (req, res) => {
 
 app.post('/orders', async (req, res) => {
   const options = {
-    amount: req.body.amount,
+    amount:  Math.floor(req.body.amount),
     currency: req.body.currency,
     receipt: "receipt",
     payment_capture: 1,
   };
+  // console.log("options",options);
+  
 
   try {
     const response = await razorpay.orders.create(options);
+    // console.log("response",response);
+    
     res.json({ order_id: response.id, currency: response.currency, amount: response.amount });
   } catch (err) {
+    console.log("error",err);
+    
     res.status(500).send('Internal server error');
   }
 });
@@ -701,7 +707,7 @@ app.get('/fetchTotalCostForSPMonthly', (req, res) => {
 
 app.get('/fetchSalaryForSPMonthly', (req, res) => {
   const { SP_Email, month, year } = req.query;
-  console.log("request sent",req.query);
+  // console.log("request sent",req.query);
   
 
   // Call the function to fetch salary
@@ -716,7 +722,7 @@ app.get('/fetchSalaryForSPMonthly', (req, res) => {
 });
 app.get('/fetchAmountToPayForSPMonthly', (req, res) => {
   const { SP_Email, month, year } = req.query;
-  console.log("request sent",req.query);
+  // console.log("request sent",req.query);
   
 
   // Call the function to fetch salary
@@ -822,7 +828,7 @@ app.post('/api/insert-report', (req, res) => {
 app.get('/reviews/:Service_Name', async (req, res) => {
   const { Service_Name } = req.params;
 
-  console.log(Service_Name);
+  // console.log(Service_Name);
   
 
   // Ensure Service_Name is provided in the URL
@@ -842,7 +848,7 @@ app.get('/reviews/:Service_Name', async (req, res) => {
     }
 
     // Return reviews if found
-    console.log("Reviews:",reviews);
+    // console.log("Reviews:",reviews);
     
     res.json({ reviews });
   });
@@ -1108,8 +1114,8 @@ app.post('/add-service-by-admin', async (req, res) => {
 
 app.delete('/delete-service', async (req, res) => {
   const { serviceName, serviceCategory } = req.body;
-  console.log("servicename",serviceName);
-  console.log("servicecat",serviceCategory);
+  // console.log("servicename",serviceName);
+  // console.log("servicecat",serviceCategory);
   
 
   try {
@@ -1168,11 +1174,11 @@ app.put('/update-report-to-rejected/:reportId', async (req, res) => {
   try {
     // Assuming `updateReportStatusToRejected` is a function you have defined
     const result = await updateReportStatusToRejected(reportId, adminEmail);
-    console.log(result);
+    // console.log(result);
     res.status(200).json(result);
 
   } catch (error) {
-    console.log(result);
+    // console.log(result);
     res.status(500).json({ message: 'Error updating report', error: error.message });
   }
 });
@@ -1180,9 +1186,9 @@ app.put('/update-report-to-rejected/:reportId', async (req, res) => {
 
 app.put('/update-report-user/:reportId/:adminEmail/:userEmail', async (req, res) => {
   const { reportId, adminEmail, userEmail } = req.params;
-  console.log("reportid", reportId);
-  console.log("admin", adminEmail);
-  console.log("user", userEmail);
+  // console.log("reportid", reportId);
+  // console.log("admin", adminEmail);
+  // console.log("user", userEmail);
   
 
   try {
@@ -1192,7 +1198,7 @@ app.put('/update-report-user/:reportId/:adminEmail/:userEmail', async (req, res)
     
     
   } catch (error) {
-    console.log();
+    // console.log();
     
     res.status(500).json({ message: 'Error updating report and user status', error: error.message });
   }
@@ -1271,7 +1277,7 @@ app.get('/api/ratings', (req, res) => {
 
 app.get('/ratings-for-sp/:Service_Name',  (req, res) => {
   const { Service_Name } = req.params;
-  console.log("service name",Service_Name);
+  // console.log("service name",Service_Name);
   
 
   if (!Service_Name) {

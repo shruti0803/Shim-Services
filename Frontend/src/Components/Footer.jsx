@@ -18,9 +18,9 @@ const Footer = () => {
         </div>
 
         {/* Centered Quick Links Section */}
-        <div className="mb-6 md:mb-0 md:w-1/3 text-center">
+        <div className="mb-6 md:mb-0 md:w-1/3 md:text-center">
   <h2 className="text-xl font-semibold mb-4">Quick Links</h2>
-  <ul className="space-y-2 flex flex-col items-center text-center">
+  <ul className="space-y-2 flex flex-col md:items-center md:text-center">
     {[
       { name: 'Home', href: '#' },
       { name: 'About Us', href: '#' },

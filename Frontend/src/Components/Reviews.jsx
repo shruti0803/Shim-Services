@@ -244,7 +244,7 @@ export const Reviews = ({ serviceName }) => {
       onClick={() => setShowAllSPs(true)}
       className="text-blue-500 hover:text-blue-700 font-medium"
     >
-      Show more..
+      See more..
     </button>
   </div>
 )}

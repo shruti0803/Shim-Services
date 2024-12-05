@@ -55,7 +55,7 @@ export const addServiceByAdmin = async (adminEmail, serviceName, serviceCategory
 export const deleteServiceByAdmin = async (serviceName, serviceCategory) => {
   try {
     // SQL query to delete data from the Services table
-    console.log(serviceName,serviceCategory);
+    // console.log(serviceName,serviceCategory);
     
     const query1 = `
       DELETE FROM services
@@ -74,7 +74,7 @@ export const deleteServiceByAdmin = async (serviceName, serviceCategory) => {
     // Execute the second query
     await connection.promise().query(query2, [serviceName, serviceCategory]);
 
-    console.log('Service deleted successfully.');
+    // console.log('Service deleted successfully.');
   } catch (error) {
     console.error('Error deleting service:', error);
     throw error; // Propagate the error for further handling (e.g., in the API controller)
