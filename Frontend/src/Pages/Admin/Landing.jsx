@@ -519,7 +519,7 @@ const Landing = () => {
       </div>
       {/* Services Booked and geography graph  */}
       <div className='flex flex-col md:flex-row'>
-  <div className="bg-white p-6 rounded-lg shadow-lg mt-6 w-1/2">
+  <div className="bg-white p-6 rounded-lg shadow-lg mt-6 md:w-1/2">
     <h2 className="text-2xl font-semibold">Services Booked</h2>
     <div className="mt-4 flex justify-center">
       <div className="w-80 h-80">
@@ -529,7 +529,7 @@ const Landing = () => {
   </div>
 
   {/* Geography Chart (India map) with city markers */}
-  <div className="bg-white mx-4 p-6 rounded-lg shadow-lg mt-6 w-1/2">
+  <div className="bg-white mx-4 p-6 rounded-lg shadow-lg mt-6 md:w-1/2">
       <h2 className="text-2xl font-semibold">Bookings by City</h2>
       <div className="mt-4" style={{ height: '400px' }}>
         <MapContainer center={[20.5937, 78.9629]} zoom={5} style={{ width: '100%', height: '100%' }}>
