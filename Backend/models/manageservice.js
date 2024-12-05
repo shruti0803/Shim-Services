@@ -58,7 +58,7 @@ export const deleteServiceByAdmin = async (serviceName, serviceCategory) => {
     console.log(serviceName,serviceCategory);
     
     const query1 = `
-      DELETE FROM Services
+      DELETE FROM services
       WHERE Service_Name = ? AND Service_Category = ?;
     `;
 

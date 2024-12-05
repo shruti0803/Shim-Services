@@ -81,7 +81,7 @@ export const updateIsSP = (U_Email, is_SP, callback) => {
 };
 
 export const userDetails = (U_Email, callback) => {
-  const query = `SELECT * FROM USER WHERE U_Email = ?`;
+  const query = `SELECT * FROM user WHERE U_Email = ?`;
   connection.query(query, [U_Email], (err, results) => {
     if (err) {
       console.error("Error fetching user details:", err);
