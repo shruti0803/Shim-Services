@@ -6,8 +6,6 @@ import { IconButton, Menu, MenuItem, Select, MenuItem as MuiMenuItem, FormContro
 // import MoreVertIcon from '@mui/icons-material/MoreVert';
 // import DeleteIcon from '@mui/icons-material/Delete';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import DeleteIcon from '@mui/icons-material/Delete';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
 import PersonIcon from '@mui/icons-material/PersonOutlined';
 import WorkIcon from '@mui/icons-material/WorkOutline';
 

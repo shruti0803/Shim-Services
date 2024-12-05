@@ -31,7 +31,7 @@ const Painting = () => {
         'Thorough servicing of appliance compressors',
         'Filter replacement and comprehensive cleaning'
       ],
-      // price: 120
+       price: 499
     },
     {
       id: 2,
@@ -41,7 +41,7 @@ const Painting = () => {
         'Advanced filter replacement technology',
         'Deep cleaning of air filters'
       ],
-      // price: 80
+     price: 899
     },
     {
       id: 3,
@@ -51,7 +51,7 @@ const Painting = () => {
         'Complete gas refill for refrigerators',
         'Includes inspection and repair of leaks'
       ],
-      // price: 100
+       price: 299
     },
     {
       id: 4,
@@ -61,7 +61,7 @@ const Painting = () => {
         'Expert installation of new appliances',
         'Full diagnostic and testing post-installation'
       ],
-      // price: 120
+       price: 299
     }
    
     
