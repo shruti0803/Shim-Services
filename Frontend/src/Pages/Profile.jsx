@@ -5,10 +5,10 @@ import axios from "axios";
 import ServiceProviderOrders from "../Components/ServiceProviderOrders";
 import SalaryOfSP from "../Components/SalaryOfSP";
 import { Link } from "react-router-dom";
-import { io } from "socket.io-client";
+// import { io } from "socket.io-client";
 
 // Initialize Socket.IO client
-const socket = io("http://localhost:4002");
+// const socket = io("http://localhost:4002");
 
 const Profile = () => {
   const { currentUser } = useAuth();
@@ -51,9 +51,9 @@ const Profile = () => {
       fetchCityAndMobile();
 
       // Listen for order status updates in real-time (using Socket.IO)
-      socket.on("orderAccepted", (orderId) => {
-        setOrders(prevOrders => prevOrders.filter(order => order.id !== orderId));
-      });
+      // socket.on("orderAccepted", (orderId) => {
+      //   setOrders(prevOrders => prevOrders.filter(order => order.id !== orderId));
+      // });
     }
   }, [isServiceProvider, email]);
 

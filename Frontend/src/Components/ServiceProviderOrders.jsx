@@ -2,10 +2,10 @@ import React, { useState, useEffect } from "react";
 import axios from 'axios';
 import BillModal from "./BillModal";
 
-import { io } from "socket.io-client";
+// import { io } from "socket.io-client";
 
 // Initialize Socket.IO connection
-const socket = io("http://localhost:4002"); // Use your backend server URL
+// const socket = io("http://localhost:4002"); // Use your backend server URL
 
 
 const ServiceProviderOrders = ({ SPEmail,SPCity }) => {
