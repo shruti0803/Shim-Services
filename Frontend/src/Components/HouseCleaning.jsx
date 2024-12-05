@@ -13,74 +13,82 @@ const Card = ({ imageSrc, title }) => (
 );
 
 const HouseCleaning = () => {
+
   const services = [
     {
       id: 1,
-      imgSrc: 'https://tse4.mm.bing.net/th?id=OIP.29Xa0yXmjpfzJn1hPoplVAHaE8&pid=Api&P=0&h=180',
-      title: 'Kitchen Cleaning',
+      imgSrc: 'https://media.istockphoto.com/id/2032428982/photo/close-up-of-cleaning-sink-with-faucet-in-bathroom-hands-in-gloves-with-detergent.jpg?s=612x612&w=0&k=20&c=rk9QdQLLSiZiaTNLz9fzh3YBQ1fYzvWfNeJDnhZ9YNo=',
+      title: 'Bathroom Cleaning',
       description: [
-        'Dusting & Vacuuming',
-        'Mopping & Sanitizing',
-        'Kitchen & Bathroom Cleaning'
+        'Thorough cleaning of all bathroom surfaces and fixtures',
+        //'Installation of new faucet systems and upgrades'
       ],
-      price: 60
+      price:1299
     },
     {
       id: 2,
-      imgSrc: 'https://media.istockphoto.com/id/1393767111/photo/young-female-cleaner-in-workwear-using-mop-while-cleaning-floor-in-office.jpg?s=612x612&w=0&k=20&c=T8ZAIpzwVSVLmegTR4l2cSDcs9hVktkmS5CDWlf52M4=',
-      title: 'Deep Cleaning',
+      imgSrc: 'https://media.istockphoto.com/id/1146967802/photo/person-cleaning-carpet-with-vacuum-cleaner.jpg?s=612x612&w=0&k=20&c=UJC79wrTWavMoIas1vxjmokR7TawUVNZR7XMqMnCaFQ=',
+      title: 'Carpet Cleaning',
       description: [
-        'Desk & Floor Cleaning',
-        'Trash Removal',
-        'Disinfecting Workspaces'
+        'Removal of dirt, stains, and odors from carpets',
+        //'Use of advanced tools to pinpoint and fix leaks efficiently'
       ],
-      price: 100
+      price:399
     },
     {
       id: 3,
-      imgSrc: 'https://media.istockphoto.com/id/1167411789/photo/person-cleaning-stain-on-carpet.jpg?s=612x612&w=0&k=20&c=Nhf9uDH5VoW0-3j5KJ_sfBlr7TgQfhI3FCuEtpWzEg4=',
-      title: 'Carpet Cleaning',
+      imgSrc: 'https://media.istockphoto.com/id/1419689809/photo/dirty-water-bubbling-in-the-nozzle-of-washing-vacuum-worker-using-professional-vacuum-cleaner.jpg?s=612x612&w=0&k=20&c=lbVFJ0dx7-6Na9EQXV0brSI1ZJiy0MP16C8DI5kQfMs=',
+      title: 'Deep Cleaning',
       description: [
-        'Stain Removal',
-        'Deep Cleaning',
-        'Odor Elimination'
+        'Intensive cleaning of all areas, targeting hidden dirt and grime',
+        //'Repipe and replacement of worn-out piping systems'
       ],
-      price: 70
+      price:999
     },
     {
       id: 4,
-      imgSrc: 'https://media.istockphoto.com/id/2164840232/photo/beautiful-smiling-young-woman-cleaning-window-with-window-cleaner.jpg?s=612x612&w=0&k=20&c=6eqocDJF9QImCO3PaEEtxXx64GJ5oeR1mziT0XQIOCU=',
-      title: 'Window Cleaning',
+      imgSrc: 'https://media.istockphoto.com/id/1139715687/photo/woman-in-yellow-gloves-washes-the-door-in-kitchen-cabinet.jpg?s=612x612&w=0&k=20&c=zaCCsFK77gTubJymaEiakXuGmHURMI4YyKcq7skVMVQ=',
+      title: 'Kitchen Cleaning',
       description: [
-        'Interior Cleaning',
-        'Exterior Washing',
-        'Streak-Free Shine'
+        'Cleaning and sanitizing kitchen surfaces, appliances, and floors',
+        //'Inspection and pumping of tanks to ensure proper function'
       ],
-      price: 55
+      price:1399
     },
     {
       id: 5,
-      imgSrc: 'https://media.istockphoto.com/id/1789004313/photo/a-young-man-vacuums-the-landing-in-a-repair-room.jpg?s=612x612&w=0&k=20&c=PZONQhDiTZqyDzsu1PI7PQKmw1eG25cWzx955DS8Xno=',
+      imgSrc: 'https://media.istockphoto.com/id/1368972405/photo/stone-tile-brush-post-construction-floor-cleaning.jpg?s=612x612&w=0&k=20&c=c4TdQU2CvPFSMhxBUfbBrWatKSUs8jPmmqC6zuc_3WY=',
       title: 'Post-Construction Cleaning',
       description: [
-        'Debris Removal',
-        'Dusting & Mopping',
-        'Detailed Finishing'
+        'Cleanup after construction or renovation, removing dust and debris',
+        //'Installation and replacement of toilet systems'
       ],
-      price: 75
+      price:1299
     },
     {
       id: 6,
-      imgSrc: 'https://tse1.mm.bing.net/th?id=OIP.DtFkNLe6S082oS9-TML9lgHaDw&pid=Api&P=0&h=180',
-      title: 'Bathroom Cleaning',
+      imgSrc: 'https://media.istockphoto.com/id/2168865002/photo/a-cleaning-lady-clicks-on-cleaning-icons-on-the-web.jpg?s=612x612&w=0&k=20&c=pYyqoo3ERPDgqPuvNjUp8PlK-mHx0ptp2OZDUweWbDw=',
+      title: 'Regular Cleaning',
       description: [
-        'Full House Cleaning',
-        'Trash Removal',
-        'Deep Cleaning All Rooms'
+        'Routine cleaning of general living spaces for upkeep',
+        //'Inspection and maintenance of water heaters for optimal performance'
       ],
-      price: 65
+      price:499
+    },
+    {
+      id: 7,
+      imgSrc: 'https://media.istockphoto.com/id/1279849148/photo/a-woman-clean-a-window-pane-with-a-rag-and-soap-suds-cleaning-with-a-detergent-hands-in-pink.jpg?s=612x612&w=0&k=20&c=jDoYmgWAzEZoLCrzsOlX_okeZWzmgU8gjxVm1FYWsps=',
+      title: 'Window Cleaning',
+      description: [
+        'Washing and shining windows for a streak-free finish',
+        //'Inspection and maintenance of water heaters for optimal performance'
+      ],
+      price:499
     }
-  ];
+];
+
+
+
   const cardItems = [
     { id: 1, imageSrc: 'https://cdn.pixabay.com/photo/2024/01/16/07/51/ai-generated-8511571_1280.jpg', title: 'Home Cleaning' },
     { id: 2, imageSrc: 'https://cdn.pixabay.com/photo/2021/07/19/04/35/workers-6477163_1280.jpg', title: 'Office Cleaning' },
