@@ -30,7 +30,8 @@ const Plumbing = () => {
       description: [
         'Repair and replacement of leaking or damaged faucets',
         'Installation of new faucet systems and upgrades'
-      ]
+      ],
+      price:499
     },
     {
       id: 2,
@@ -39,7 +40,8 @@ const Plumbing = () => {
       description: [
         'Detection and repair of hidden water leaks in pipes',
         'Use of advanced tools to pinpoint and fix leaks efficiently'
-      ]
+      ],
+      price:399
     },
     {
       id: 3,
@@ -48,7 +50,8 @@ const Plumbing = () => {
       description: [
         'Fixing broken or corroded pipes to prevent water damage',
         'Repipe and replacement of worn-out piping systems'
-      ]
+      ],
+      price:999
     },
     {
       id: 4,
@@ -57,7 +60,8 @@ const Plumbing = () => {
       description: [
         'Cleaning and maintenance of septic tanks to prevent blockages',
         'Inspection and pumping of tanks to ensure proper function'
-      ]
+      ],
+      price:5999
     },
     {
       id: 5,
@@ -66,7 +70,8 @@ const Plumbing = () => {
       description: [
         'Fixing clogged or malfunctioning toilets',
         'Installation and replacement of toilet systems'
-      ]
+      ],
+      price:999
     },
     {
       id: 6,
@@ -75,7 +80,8 @@ const Plumbing = () => {
       description: [
         'Installation and repair of water heating systems',
         'Inspection and maintenance of water heaters for optimal performance'
-      ]
+      ],
+      price:699
     }
 ];
 

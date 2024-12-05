@@ -31,7 +31,7 @@ const NetworkServices = () => {
         'Setting up network infrastructure and devices',
         'Configuration of routers, switches, and access points'
       ],
-      price: 80
+      price: 699
     },
     {
       id: 2,
@@ -51,7 +51,7 @@ const NetworkServices = () => {
         'Identifying and resolving network issues',
         'Optimizing network performance and connectivity'
       ],
-      price: 70
+      price: 799
     },
     {
       id: 4,
@@ -61,7 +61,7 @@ const NetworkServices = () => {
         'Setting up secure and stable wireless networks',
         'Configuration of wireless access points and routers'
       ],
-      price: 60
+      price: 299
     }
   ];
   

@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 
 import Details from './Details';
 import Carousel from 'react-bootstrap/Carousel';
@@ -15,7 +15,10 @@ const Card = ({ imageSrc, title }) => (
 
 const Painting = () => {
 
+  //const[ratings, setRatings] = useState([]);
+
   
+
   const handleBookNow = () => {
     
       
@@ -31,7 +34,9 @@ const Painting = () => {
         'Thorough servicing of appliance compressors',
         'Filter replacement and comprehensive cleaning'
       ],
-      // price: 120
+       price: 120,
+       rating: 4.5,
+       review: 34
     },
     {
       id: 2,
@@ -41,7 +46,9 @@ const Painting = () => {
         'Advanced filter replacement technology',
         'Deep cleaning of air filters'
       ],
-      // price: 80
+       price: 8999,
+       rating: 4.5,
+       review: 34
     },
     {
       id: 3,
@@ -51,7 +58,9 @@ const Painting = () => {
         'Complete gas refill for refrigerators',
         'Includes inspection and repair of leaks'
       ],
-      // price: 100
+       price: 299,
+       rating: 4.5,
+       review: 34
     },
     {
       id: 4,
@@ -61,7 +70,9 @@ const Painting = () => {
         'Expert installation of new appliances',
         'Full diagnostic and testing post-installation'
       ],
-      // price: 120
+       price: 129,
+       rating: 4.5,
+       review: 34
     }
    
     
@@ -174,10 +185,10 @@ const Painting = () => {
   </li>
 </ul>
 
-          <Reviews serviceName={"Painting Services"} />
+          <Reviews serviceName={"Painting"} />
         </div>
         <div className="flex-6 mx-4 w-1/2">
-          <Details services={services} service_name={"Painting Services"} />
+          <Details services={services} service_name={"Painting"} />
         </div>
       </div>
       

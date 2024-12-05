@@ -19,9 +19,9 @@ const connection = mysql.createConnection({
   port: process.env.DB_PORT,              // Replace with your database user
 
 
-  password: 'IshaSql@562',     // Replace with your database password
+  password: process.env.DB_PASSWORD,     // Replace with your database password
 
-  database: 'ProjectShimServices'   // Replace with your database name
+  database: process.env.DB_NAME   // Replace with your database name
 });
 
 // Connect to the MySQL database
